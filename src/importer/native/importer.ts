@@ -1,3 +1,5 @@
+import {addAlert, gettext} from "fwtoolkit"
+
 import {GetImages} from "./get_images.js"
 import {extractTemplate} from "./extract_template.js"
 
@@ -78,6 +80,12 @@ export class NativeImporter {
             .then(() => this.createDoc())
             .then(() => {
                 if (!this.docId) {
+                    addAlert(
+                        "error",
+                        gettext(
+                            "Could not create document. You may have reached your document limit."
+                        )
+                    )
                     return Promise.reject(new Error("document not created"))
                 }
                 return this.saveImages()
