@@ -19,11 +19,11 @@
   ],
   "homepage": "https://fiduswriter.codeberg.page/fiduswriter-document/",
   "bugs": {
-    "url": "https://codeberg.org/fiduswriter/fiduswriter-document-js/issues"
+    "url": "https://codeberg.org/fiduswriter/fiduswriter-document-ts/issues"
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@codeberg.org/fiduswriter/fiduswriter-document-js.git"
+    "url": "ssh://git@codeberg.org/fiduswriter/fiduswriter-document-ts.git"
   },
   "license": "AGPL-3.0",
   "author": "Johannes Wilm",
