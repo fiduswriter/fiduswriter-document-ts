@@ -78,7 +78,7 @@ export class ZipFidus {
             this.textFiles,
             this.httpFiles,
             [],
-            "application/fidus+zip"
+            "application/vnd.fiduswriter+zip"
         )
         return zipper.init()
     }

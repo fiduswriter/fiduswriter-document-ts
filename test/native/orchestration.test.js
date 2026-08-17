@@ -11,6 +11,7 @@ const {SaveRevision} = await import("../../src/exporter/native/revision.js")
 const {SaveCopy} = await import("../../src/exporter/native/copy.js")
 const {NativeImporter} = await import("../../src/importer/native/importer.js")
 const {FidusFileImporter} = await import("../../src/importer/native/file.js")
+const {FW_DOCUMENT_VERSION} = await import("../../src/schema/index.js")
 
 const minimalDoc = {
     type: "doc",
@@ -74,10 +75,15 @@ describe("native exporter orchestration", () => {
         const arrayBuffer = await blob.arrayBuffer()
         const zip = await JSZip.loadAsync(arrayBuffer)
         expect(zip.file("mimetype")).not.toBeNull()
+        expect(await zip.file("mimetype").async("string")).toBe(
+            "application/vnd.fiduswriter+zip"
+        )
+        expect(await zip.file("filetype-version").async("string")).toBe(
+            FW_DOCUMENT_VERSION
+        )
         expect(zip.file("document.json")).not.toBeNull()
         expect(zip.file("images.json")).not.toBeNull()
         expect(zip.file("bibliography.json")).not.toBeNull()
-        expect(zip.file("filetype-version")).not.toBeNull()
     })
 
     it("ExportFidusFile returns the generated blob", async () => {
@@ -192,5 +198,37 @@ describe("native importer orchestration", () => {
         expect(result.doc.id).toBe(8)
         expect(backend.createDoc).toHaveBeenCalledTimes(1)
         expect(backend.saveDocument).toHaveBeenCalledTimes(1)
+    })
+
+    it("FidusFileImporter still accepts a file with the legacy mimetype", async () => {
+        const zipper = new ZipFidus(fullDoc.id, fullDoc, {}, {}, [], false)
+        const blob = await zipper.init()
+        const {default: JSZip} = await import("jszip")
+        const zip = await JSZip.loadAsync(await blob.arrayBuffer())
+        // Rewrite the mimetype entry to the legacy alias string.
+        zip.file("mimetype", "application/fidus+zip")
+        const legacyBlob = await zip.generateAsync({type: "blob"})
+        const arrayBuffer = await legacyBlob.arrayBuffer()
+
+        const backend = {
+            createDoc: jest.fn().mockResolvedValue({
+                id: 9,
+                path: "",
+                e2ee: false
+            }),
+            saveImages: jest.fn().mockResolvedValue({}),
+            saveDocument: jest.fn().mockResolvedValue({added: 1, updated: 2})
+        }
+
+        const fileImporter = new FidusFileImporter(
+            arrayBuffer,
+            {id: 1, name: "Tester"},
+            "",
+            backend
+        )
+        const result = await fileImporter.init()
+        expect(result.ok).toBe(true)
+        expect(result.doc.id).toBe(9)
+        expect(backend.createDoc).toHaveBeenCalledTimes(1)
     })
 })

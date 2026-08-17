@@ -17,6 +17,15 @@ import type {
 export const MIN_FW_DOCUMENT_VERSION = 1.6
 export const MAX_FW_DOCUMENT_VERSION = Number.parseFloat(FW_DOCUMENT_VERSION)
 
+/** Accepted `mimetype` entry values for `.fidus` files.
+ * The canonical vendor type and the historical alias are both accepted so
+ * that files produced by any Fidus Writer version can be imported.
+ */
+export const FIDUS_MIMETYPES = [
+    "application/fidus+zip",
+    "application/vnd.fiduswriter+zip"
+]
+
 const TEXT_FILENAMES = [
     "mimetype",
     "filetype-version",
@@ -174,7 +183,7 @@ export class FidusFileImporter {
             mimeType = mimeTypeFile.content
 
         if (
-            mimeType === "application/fidus+zip" &&
+            FIDUS_MIMETYPES.includes(mimeType) &&
             filetypeVersion >= MIN_FW_DOCUMENT_VERSION &&
             filetypeVersion <= MAX_FW_DOCUMENT_VERSION
         ) {

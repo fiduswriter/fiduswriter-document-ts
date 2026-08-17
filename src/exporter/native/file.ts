@@ -83,6 +83,6 @@ export class ExportFidusFile {
     download(blob: Blob): void | Promise<void> {
         const title: string = shortFileTitle(this.doc.title, this.doc.path || "") || "untitled"
         const filename = `${createSlug(title)}.fidus`
-        return download(blob, filename, "application/fidus+zip")
+        return download(blob, filename, "application/vnd.fiduswriter+zip")
     }
 }
