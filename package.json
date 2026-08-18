@@ -210,7 +210,7 @@
     "@xmldom/xmldom": "^0.9.10",
     "eslint": "^10.6.0",
     "gettext-parser": "^9.1.1",
-    "globals": "^15.15.0",
+    "globals": "^17.0.0",
     "happy-dom": "^20.10.6",
     "husky": "^9.1.7",
     "jest": "^30.4.2",
@@ -219,7 +219,7 @@
     "ts-jest": "^29.1.2",
     "ts-jest-resolver": "^2.0.1",
     "tsx": "^4.22.4",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.0",
     "typescript-eslint": "^8.62.0"
   },
   "lint-staged": {
