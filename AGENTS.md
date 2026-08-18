@@ -12,7 +12,7 @@ assets.
 
 - Package name: `@fiduswriter/document`
 - License: `AGPL-3.0`
-- Repository: `https://codeberg.org/fiduswriter/fiduswriter-document.git`
+- Repository: `https://git.fiduswriter.org/fiduswriter/fiduswriter-document-ts.git`
 - Author: Johannes Wilm
 
 The library is intentionally backend-agnostic: it knows nothing about Django and
@@ -68,8 +68,8 @@ Do **not** put in this repository:
 ├── scripts/              # Build helpers
 │   ├── bundle-mathlive.ts # Bundles MathLive assets into static-libs/
 │   ├── export-schema.js  # Writes schema.json
-│   └── deploy-pages.sh   # Deploys demo/ to Codeberg Pages
-├── demo/                 # Codeberg Pages demo
+│   └── deploy-pages.sh   # Deploys demo/ to git-pages
+├── demo/                 # git-pages demo
 ├── test/                 # Jest tests
 ├── package.json
 ├── tsconfig.json
