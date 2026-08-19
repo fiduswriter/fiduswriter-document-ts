@@ -36,8 +36,8 @@ importers:
         specifier: ^3.10.1
         version: 3.10.1
       mathlive:
-        specifier: ^0.104.0
-        version: 0.104.2
+        specifier: ^0.110.0
+        version: 0.110.0
       mathml-to-latex:
         specifier: ^1.4.3
         version: 1.8.0
@@ -106,8 +106,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
       '@types/prosemirror-tables':
-        specifier: ^0.8.0
-        version: 0.8.0
+        specifier: ^0.9.0
+        version: 0.9.1
       '@types/prosemirror-transform':
         specifier: ^1.5.0
         version: 1.5.0
@@ -152,6 +152,9 @@ importers:
         version: 8.65.0(eslint@10.7.0)(typescript@7.0.2)
 
 packages:
+
+  '@arnog/colors@0.5.0':
+    resolution: {integrity: sha512-NB7yqrO7qvInsqJdqz6C6mDU+2oiKmbBbk3czMS0E7KkGxLRy538tEHCsB5TKqmaxxXpi6/U120TnGl8NsDePg==}
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -322,8 +325,8 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@cortex-js/compute-engine@0.28.0':
-    resolution: {integrity: sha512-kGs74P4KVNLSqu+iVhLSAvodScZdVGoZI2kOsUjnBEFCFjlPJ1Nj5TpBz/4nwPT+viguB+g7VseXsmcxWRx23Q==}
+  '@cortex-js/compute-engine@0.58.0':
+    resolution: {integrity: sha512-N0+vXjVZfKwJS7ZIGvq41mojI55m5TrdDXveAXzNjzjZ9iNiNrdEzXL2EmrcP+9GCWCwTonrEeZWAIG78f3INg==}
     engines: {node: '>=21.7.3', npm: '>=10.5.0'}
 
   '@emnapi/core@1.10.0':
@@ -757,16 +760,13 @@ packages:
     resolution: {integrity: sha512-71epLy1HD2H7Qn6iOoQrFdbdFP32Cg5U7OvlCXMuYO8ygUdz07dfqA1lNj1y+KLf3HkRCXVkfvi3OnNa/tFZ3A==}
     deprecated: This is a stub types definition. prosemirror-state provides its own type definitions, so you do not need this installed.
 
-  '@types/prosemirror-tables@0.8.0':
-    resolution: {integrity: sha512-CZ1t19P8zYK1uc3fI6OYc0vUccZbvZlCtT3i1Jt0pga/UQbk1xMiXrdxX1ANDV/7ytzLxI+zT50tPASZtl8FXA==}
+  '@types/prosemirror-tables@0.9.1':
+    resolution: {integrity: sha512-zoY1qcAC6kG4UjnaQQXuoyYQdDJMQmY9uzRKdyUppP8rWRR5/kXBHOd84CD9ZvrYUBo3uDmS20qQnc3knr2j9A==}
+    deprecated: This is a stub types definition. prosemirror-tables provides its own type definitions, so you do not need this installed.
 
   '@types/prosemirror-transform@1.5.0':
     resolution: {integrity: sha512-++krMS5bt3SxNOqjrftispPLRkvfXXw2BtVq4VPJ8Vpf+Sne1MhxVoj0EFCM+14MFlX0EHYQvX3k9AaQzob9ZQ==}
     deprecated: This is a stub types definition. prosemirror-transform provides its own type definitions, so you do not need this installed.
-
-  '@types/prosemirror-view@1.24.0':
-    resolution: {integrity: sha512-Swn08/O+QIOKOSfFFa+KKF19eeHetwA+pBMAHZ7wbF0wPrMS3zJ+G9wbOGqSkUv6JOVpuhlOP8Xg5nA3MyIXgQ==}
-    deprecated: This is a stub types definition. prosemirror-view provides its own type definitions, so you do not need this installed.
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
@@ -1925,9 +1925,8 @@ packages:
   makeerror@1.0.12:
     resolution: {integrity: sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==}
 
-  mathlive@0.104.2:
-    resolution: {integrity: sha512-5z3B5DEZf20UNf+VPXE/0CD1r2rGkNlzdvCt3muTunWPSFb5aBy6WRPXdeMPdsulSCXDse/EYotr0Mx0R+tX4Q==}
-    engines: {node: '>=21.0.0', npm: '>=10.5.0'}
+  mathlive@0.110.0:
+    resolution: {integrity: sha512-UOpJsQ6h1eeN0xZULGTl1MwUB/lZLCDuzKeHvKEh7Zra8U/rtgDNrssj5PZdJtBTIV48AfEhtv6rv47AeMOxJA==}
 
   mathml-to-latex@1.8.0:
     resolution: {integrity: sha512-gQ0uK3zqB8HwlfaXJkEL5rgaZNbKUiBMmBP/B/W+b+t6KcseLSuYb1b0BjLgS9ZiQa24ePkqTX8/6FaQuDL7wQ==}
@@ -2487,6 +2486,8 @@ packages:
 
 snapshots:
 
+  '@arnog/colors@0.5.0': {}
+
   '@babel/code-frame@7.29.7':
     dependencies:
       '@babel/helper-validator-identifier': 7.29.7
@@ -2680,8 +2681,9 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@cortex-js/compute-engine@0.28.0':
+  '@cortex-js/compute-engine@0.58.0':
     dependencies:
+      '@arnog/colors': 0.5.0
       complex-esm: 2.1.1-esm1
       decimal.js: 10.6.0
 
@@ -3155,19 +3157,13 @@ snapshots:
     dependencies:
       prosemirror-state: 1.4.4
 
-  '@types/prosemirror-tables@0.8.0':
+  '@types/prosemirror-tables@0.9.1':
     dependencies:
-      '@types/prosemirror-model': 1.17.0
-      '@types/prosemirror-state': 1.4.0
-      '@types/prosemirror-view': 1.24.0
+      prosemirror-tables: 1.8.5
 
   '@types/prosemirror-transform@1.5.0':
     dependencies:
       prosemirror-transform: 1.12.0
-
-  '@types/prosemirror-view@1.24.0':
-    dependencies:
-      prosemirror-view: 1.42.1
 
   '@types/stack-utils@2.0.3': {}
 
@@ -4473,9 +4469,9 @@ snapshots:
     dependencies:
       tmpl: 1.0.5
 
-  mathlive@0.104.2:
+  mathlive@0.110.0:
     dependencies:
-      '@cortex-js/compute-engine': 0.28.0
+      '@cortex-js/compute-engine': 0.58.0
 
   mathml-to-latex@1.8.0:
     dependencies:
