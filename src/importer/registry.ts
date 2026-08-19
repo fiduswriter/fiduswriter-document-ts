@@ -1,7 +1,7 @@
 import type JSZip from "jszip"
 import {ZipAnalyzer} from "./zip_analyzer.js"
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type ImporterClass = new (...args: any[]) => unknown
 
 interface ImporterEntry {

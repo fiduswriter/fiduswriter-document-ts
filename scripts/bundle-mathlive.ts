@@ -10,7 +10,7 @@ import {
     utimesSync,
     writeFileSync
 } from "node:fs"
-import {dirname, join, relative} from "node:path"
+import {dirname, join} from "node:path"
 import {fileURLToPath} from "node:url"
 import JSZip from "jszip"
 
@@ -18,7 +18,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const repoRoot = join(__dirname, "..")
 
-const MATHLIVE_ROOT = join(repoRoot, "node_modules", "mathlive", "dist")
+const MATHLIVE_ROOT = join(repoRoot, "node_modules", "mathlive")
 const CSS_SRC = join(MATHLIVE_ROOT, "mathlive-static.css")
 const FONTS_SRC_DIR = join(MATHLIVE_ROOT, "fonts")
 
@@ -168,7 +168,7 @@ function main(force = false): void {
     let currentHash: string
     try {
         currentHash = calculateSourceHash()
-    } catch (error) {
+    } catch (_error) {
         console.warn(
             "MathLive source files not found. Skipping bundle creation. Run npm install first."
         )

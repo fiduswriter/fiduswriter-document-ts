@@ -6,7 +6,13 @@ export default tseslint.config(
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
     {
-        files: ["src/**/*.ts", "test/**/*.ts", "test/**/*.js"],
+        files: [
+            "src/**/*.ts",
+            "test/**/*.ts",
+            "test/**/*.js",
+            "scripts/**/*.ts",
+            "scripts/**/*.js"
+        ],
         languageOptions: {
             ecmaVersion: 2020,
             sourceType: "module"

@@ -99,24 +99,6 @@ importers:
       '@types/node':
         specifier: ^26.0.1
         version: 26.1.1
-      '@types/prosemirror-model':
-        specifier: ^1.16.2
-        version: 1.17.0
-      '@types/prosemirror-schema-basic':
-        specifier: ^1.0.2
-        version: 1.2.0
-      '@types/prosemirror-schema-list':
-        specifier: ^1.2.0
-        version: 1.2.0
-      '@types/prosemirror-state':
-        specifier: ^1.4.0
-        version: 1.4.0
-      '@types/prosemirror-tables':
-        specifier: ^0.9.0
-        version: 0.9.1
-      '@types/prosemirror-transform':
-        specifier: ^1.5.0
-        version: 1.5.0
       '@typescript/native':
         specifier: npm:typescript@^7.0.2
         version: typescript@7.0.2
@@ -835,30 +817,6 @@ packages:
 
   '@types/node@26.1.1':
     resolution: {integrity: sha512-nxAkRSVkN1Y0JC1W8ky/fTfkGsMmcrRsbx+3XoZE+rMOX71kLYTV7fLXpqud1GpbpP5TuffXFqfX7fH2GgZREw==}
-
-  '@types/prosemirror-model@1.17.0':
-    resolution: {integrity: sha512-lG5xEMkE8r8Soa80KdWPTbCLUaSHBHVHpTIEsQiebfONpvmS5061IMGzHUdb1oWjgrwh8EJq0GgMNwXHUx5mVg==}
-    deprecated: This is a stub types definition. prosemirror-model provides its own type definitions, so you do not need this installed.
-
-  '@types/prosemirror-schema-basic@1.2.0':
-    resolution: {integrity: sha512-WrQLRv3Ss48e2XBnocoZNMLw3xZwiW2cSjPvrZ/Ui6PicAMsabkb6EKTdLU0B52LuQjShNPtq0tFejrbLOMbpQ==}
-    deprecated: This is a stub types definition. prosemirror-schema-basic provides its own type definitions, so you do not need this installed.
-
-  '@types/prosemirror-schema-list@1.2.0':
-    resolution: {integrity: sha512-njvba73mgBanQOt2/piYMeP+nsu8lzomA350Lh7/sdr6NPsRvYPggwJDIZEG0Cb/MB0fnv4PdRaTi93PoLHArw==}
-    deprecated: This is a stub types definition. prosemirror-schema-list provides its own type definitions, so you do not need this installed.
-
-  '@types/prosemirror-state@1.4.0':
-    resolution: {integrity: sha512-71epLy1HD2H7Qn6iOoQrFdbdFP32Cg5U7OvlCXMuYO8ygUdz07dfqA1lNj1y+KLf3HkRCXVkfvi3OnNa/tFZ3A==}
-    deprecated: This is a stub types definition. prosemirror-state provides its own type definitions, so you do not need this installed.
-
-  '@types/prosemirror-tables@0.9.1':
-    resolution: {integrity: sha512-zoY1qcAC6kG4UjnaQQXuoyYQdDJMQmY9uzRKdyUppP8rWRR5/kXBHOd84CD9ZvrYUBo3uDmS20qQnc3knr2j9A==}
-    deprecated: This is a stub types definition. prosemirror-tables provides its own type definitions, so you do not need this installed.
-
-  '@types/prosemirror-transform@1.5.0':
-    resolution: {integrity: sha512-++krMS5bt3SxNOqjrftispPLRkvfXXw2BtVq4VPJ8Vpf+Sne1MhxVoj0EFCM+14MFlX0EHYQvX3k9AaQzob9ZQ==}
-    deprecated: This is a stub types definition. prosemirror-transform provides its own type definitions, so you do not need this installed.
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
@@ -3146,30 +3104,6 @@ snapshots:
   '@types/node@26.1.1':
     dependencies:
       undici-types: 8.3.0
-
-  '@types/prosemirror-model@1.17.0':
-    dependencies:
-      prosemirror-model: 1.25.11
-
-  '@types/prosemirror-schema-basic@1.2.0':
-    dependencies:
-      prosemirror-schema-basic: 1.2.4
-
-  '@types/prosemirror-schema-list@1.2.0':
-    dependencies:
-      prosemirror-schema-list: 1.5.1
-
-  '@types/prosemirror-state@1.4.0':
-    dependencies:
-      prosemirror-state: 1.4.4
-
-  '@types/prosemirror-tables@0.9.1':
-    dependencies:
-      prosemirror-tables: 1.8.5
-
-  '@types/prosemirror-transform@1.5.0':
-    dependencies:
-      prosemirror-transform: 1.12.0
 
   '@types/stack-utils@2.0.3': {}
 
