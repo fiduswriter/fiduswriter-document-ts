@@ -24,6 +24,7 @@ export class ExportFidusFile {
         token: string | boolean
     ) => Promise<TemplateFiles>
     progressCallback?: ProgressCallback
+    shouldDownload: boolean
 
     constructor(
         doc: ExportDoc,
@@ -35,7 +36,8 @@ export class ExportFidusFile {
             docId: string | number,
             token: string | boolean
         ) => Promise<TemplateFiles>,
-        progressCallback?: ProgressCallback
+        progressCallback?: ProgressCallback,
+        download = true
     ) {
         this.doc = doc
         this.bibDB = bibDB
@@ -44,6 +46,7 @@ export class ExportFidusFile {
         this.token = token
         this.getTemplateFiles = getTemplateFiles
         this.progressCallback = progressCallback
+        this.shouldDownload = download
         return this.init() as unknown as ExportFidusFile
     }
 
@@ -75,7 +78,9 @@ export class ExportFidusFile {
             })
             .then(blob => {
                 this.progressCallback?.(gettext("Export complete."), 100)
-                this.download(blob)
+                if (this.shouldDownload) {
+                    this.download(blob)
+                }
                 return blob
             })
     }

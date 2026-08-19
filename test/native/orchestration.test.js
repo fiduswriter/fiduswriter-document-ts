@@ -91,6 +91,30 @@ describe("native exporter orchestration", () => {
         expect(blob).toBeInstanceOf(Blob)
     })
 
+    it("ExportFidusFile with download=false skips the download", async () => {
+        const downloadjs = await import("downloadjs")
+        const callsBefore = downloadjs.downloadCalls.length
+        const blob = await new ExportFidusFile(
+            fullDoc,
+            bibDB,
+            {db: {}},
+            false,
+            false,
+            undefined,
+            undefined,
+            false
+        )
+        expect(blob).toBeInstanceOf(Blob)
+        expect(downloadjs.downloadCalls.length).toBe(callsBefore)
+    })
+
+    it("ExportFidusFile downloads by default", async () => {
+        const downloadjs = await import("downloadjs")
+        const callsBefore = downloadjs.downloadCalls.length
+        await new ExportFidusFile(fullDoc, bibDB, {db: {}}, false)
+        expect(downloadjs.downloadCalls.length).toBe(callsBefore + 1)
+    })
+
     it("SaveRevision uploads the generated blob", async () => {
         const uploadRevision = jest.fn().mockResolvedValue({ok: true})
         const saver = new SaveRevision(
