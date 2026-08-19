@@ -2,22 +2,23 @@
 export default {
     rootDir: ".",
     testEnvironment: "node",
-    resolver: "ts-jest-resolver",
     extensionsToTreatAsEsm: [".ts"],
     transform: {
         "^.+\\.ts$": [
-            "ts-jest",
+            "@swc/jest",
             {
-                useESM: true,
-                tsconfig: {
-                    module: "NodeNext",
-                    moduleResolution: "NodeNext"
+                jsc: {
+                    parser: {
+                        syntax: "typescript"
+                    },
+                    target: "es2020"
                 }
             }
         ]
     },
     moduleDirectories: ["node_modules"],
     moduleNameMapper: {
+        "^(\\.{1,2}/.*)\\.js$": "$1",
         "^downloadjs$": "<rootDir>/test/exporter/mocks/downloadjs.js",
         "^mathlive$": "<rootDir>/test/exporter/mocks/mathlive.js",
         "^mathml2omml$": "<rootDir>/test/exporter/mocks/mathml2omml.js",
