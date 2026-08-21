@@ -45,28 +45,44 @@ type MathJaxAdaptor = import("mathjax-full/js/core/DOMAdaptor.js").DOMAdaptor<
 let mathReady: Promise<void> | null = null
 let mathConvert: MathConvert | null = null
 
+/**
+ * `mathjax-full` is CommonJS. Native ESM (Node) and the Jest ESM loader expose
+ * the named exports declared in the .d.ts, but bundlers that code-split dynamic
+ * imports (esbuild with `splitting: true`, rspack) emit the CJS module as a
+ * separate chunk whose only export is the `module.exports` object under
+ * `default`. Reading through `.default` first works in every case.
+ */
+function cjsExport<T>(mod: T & {default?: T}): T {
+    return mod.default ?? (mod as T)
+}
+
 /** Load and initialise MathJax once; resolves when TeX→SVG conversion is ready. */
 export function ensureMathJax(): Promise<void> {
     if (!mathReady) {
         mathReady = (async () => {
-            const [{mathjax}, {TeX}, {SVG}, {AllPackages}] = await Promise.all([
-                import("mathjax-full/js/mathjax.js"),
-                import("mathjax-full/js/input/tex.js"),
-                import("mathjax-full/js/output/svg.js"),
-                import("mathjax-full/js/input/tex/AllPackages.js")
-            ])
-            const {RegisterHTMLHandler} = await import(
-                "mathjax-full/js/handlers/html.js"
+            const [mathjaxMod, texMod, svgMod, allPackagesMod] =
+                await Promise.all([
+                    import("mathjax-full/js/mathjax.js"),
+                    import("mathjax-full/js/input/tex.js"),
+                    import("mathjax-full/js/output/svg.js"),
+                    import("mathjax-full/js/input/tex/AllPackages.js")
+                ])
+            const {mathjax} = cjsExport(mathjaxMod)
+            const {TeX} = cjsExport(texMod)
+            const {SVG} = cjsExport(svgMod)
+            const {AllPackages} = cjsExport(allPackagesMod)
+            const {RegisterHTMLHandler} = cjsExport(
+                await import("mathjax-full/js/handlers/html.js")
             )
             let adaptor: MathJaxAdaptor
             if (typeof document === "undefined") {
-                const {liteAdaptor} = await import(
-                    "mathjax-full/js/adaptors/liteAdaptor.js"
+                const {liteAdaptor} = cjsExport(
+                    await import("mathjax-full/js/adaptors/liteAdaptor.js")
                 )
                 adaptor = liteAdaptor()
             } else {
-                const {browserAdaptor} = await import(
-                    "mathjax-full/js/adaptors/browserAdaptor.js"
+                const {browserAdaptor} = cjsExport(
+                    await import("mathjax-full/js/adaptors/browserAdaptor.js")
                 )
                 adaptor = browserAdaptor()
             }
@@ -79,8 +95,15 @@ export function ensureMathJax(): Promise<void> {
                 return adaptor.innerHTML(node)
             }
         })().catch(error => {
+            // Do not fail the whole print/PDF export when MathJax cannot be
+            // loaded or initialised: leave `mathConvert` null so `latexToSvg`
+            // returns null and callers fall back to MathML. Reset `mathReady`
+            // so a later call can retry.
             mathReady = null
-            throw error
+            console.warn(
+                "MathJax SVG math initialisation failed; falling back to MathML.",
+                error
+            )
         })
     }
     return mathReady
