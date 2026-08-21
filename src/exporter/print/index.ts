@@ -5,6 +5,7 @@ import {PAPER_SIZES} from "../../schema/const.js"
 import type {BibDB, CSL, ExportDoc, FidusNode, ImageDB} from "../../types.js"
 import {HTMLExporter} from "../html/index.js"
 import {HTMLExporterConvert} from "../html/convert.js"
+import type {HTMLExportMetadata} from "../html/convert.js"
 import {removeHidden} from "../tools/doc_content.js"
 
 export type ProgressCallback = (
@@ -34,18 +35,19 @@ export class PrintExporter extends HTMLExporter {
         this.progressCallback = progressCallback
     }
 
-    async init(): Promise<void> {
-        this.progressCallback?.(
-            `${shortFileTitle(this.doc.title, this.doc.path || "")}: ${gettext("Printing has been initiated.")}`,
-            0
-        )
+    /**
+     * Build the vivliostyle-ready HTML string (and its metadata) shared by the
+     * print dialog and the PDF exporter: document content with the print CSS
+     * (pagination, footnotes, TOC page numbers) and the document style (with
+     * asset URLs made absolute so fonts/images resolve inside the iframe).
+     */
+    protected async buildPaginatedHtml(): Promise<{
+        html: string
+        metaData: HTMLExportMetadata
+    }> {
         this.docContent = removeHidden(this.doc.content) as FidusNode
 
-        const styleSheets: Array<{
-            url?: string
-            contents?: string
-            filename?: string
-        }> = [
+        this.styleSheets = [
             {url: staticUrl("css/editor/document.css")},
             {
                 contents: `a.footnote, a.affiliation {
@@ -106,6 +108,12 @@ export class PrintExporter extends HTMLExporter {
                 	flex: none;
                 	order: 2;
                 }
+                span.insertion, [data-track="insertion"] {
+                	text-decoration: underline;
+                }
+                span.deletion, [data-track="deletion"] {
+                	text-decoration: line-through;
+                }
                 body {
                     background-color: white;
                 }
@@ -124,11 +132,11 @@ export class PrintExporter extends HTMLExporter {
         const docStyle = this.getDocStyle(this.doc)
 
         if (docStyle) {
-            styleSheets.push(docStyle)
+            this.styleSheets.push(docStyle)
         }
 
         await Promise.all(
-            styleSheets.map(async sheet => await this.loadStyle(sheet))
+            this.styleSheets.map(async sheet => await this.loadStyle(sheet))
         )
 
         this.converter = new HTMLExporterConvert(
@@ -139,13 +147,26 @@ export class PrintExporter extends HTMLExporter {
             this.imageDB,
             this.bibDB,
             this.csl,
-            styleSheets,
+            this.styleSheets,
             {
-                relativeUrls: false
+                relativeUrls: false,
+                // Render tracked changes when the document still contains the
+                // marks (resolved exports simply have none to render).
+                trackChanges: true
             }
         )
 
         const {html, metaData} = await this.converter.init()
+        return {html, metaData}
+    }
+
+    async init(): Promise<void> {
+        this.progressCallback?.(
+            `${shortFileTitle(this.doc.title, this.doc.path || "")}: ${gettext("Printing has been initiated.")}`,
+            0
+        )
+
+        const {html, metaData} = await this.buildPaginatedHtml()
 
         this.progressCallback?.(
             `${shortFileTitle(this.doc.title, this.doc.path || "")}: ${gettext("Print view ready. Opening print dialog...")}`,

@@ -206,6 +206,15 @@ msgstr "Norwegian (bokmål)"
 msgid "Norwegian (nynorsk)"
 msgstr "Norwegian (nynorsk)"
 
+msgid "PDF export complete."
+msgstr "PDF export complete."
+
+msgid "PDF export failed."
+msgstr "PDF export failed."
+
+msgid "PDF export has been initiated."
+msgstr "PDF export has been initiated."
+
 msgid "Persian"
 msgstr "Persian"
 
@@ -235,6 +244,9 @@ msgstr "Printing has been initiated."
 
 msgid "Rendering document..."
 msgstr "Rendering document..."
+
+msgid "Rendering PDF…"
+msgstr "Rendering PDF…"
 
 msgid "Reviewers"
 msgstr "Reviewers"

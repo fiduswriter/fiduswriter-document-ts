@@ -1,6 +1,6 @@
 {
   "name": "@fiduswriter/document",
-  "version": "0.2.43",
+  "version": "0.3.0",
   "description": "Fidus Writer document schema, importers and exporters",
   "keywords": [
     "fiduswriter",
@@ -178,7 +178,7 @@
     "downloadjs": "^1.4.7",
     "fast-deep-equal": "^3.1.3",
     "fast-xml-parser": "^5.9.3",
-    "fwtoolkit": "^0.2.13",
+    "fwtoolkit": "^0.2.14",
     "jszip": "^3.10.1",
     "mathlive": "^0.110.0",
     "mathml-to-latex": "^1.4.3",
@@ -196,13 +196,14 @@
     "prosemirror-tables": "^1.6.4",
     "prosemirror-transform": "^1.12.0",
     "prosemirror-view": "^1.41.9",
+    "vivliostyle-pdf": "^0.2.0",
     "w3c-keyname": "2.2.8"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^26.0.1",
     "@swc/core": "^1.16.1",
     "@swc/jest": "^0.2.39",
+    "@types/node": "^26.0.1",
     "@typescript/native": "npm:typescript@^7.0.2",
     "@xmldom/xmldom": "^0.9.10",
     "eslint": "^10.6.0",

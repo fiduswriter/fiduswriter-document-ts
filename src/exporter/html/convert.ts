@@ -29,6 +29,13 @@ interface HTMLExporterConvertOptions {
     footnoteOffset?: number
     affiliationOffset?: number
     figureOffset?: Record<string, number>
+    /**
+     * Render tracked changes (insertions underlined, deletions struck through)
+     * instead of silently dropping the marks. Only has an effect when the
+     * document still contains `insertion`/`deletion` marks (i.e. the caller
+     * did not resolve them first).
+     */
+    trackChanges?: boolean
 }
 
 export interface HTMLExportMetadata {
@@ -54,6 +61,7 @@ export class HTMLExporterConvert {
     relativeUrls: boolean
     footnoteNumbering: string
     affiliationNumbering: string
+    trackChanges: boolean
 
     endSlash: string
     imageIds: string[]
@@ -98,7 +106,8 @@ export class HTMLExporterConvert {
             idPrefix = "",
             footnoteOffset = 0,
             affiliationOffset = 0,
-            figureOffset = {}
+            figureOffset = {},
+            trackChanges = false
         }: HTMLExporterConvertOptions = {}
     ) {
         this.docTitle = docTitle
@@ -114,6 +123,7 @@ export class HTMLExporterConvert {
         this.relativeUrls = relativeUrls
         this.footnoteNumbering = footnoteNumbering
         this.affiliationNumbering = affiliationNumbering
+        this.trackChanges = trackChanges
 
         this.endSlash = this.xhtml ? "/" : ""
         this.imageIds = []
@@ -429,6 +439,30 @@ export class HTMLExporterConvert {
         return content
     }
 
+    /**
+     * When rendering tracked changes, mark block-level nodes that carry a
+     * `track` attribute (deleted/inserted blocks) with `data-track`, so CSS
+     * (and the vivliostyle-pdf emitter's decoration walk) can style them.
+     */
+    blockTrackData(attrs: Record<string, unknown>): string {
+        if (!this.trackChanges) {
+            return ""
+        }
+        const track = attrs.track
+        if (Array.isArray(track)) {
+            const type = (track as Array<{type?: string}>).find(
+                (t: {type?: string}) =>
+                    t &&
+                    typeof t.type === "string" &&
+                    t.type !== "block_change"
+            )?.type
+            if (type) {
+                return ` data-track="${escapeText(type)}"`
+            }
+        }
+        return ""
+    }
+
     walkJson(node: FidusNode, options: Record<string, unknown> = {}): string {
         let start = "",
             content = "",
@@ -438,11 +472,11 @@ export class HTMLExporterConvert {
             case "doc":
                 break
             case "title":
-                start += `<div class="doc-part doc-title" id="${this.idPrefix}title">`
+                start += `<div class="doc-part doc-title" id="${this.idPrefix}title"${this.blockTrackData(attrs)}>`
                 end = "</div>" + end
                 break
             case "heading_part":
-                start += `<div class="doc-part doc-heading doc-${attrs.id} ${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}>`
+                start += `<div class="doc-part doc-heading doc-${attrs.id} ${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
                 end = "</div>" + end
                 break
             case "contributor":
@@ -450,7 +484,7 @@ export class HTMLExporterConvert {
                 break
             case "contributors_part":
                 if (node.content) {
-                    start += `<div class="doc-part doc-contributors doc-${attrs.id} ${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}>`
+                    start += `<div class="doc-part doc-contributors doc-${attrs.id} ${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
                     end = "</div>" + end
                     let counter = 0
                     const contributorOutputs: string[] = []
@@ -513,7 +547,7 @@ export class HTMLExporterConvert {
                 break
             case "tags_part":
                 if (node.content) {
-                    start += `<div class="doc-part doc-tags doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}>`
+                    start += `<div class="doc-part doc-tags doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
                     end = "</div>" + end
                 }
                 break
@@ -524,7 +558,7 @@ export class HTMLExporterConvert {
                 break
             case "richtext_part":
                 if (node.content) {
-                    start += `<div class="doc-part doc-richtext doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}>`
+                    start += `<div class="doc-part doc-richtext doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
                     end = "</div>" + end
                 }
                 break
@@ -551,12 +585,12 @@ export class HTMLExporterConvert {
                 break
             case "table_part":
                 if (node.content) {
-                    start += `<div class="doc-part doc-table doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}>`
+                    start += `<div class="doc-part doc-table doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
                     end = "</div>" + end
                 }
                 break
             case "paragraph":
-                start += `<p id="${this.idPrefix}p-${++this.parCounter}">`
+                start += `<p id="${this.idPrefix}p-${++this.parCounter}"${this.blockTrackData(attrs)}>`
                 end = "</p>" + end
                 break
             case "heading1":
@@ -566,7 +600,7 @@ export class HTMLExporterConvert {
             case "heading5":
             case "heading6": {
                 const level = Number.parseInt(node.type.slice(-1))
-                start += `<h${level} id="${this.idPrefix}${attrs.id}">`
+                start += `<h${level} id="${this.idPrefix}${attrs.id}"${this.blockTrackData(attrs)}>`
                 end = `</h${level}>` + end
                 break
             }
@@ -693,7 +727,9 @@ export class HTMLExporterConvert {
                     anchor: FidusMark | undefined,
                     sup: FidusMark | undefined,
                     sub: FidusMark | undefined,
-                    code: FidusMark | undefined
+                    code: FidusMark | undefined,
+                    insertion: FidusMark | undefined,
+                    deletion: FidusMark | undefined
                 // Check for hyperlink, bold/strong, italic/em and underline
                 if (node.marks) {
                     strong = node.marks.find(
@@ -712,6 +748,22 @@ export class HTMLExporterConvert {
                     sup = node.marks.find((mark: FidusMark) => mark.type === "sup")
                     sub = node.marks.find((mark: FidusMark) => mark.type === "sub")
                     code = node.marks.find((mark: FidusMark) => mark.type === "code")
+                    insertion = node.marks.find(
+                        (mark: FidusMark) => mark.type === "insertion"
+                    )
+                    deletion = node.marks.find(
+                        (mark: FidusMark) => mark.type === "deletion"
+                    )
+                }
+                if (this.trackChanges) {
+                    if (insertion) {
+                        start += '<span class="insertion">'
+                        end = "</span>" + end
+                    }
+                    if (deletion) {
+                        start += '<span class="deletion">'
+                        end = "</span>" + end
+                    }
                 }
                 if (em) {
                     start += "<em>"
