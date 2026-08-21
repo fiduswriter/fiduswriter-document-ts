@@ -1,6 +1,6 @@
 {
   "name": "@fiduswriter/document",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Fidus Writer document schema, importers and exporters",
   "keywords": [
     "fiduswriter",
@@ -180,6 +180,7 @@
     "fast-xml-parser": "^5.9.3",
     "fwtoolkit": "^0.2.14",
     "jszip": "^3.10.1",
+    "mathjax-full": "^3.2.2",
     "mathlive": "^0.110.0",
     "mathml-to-latex": "^1.4.3",
     "mathml2omml": "^0.5.0",

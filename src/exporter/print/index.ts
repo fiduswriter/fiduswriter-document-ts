@@ -152,7 +152,11 @@ export class PrintExporter extends HTMLExporter {
                 relativeUrls: false,
                 // Render tracked changes when the document still contains the
                 // marks (resolved exports simply have none to render).
-                trackChanges: true
+                trackChanges: true,
+                // Formulas as SVG so the vivliostyle-pdf emitter (and the
+                // browser print pipeline) render fractions, radicals and
+                // stretchy delimiters faithfully.
+                mathOutput: "svg"
             }
         )
 

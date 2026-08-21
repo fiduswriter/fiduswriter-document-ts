@@ -1,6 +1,7 @@
 import {convertLatexToMathMl} from "mathlive"
 
 import {escapeText, staticUrl} from "fwtoolkit"
+import {ensureMathJax, latexToSvg} from "./math.js"
 import {getCat} from "../../schema/i18n.js"
 import type {
     BibDB,
@@ -36,6 +37,14 @@ interface HTMLExporterConvertOptions {
      * did not resolve them first).
      */
     trackChanges?: boolean
+    /**
+     * How to render `equation`/`figure_equation` nodes. `"mathml"` (default)
+     * emits MathML via MathLive. `"svg"` converts the stored LaTeX to an SVG
+     * `<img>` via MathJax instead, which renders consistently everywhere
+     * (browsers, EPUB readers, and the vivliostyle-pdf PDF emitter). Falls
+     * back to MathML when MathJax cannot convert a formula.
+     */
+    mathOutput?: "mathml" | "svg"
 }
 
 export interface HTMLExportMetadata {
@@ -62,6 +71,7 @@ export class HTMLExporterConvert {
     footnoteNumbering: string
     affiliationNumbering: string
     trackChanges: boolean
+    mathOutput: "mathml" | "svg"
 
     endSlash: string
     imageIds: string[]
@@ -107,7 +117,8 @@ export class HTMLExporterConvert {
             footnoteOffset = 0,
             affiliationOffset = 0,
             figureOffset = {},
-            trackChanges = false
+            trackChanges = false,
+            mathOutput = "mathml"
         }: HTMLExporterConvertOptions = {}
     ) {
         this.docTitle = docTitle
@@ -124,6 +135,7 @@ export class HTMLExporterConvert {
         this.footnoteNumbering = footnoteNumbering
         this.affiliationNumbering = affiliationNumbering
         this.trackChanges = trackChanges
+        this.mathOutput = mathOutput
 
         this.endSlash = this.xhtml ? "/" : ""
         this.imageIds = []
@@ -206,6 +218,12 @@ export class HTMLExporterConvert {
                     ? "css/mathlive.css"
                     : staticUrl("css/libs/mathlive/mathlive.css")
             })
+        }
+        if (this.mathOutput === "svg" && this.features.math) {
+            // MathJax must be initialised before the (synchronous) walkJson
+            // conversion below; it is lazy-loaded so MathML-only exports and
+            // documents without math pay nothing.
+            await ensureMathJax()
         }
         const body = this.assembleBody()
         const back = this.assembleBack()
@@ -968,9 +986,22 @@ export class HTMLExporterConvert {
                     }
 
                     if (typeof equation === "string") {
-                        start += `<div class="figure-equation" data-equation="${escapeText(equation)}"><math display="block">`
-                        end = "</math></div>" + end
-                        content = convertLatexToMathMl(equation)
+                        if (this.mathOutput === "svg") {
+                            const svgMath = latexToSvg(equation, true)
+                            if (svgMath) {
+                                start += `<div class="figure-equation" data-equation="${escapeText(equation)}">`
+                                end = "</div>" + end
+                                content = `<img class="equation-svg" src="${svgMath.src}" alt="${escapeText(equation)}" style="width:${svgMath.widthEm}em;height:${svgMath.heightEm}em;vertical-align:middle">`
+                            } else {
+                                start += `<div class="figure-equation" data-equation="${escapeText(equation)}"><math display="block">`
+                                end = "</math></div>" + end
+                                content = convertLatexToMathMl(equation)
+                            }
+                        } else {
+                            start += `<div class="figure-equation" data-equation="${escapeText(equation)}"><math display="block">`
+                            end = "</math></div>" + end
+                            content = convertLatexToMathMl(equation)
+                        }
                     } else {
                         if (imageUrl) {
                             content += `<img src="${imageUrl}"${this.endSlash}>`
@@ -1060,9 +1091,22 @@ export class HTMLExporterConvert {
             case "equation": {
                 const equation =
                     typeof attrs.equation === "string" ? attrs.equation : ""
-                start += '<span class="equation"><math>'
-                end = "</math></span>" + end
-                content = convertLatexToMathMl(equation)
+                if (this.mathOutput === "svg") {
+                    const svgMath = latexToSvg(equation, false)
+                    if (svgMath) {
+                        start += `<span class="equation" data-equation="${escapeText(equation)}" style="vertical-align:${svgMath.verticalAlignEm}em">`
+                        end = "</span>" + end
+                        content = `<img class="equation-svg" src="${svgMath.src}" alt="${escapeText(equation)}" style="width:${svgMath.widthEm}em;height:${svgMath.heightEm}em">`
+                    } else {
+                        start += '<span class="equation"><math>'
+                        end = "</math></span>" + end
+                        content = convertLatexToMathMl(equation)
+                    }
+                } else {
+                    start += '<span class="equation"><math>'
+                    end = "</math></span>" + end
+                    content = convertLatexToMathMl(equation)
+                }
                 break
             }
             case "hard_break":
