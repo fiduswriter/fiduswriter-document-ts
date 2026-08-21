@@ -159,7 +159,8 @@ change.
 
 This library is consumed by:
 
-- `fiduswriter/` (the main Fidus Writer Django app) via `document/package.json5`.
+- `fiduswriter-server-backend/` (the main Fidus Writer Django app) via
+  `fiduswriter/document/package.json5`.
 - `@fiduswriter/books-document` for book-level exporters/importers.
 - `@fiduswriter/cli` for command-line conversion.
 
@@ -173,7 +174,7 @@ When publishing a new version, update those consumers and run their tests.
 - `npm publish` triggers `prepublishOnly`, which builds and bundles.
 - Push commits and tags.
 - Update downstream consumers (`@fiduswriter/books-document`,
-  `@fiduswriter/cli`, `fiduswriter/document/package.json5`).
+  `@fiduswriter/cli`, `fiduswriter-server-backend/fiduswriter/document/package.json5`).
 
 ## Useful references
 
