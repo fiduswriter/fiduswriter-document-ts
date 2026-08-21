@@ -163,7 +163,7 @@ export class ODTExporterStyles {
         }
         if (attributes.includes("t")) {
             styleProperties +=
-                ' style:font-name="Courier New" fo:font-family="Courier New"'
+                ' style:font-name="JetBrains Mono" fo:font-family="JetBrains Mono"'
         }
         const styleCounter = ++this.inlineStyleCounter
         this.inlineStyleIds[attributes] = styleCounter

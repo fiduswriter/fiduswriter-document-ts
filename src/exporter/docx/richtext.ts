@@ -633,7 +633,7 @@ export class DOCXExporterRichtext {
                     }
                     if (code) {
                         start +=
-                            '<w:rFonts w:ascii="Courier New" w:hAnsi="Courier New"/>'
+                            '<w:rFonts w:ascii="JetBrains Mono" w:hAnsi="JetBrains Mono"/>'
                     }
                 }
                 if (formatChange) {
