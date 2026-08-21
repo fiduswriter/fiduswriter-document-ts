@@ -84,8 +84,8 @@ importers:
         specifier: ^1.41.9
         version: 1.42.1
       vivliostyle-pdf:
-        specifier: file:../vivliostyle-pdf
-        version: file:../vivliostyle-pdf
+        specifier: ^0.2.0
+        version: 0.2.0
       w3c-keyname:
         specifier: 2.2.8
         version: 2.2.8
@@ -2405,8 +2405,8 @@ packages:
     resolution: {integrity: sha512-kiGUalWN+rgBJ/1OHZsBtU4rXZOfj/7rKQxULKlIzwzQSvMJUUNgPwJEEh7gU6xEVxC0ahoOBvN2YI8GH6FNgA==}
     engines: {node: '>=10.12.0'}
 
-  vivliostyle-pdf@file:../vivliostyle-pdf:
-    resolution: {directory: ../vivliostyle-pdf, type: directory}
+  vivliostyle-pdf@0.2.0:
+    resolution: {integrity: sha512-J/PS3UyPvIa5nBYz7kosaR5s6rLQ3rTfbDX2teoAgRtHWT+feQHSoeEDyDbVlofRljxmW7dkn8OIOc3WuMSNNw==}
 
   w3c-keyname@2.2.8:
     resolution: {integrity: sha512-dpojBhNsCNN7T82Tm7k26A6G9ML3NkhDsnw9n/eoxSRlVBB4CEtIQ/KTCLI2Fwf3ataSXRhYFkQi3SlnFwPvPQ==}
@@ -4932,7 +4932,7 @@ snapshots:
       '@types/istanbul-lib-coverage': 2.0.6
       convert-source-map: 2.0.0
 
-  vivliostyle-pdf@file:../vivliostyle-pdf:
+  vivliostyle-pdf@0.2.0:
     dependencies:
       '@pdfme/pdf-lib': 6.1.12
       '@vivliostyle/print': 2.44.1
