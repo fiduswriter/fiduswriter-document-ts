@@ -63,7 +63,7 @@ rewrite and a browser-runnable demo site.
 - **Schema** — ProseMirror-compatible document schema exported as both
   TypeScript types and a `schema.json` artefact; `FW_DOCUMENT_VERSION`,
   `MIN_FW_DOCUMENT_VERSION`, and `MAX_FW_DOCUMENT_VERSION` constants exposed.
-- **Demo site** at https://fiduswriter.codeberg.page/fiduswriter-document/
+- **Demo site** at https://fiduswriter.pages.fiduswriter.org/fiduswriter-document-ts/
   — File converter (JATS, HTML, LaTeX, Pandoc JSON, EPUB, DOCX, ODT, Native),
   schema viewer, JATS bibliography generator, and import preview — all
   processing happens in the browser.
@@ -73,7 +73,7 @@ rewrite and a browser-runnable demo site.
 - **Round-trip tests** — Jest suite with real DOCX/ODT fixture files; validates
   ZIP structure, XML well-formedness, and content fidelity after
   import → export cycles.
-- `deploy-pages` npm script to build and push the demo site to Codeberg Pages.
+- `deploy-pages` npm script to build and push the demo site to Forgejo Pages.
 
 ### Changed
 
@@ -82,4 +82,4 @@ rewrite and a browser-runnable demo site.
 
 ---
 
-[0.1.0]: https://codeberg.org/fiduswriter/fiduswriter-document/releases/tag/v0.1.0
+[0.1.0]: https://git.fiduswriter.org/fiduswriter/fiduswriter-document-ts/releases/tag/v0.1.0

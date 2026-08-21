@@ -1,13 +1,13 @@
 # @fiduswriter/document
 
-<p align="center"><img src="https://codeberg.org/fiduswriter/fiduswriter-document/raw/branch/main/demo/logo.svg" alt="@fiduswriter/document logo" width="100" height="100"></p>
+<p align="center"><img src="https://git.fiduswriter.org/fiduswriter/fiduswriter-document-ts/raw/branch/main/demo/logo.svg" alt="@fiduswriter/document logo" width="100" height="100"></p>
 
 This package contains the Fidus Writer document schema, importers and exporters.
 
 ## Demo
 
 Interactive examples running entirely in the browser are available at
-**https://fiduswriter.codeberg.page/fiduswriter-document/**
+**https://fiduswriter.pages.fiduswriter.org/fiduswriter-document-ts/**
 
 The demo site includes:
 
@@ -37,7 +37,7 @@ npm install
 npm run build      # compile TypeScript to dist/
 npm run typecheck  # run tsc --noEmit
 npm test           # run the Jest test suite
-npm run deploy-pages  # build and push the demo site to Codeberg Pages
+npm run deploy-pages  # build and push the demo site to Forgejo Pages
 ```
 
 ## Dependencies
