@@ -14,10 +14,15 @@ import {createSlug} from "../tools/file.js"
 
 export interface PdfExporterOptions {
     /**
-     * The Fidus Writer application version. Used as the PDF Creator string
+     * The Fidus Writer application version. Used as the PDF Producer string
      * (e.g. "Fidus Writer 4.1.7").
      */
     version?: string
+    /**
+     * The display name of the current Fidus Writer user. Used as the PDF
+     * Creator string when the document itself declares no authors.
+     */
+    userName?: string
     /**
      * A pre-built `.fidus` file (bytes) to embed as a PDF attachment so the
      * PDF is self-contained with its editable source.
@@ -101,7 +106,13 @@ export class PdfExporter extends PrintExporter {
                 ? metaData.keywords.join(", ")
                 : undefined,
             language: this.doc.settings.language || "en-US",
-            creator: this.options.version
+            // Creator: the document's authors when present, otherwise the
+            // current Fidus Writer user who initiated the export.
+            creator: authorString.length
+                ? authorString
+                : this.options.userName,
+            // Producer: the application that produced the PDF.
+            producer: this.options.version
                 ? `Fidus Writer ${this.options.version}`
                 : "Fidus Writer"
         }
@@ -126,7 +137,9 @@ export class PdfExporter extends PrintExporter {
         )
 
         const metadata = await this.buildMetadata(metaData)
-        const slug = createSlug(this.docTitle) || "document"
+        // Name the download after the document title (not the folder path
+        // segment that `docTitle`/`shortFileTitle` carries).
+        const slug = createSlug(this.doc.title) || "document"
         const filename = `${slug}.pdf`
 
         const attachments: EmitAttachment[] = []
