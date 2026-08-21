@@ -172,7 +172,7 @@
   },
   "dependencies": {
     "@prettier/plugin-xml": "^3.4.2",
-    "@vivliostyle/print": "^2.42.0",
+    "@vivliostyle/print": "^2.44.1",
     "bibliojson": "^4.0.4",
     "citeproc-plus": "^2.0.4",
     "downloadjs": "^1.4.7",
