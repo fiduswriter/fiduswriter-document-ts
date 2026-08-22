@@ -1,9 +1,52 @@
-/* document.css — base styles for Fidus Writer HTML/EPUB exports */
+/* document.css — base styles for Fidus Writer HTML/EPUB/print exports */
+
+/* ── Fallback fonts (Libertinus, SIL OFL) ────────────────────────────────── */
+
+/* The Libertinus Serif/Mono TTFs are bundled with @fiduswriter/document. The
+   url() paths are relative to this stylesheet: they resolve against
+   css/document/fonts/ when this file is served as static/css/document/document.css
+   and against css/fonts/ when it is embedded as css/document.css inside an
+   HTML/EPUB export (the exporter adds the font files to the zip alongside it). */
+
+@font-face {
+    font-family: "Libertinus Serif";
+    font-style: normal;
+    font-weight: 400;
+    src: url(fonts/LibertinusSerif-Regular.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "Libertinus Serif";
+    font-style: normal;
+    font-weight: 700;
+    src: url(fonts/LibertinusSerif-Bold.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "Libertinus Serif";
+    font-style: italic;
+    font-weight: 400;
+    src: url(fonts/LibertinusSerif-Italic.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "Libertinus Serif";
+    font-style: italic;
+    font-weight: 700;
+    src: url(fonts/LibertinusSerif-BoldItalic.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "Libertinus Mono";
+    font-style: normal;
+    font-weight: 400;
+    src: url(fonts/LibertinusMono-Regular.ttf) format("truetype");
+}
 
 /* ── Reset & base ──────────────────────────────────────────────────────────── */
 
 body.doc {
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Libertinus Serif", "Liberation Serif", serif;
     font-size: 1rem;
     line-height: 1.7;
     color: #1a1a1a;
@@ -28,20 +71,37 @@ body.doc {
 
 /* ── Headings ──────────────────────────────────────────────────────────────── */
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: Georgia, "Times New Roman", serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Libertinus Serif", "Liberation Serif", serif;
     font-weight: bold;
     line-height: 1.25;
     margin: 1.5em 0 0.5em;
     color: #111;
 }
 
-h1 { font-size: 1.75rem; }
-h2 { font-size: 1.5rem;  }
-h3 { font-size: 1.25rem; }
-h4 { font-size: 1.1rem;  }
-h5 { font-size: 1rem;    }
-h6 { font-size: 0.9rem;  }
+h1 {
+    font-size: 1.75rem;
+}
+h2 {
+    font-size: 1.5rem;
+}
+h3 {
+    font-size: 1.25rem;
+}
+h4 {
+    font-size: 1.1rem;
+}
+h5 {
+    font-size: 1rem;
+}
+h6 {
+    font-size: 0.9rem;
+}
 
 /* ── Paragraphs ────────────────────────────────────────────────────────────── */
 
@@ -55,17 +115,23 @@ p {
     text-decoration: underline;
 }
 
-sup, sub {
+sup,
+sub {
     font-size: 0.75em;
     line-height: 0;
     position: relative;
     vertical-align: baseline;
 }
-sup { top: -0.5em; }
-sub { bottom: -0.25em; }
+sup {
+    top: -0.5em;
+}
+sub {
+    bottom: -0.25em;
+}
 
 code {
-    font-family: "JetBrains Mono", "DejaVu Sans Mono", monospace;
+    font-family:
+        "Libertinus Mono", "JetBrains Mono", "DejaVu Sans Mono", monospace;
     font-size: 0.88em;
     background: #f4f4f4;
     padding: 0.1em 0.3em;
@@ -84,7 +150,8 @@ blockquote {
 
 /* ── Lists ─────────────────────────────────────────────────────────────────── */
 
-ol, ul {
+ol,
+ul {
     margin: 0.5em 0 1em 2em;
     padding: 0;
 }
@@ -97,6 +164,10 @@ li {
 
 a {
     color: #1a5fb4;
+    text-decoration: underline;
+}
+
+.user-contents a {
     text-decoration: underline;
 }
 
@@ -126,7 +197,8 @@ div.figure-equation {
 /* ── Code blocks ───────────────────────────────────────────────────────────── */
 
 pre {
-    font-family: "JetBrains Mono", "DejaVu Sans Mono", monospace;
+    font-family:
+        "Libertinus Mono", "JetBrains Mono", "DejaVu Sans Mono", monospace;
     font-size: 0.88em;
     background: #f4f4f4;
     border: 1px solid #e0e0e0;
@@ -184,8 +256,14 @@ img {
 }
 
 /* Alignment */
-.aligned-left  { float: left;  margin: 0 1.5em 1em 0; }
-.aligned-right { float: right; margin: 0 0 1em 1.5em; }
+.aligned-left {
+    float: left;
+    margin: 0 1.5em 1em 0;
+}
+.aligned-right {
+    float: right;
+    margin: 0 0 1em 1.5em;
+}
 .aligned-center {
     float: none;
     margin-left: auto;
@@ -193,10 +271,18 @@ img {
 }
 
 /* Width classes (percentage of container) */
-.image-width-25  { width: 25%;  }
-.image-width-50  { width: 50%;  }
-.image-width-75  { width: 75%;  }
-.image-width-100 { width: 100%; }
+.image-width-25 {
+    width: 25%;
+}
+.image-width-50 {
+    width: 50%;
+}
+.image-width-75 {
+    width: 75%;
+}
+.image-width-100 {
+    width: 100%;
+}
 
 /* Clear floats after doc-parts that contain floated images */
 .doc-part::after {
@@ -227,7 +313,8 @@ caption label {
     margin-right: 0.4em;
 }
 
-th, td {
+th,
+td {
     border: 1px solid #ccc;
     padding: 0.45em 0.7em;
     vertical-align: top;
@@ -240,10 +327,39 @@ th {
 }
 
 /* Table width/alignment helpers */
-.table-full  { width: 100%; }
-.table-center { margin-left: auto; margin-right: auto; }
-.table-left  { margin-right: auto; }
-.table-right { margin-left: auto; }
+.table-25 {
+    width: 25%;
+}
+.table-50 {
+    width: 50%;
+}
+.table-75 {
+    width: 75%;
+}
+.table-100 {
+    width: 100%;
+}
+.table-full {
+    width: 100%;
+}
+.table-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+.table-left {
+    margin-right: auto;
+}
+.table-right {
+    margin-left: auto;
+}
+
+.doc table[data-layout="fixed"] {
+    table-layout: fixed !important;
+}
+
+.doc table[data-layout="auto"] {
+    table-layout: auto !important;
+}
 
 /* ── Table of contents ─────────────────────────────────────────────────────── */
 
@@ -382,6 +498,54 @@ aside.footnote p {
     text-indent: -2em;
     margin-bottom: 0.5em;
     font-size: 0.95em;
+}
+
+/* ── Bibliography / CSL layout ──────────────────────────────────────────────── */
+
+.csl-bib-body {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+.csl-left-margin {
+    padding-right: 1ch;
+    clear: left;
+    float: left;
+    white-space: pre;
+}
+
+.csl-entry i,
+.citation i {
+    font-style: italic;
+}
+
+.csl-entry b,
+.citation b {
+    font-weight: bold;
+}
+
+.csl-entry sup,
+.citation sup {
+    vertical-align: super;
+    font-size: smaller;
+}
+
+.csl-entry sub,
+.citation sub {
+    vertical-align: sub;
+    font-size: smaller;
+}
+
+.csl-indent {
+    padding-left: 0.5in;
+}
+
+.csl-entry {
+    clear: left;
+}
+
+.csl-right-inline {
+    padding-left: 20px;
 }
 
 /* ── Separator ──────────────────────────────────────────────────────────────── */

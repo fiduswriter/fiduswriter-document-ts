@@ -1,8 +1,8 @@
 import JSZip from "jszip"
 import {initSettings} from "fwtoolkit"
 
-// Configure staticUrl so that asset paths like "css/document.css" are resolved
-// relative to the demo root rather than the converter/ subdirectory.
+// Configure staticUrl so that asset paths like "css/document/document.css" are
+// resolved relative to the demo root rather than the converter/ subdirectory.
 // apiUrl is set to an identity function and getCsrfToken returns an empty
 // string so that the DOCX/ODT exporters can use fwtoolkit's get() to fetch
 // template files without a backend.

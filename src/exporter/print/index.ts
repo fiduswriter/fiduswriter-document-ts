@@ -48,7 +48,7 @@ export class PrintExporter extends HTMLExporter {
         this.docContent = removeHidden(this.doc.content) as FidusNode
 
         this.styleSheets = [
-            {url: staticUrl("css/editor/document.css")},
+            {url: staticUrl("css/document/document.css")},
             {
                 contents: `a.footnote, a.affiliation {
                     -adapt-template: url(data:application/xml,${encodeURI(
