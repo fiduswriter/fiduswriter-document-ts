@@ -15,8 +15,8 @@ import {htmlExportTemplate} from "./templates.js"
  Exporter to HTML
 */
 
-// The open-license (SIL OFL) Libertinus Serif/Mono fallback fonts bundled
-// with @fiduswriter/document. css/document.css references them through
+// The open-license (SIL OFL) Libertinus Serif + JetBrains Mono fallback fonts
+// bundled with @fiduswriter/document. css/document.css references them through
 // relative @font-face url()s (fonts/...), so they are shipped in the export
 // next to the stylesheet under css/fonts/ to keep the fallback self-contained.
 const FALLBACK_FONTS = [
@@ -24,7 +24,8 @@ const FALLBACK_FONTS = [
     "LibertinusSerif-Bold.ttf",
     "LibertinusSerif-Italic.ttf",
     "LibertinusSerif-BoldItalic.ttf",
-    "LibertinusMono-Regular.ttf"
+    "JetBrainsMono-Regular.ttf",
+    "JetBrainsMono-Bold.ttf"
 ]
 
 export class HTMLExporter {

@@ -1,12 +1,13 @@
 /* document.css — base styles for Fidus Writer HTML/EPUB/print exports */
 
-/* ── Fallback fonts (Libertinus, SIL OFL) ────────────────────────────────── */
+/* ── Fallback fonts (Libertinus Serif + JetBrains Mono, SIL OFL) ────────── */
 
-/* The Libertinus Serif/Mono TTFs are bundled with @fiduswriter/document. The
-   url() paths are relative to this stylesheet: they resolve against
-   css/document/fonts/ when this file is served as static/css/document/document.css
-   and against css/fonts/ when it is embedded as css/document.css inside an
-   HTML/EPUB export (the exporter adds the font files to the zip alongside it). */
+/* The Libertinus Serif and JetBrains Mono TTFs are bundled with
+   @fiduswriter/document. The url() paths are relative to this stylesheet:
+   they resolve against css/document/fonts/ when this file is served as
+   static/css/document/document.css and against css/fonts/ when it is embedded
+   as css/document.css inside an HTML/EPUB export (the exporter adds the font
+   files to the zip alongside it). */
 
 @font-face {
     font-family: "Libertinus Serif";
@@ -37,10 +38,17 @@
 }
 
 @font-face {
-    font-family: "Libertinus Mono";
+    font-family: "JetBrains Mono";
     font-style: normal;
     font-weight: 400;
-    src: url(fonts/LibertinusMono-Regular.ttf) format("truetype");
+    src: url(fonts/JetBrainsMono-Regular.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "JetBrains Mono";
+    font-style: normal;
+    font-weight: 700;
+    src: url(fonts/JetBrainsMono-Bold.ttf) format("truetype");
 }
 
 /* ── Reset & base ──────────────────────────────────────────────────────────── */
@@ -130,8 +138,7 @@ sub {
 }
 
 code {
-    font-family:
-        "Libertinus Mono", "JetBrains Mono", "DejaVu Sans Mono", monospace;
+    font-family: "JetBrains Mono", "DejaVu Sans Mono", monospace;
     font-size: 0.88em;
     background: #f4f4f4;
     padding: 0.1em 0.3em;
@@ -202,8 +209,7 @@ div.figure-equation {
 /* ── Code blocks ───────────────────────────────────────────────────────────── */
 
 pre {
-    font-family:
-        "Libertinus Mono", "JetBrains Mono", "DejaVu Sans Mono", monospace;
+    font-family: "JetBrains Mono", "DejaVu Sans Mono", monospace;
     font-size: 0.88em;
     background: #f4f4f4;
     border: 1px solid #e0e0e0;
