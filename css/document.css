@@ -181,6 +181,11 @@ a.reference {
     /* Invisible inline anchor for cross-references. */
 }
 
+span.anchor {
+    text-decoration: underline;
+    color: var(--cs-4-text);
+}
+
 /* ── Equations ─────────────────────────────────────────────────────────────── */
 
 span.equation {
@@ -298,6 +303,7 @@ table {
     margin: 1.5em 0;
     width: 100%;
     font-size: 0.95em;
+    clear: both;
 }
 
 caption {
@@ -368,14 +374,39 @@ th {
     margin-bottom: 0.5em;
 }
 
-.table-of-contents h2,
-.table-of-contents h3,
-.table-of-contents h4,
-.table-of-contents h5,
-.table-of-contents h6 {
-    font-size: 1rem;
+.doc .table-of-contents h1,
+.doc .table-of-contents h2,
+.doc .table-of-contents h3,
+.doc .table-of-contents h4,
+.doc .table-of-contents h5,
+.doc .table-of-contents h6 {
+    font-size: 1em;
     font-weight: normal;
-    margin: 0.2em 0 0.2em 1.5em;
+    margin-bottom: unset;
+}
+
+.doc .table-of-contents h2 {
+    padding-left: 1em;
+}
+
+.doc .table-of-contents h3 {
+    padding-left: 2em;
+}
+
+.doc .table-of-contents h4 {
+    padding-left: 3em;
+}
+
+.doc .table-of-contents h5 {
+    padding-left: 4em;
+}
+
+.doc .table-of-contents h6 {
+    padding-left: 5em;
+}
+
+.doc .table-of-contents h1.toc {
+    font-style: italic;
 }
 
 .table-of-contents a {
@@ -541,6 +572,22 @@ aside.footnote p {
 
 .csl-right-inline {
     padding-left: 20px;
+}
+
+/* Ensure inline code marks stay inline even with higher specificity selectors */
+
+/* Cover all block-level elements that can contain inline content */
+
+.user-contents p code,
+.user-contents h1 code,
+.user-contents h2 code,
+.user-contents h3 code,
+.user-contents h4 code,
+.user-contents h5 code,
+.user-contents h6 code,
+.user-contents figcaption code,
+.user-contents caption code {
+    display: inline;
 }
 
 /* ── Separator ──────────────────────────────────────────────────────────────── */
