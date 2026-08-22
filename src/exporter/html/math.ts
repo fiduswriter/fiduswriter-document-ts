@@ -75,16 +75,25 @@ export function ensureMathJax(): Promise<void> {
                 await import("mathjax-full/js/handlers/html.js")
             )
             let adaptor: MathJaxAdaptor
-            if (typeof document === "undefined") {
-                const {liteAdaptor} = cjsExport(
-                    await import("mathjax-full/js/adaptors/liteAdaptor.js")
-                )
-                adaptor = liteAdaptor()
-            } else {
+            // Use the browser DOM adaptor only when we actually run in a real
+            // browser. Node and Node-like environments (the CLI sets up a
+            // happy-dom `window`/`document`, which is not a full browser DOM)
+            // must use the lightweight adaptor, otherwise MathJax's handler
+            // registration fails and every formula falls back to MathML.
+            const isBrowserDocument =
+                typeof document !== "undefined" &&
+                typeof globalThis.Document !== "undefined" &&
+                document instanceof globalThis.Document
+            if (isBrowserDocument) {
                 const {browserAdaptor} = cjsExport(
                     await import("mathjax-full/js/adaptors/browserAdaptor.js")
                 )
                 adaptor = browserAdaptor()
+            } else {
+                const {liteAdaptor} = cjsExport(
+                    await import("mathjax-full/js/adaptors/liteAdaptor.js")
+                )
+                adaptor = liteAdaptor()
             }
             RegisterHTMLHandler(adaptor)
             const tex = new TeX({packages: AllPackages})
