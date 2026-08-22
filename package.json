@@ -178,7 +178,7 @@
     "downloadjs": "^1.4.7",
     "fast-deep-equal": "^3.1.3",
     "fast-xml-parser": "^5.9.3",
-    "fwtoolkit": "^0.2.14",
+    "fwtoolkit": "^0.2.17",
     "jszip": "^3.10.1",
     "mathjax-full": "^3.2.2",
     "mathlive": "^0.110.0",

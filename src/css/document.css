@@ -312,6 +312,11 @@ th {
     font-size: 0.85em;
 }
 
+/* In HTML-based exporters */
+div.doc-tags > span.tag + span.tag:before {
+    content: "; ";
+}
+
 /* ── Back matter ────────────────────────────────────────────────────────────── */
 
 #back {
