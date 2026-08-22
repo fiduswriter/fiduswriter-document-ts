@@ -36,7 +36,7 @@ interface SvgMathResult {
 
 type MathConvert = (latex: string, display: boolean) => string
 
-type MathJaxAdaptor = import("mathjax-full/js/core/DOMAdaptor.js").DOMAdaptor<
+type MathJaxAdaptor = import("@mathjax/src/js/core/DOMAdaptor.js").DOMAdaptor<
     unknown,
     unknown,
     unknown
@@ -46,11 +46,11 @@ let mathReady: Promise<void> | null = null
 let mathConvert: MathConvert | null = null
 
 /**
- * `mathjax-full` is CommonJS. Native ESM (Node) and the Jest ESM loader expose
- * the named exports declared in the .d.ts, but bundlers that code-split dynamic
- * imports (esbuild with `splitting: true`, rspack) emit the CJS module as a
- * separate chunk whose only export is the `module.exports` object under
- * `default`. Reading through `.default` first works in every case.
+ * `@mathjax/src` ships both ESM and CJS builds. Native ESM (Node) and the Jest
+ * ESM loader expose the named exports directly, but bundlers that code-split
+ * dynamic imports (esbuild with `splitting: true`, rspack) may emit a module
+ * whose only export is under `default`. Reading through `.default` first works
+ * in every case.
  */
 function cjsExport<T>(mod: T & {default?: T}): T {
     return mod.default ?? (mod as T)
@@ -60,19 +60,16 @@ function cjsExport<T>(mod: T & {default?: T}): T {
 export function ensureMathJax(): Promise<void> {
     if (!mathReady) {
         mathReady = (async () => {
-            const [mathjaxMod, texMod, svgMod, allPackagesMod] =
-                await Promise.all([
-                    import("mathjax-full/js/mathjax.js"),
-                    import("mathjax-full/js/input/tex.js"),
-                    import("mathjax-full/js/output/svg.js"),
-                    import("mathjax-full/js/input/tex/AllPackages.js")
-                ])
+            const [mathjaxMod, texMod, svgMod] = await Promise.all([
+                import("@mathjax/src/js/mathjax.js"),
+                import("@mathjax/src/js/input/tex.js"),
+                import("@mathjax/src/js/output/svg.js")
+            ])
             const {mathjax} = cjsExport(mathjaxMod)
             const {TeX} = cjsExport(texMod)
             const {SVG} = cjsExport(svgMod)
-            const {AllPackages} = cjsExport(allPackagesMod)
             const {RegisterHTMLHandler} = cjsExport(
-                await import("mathjax-full/js/handlers/html.js")
+                await import("@mathjax/src/js/handlers/html.js")
             )
             let adaptor: MathJaxAdaptor
             // Use the browser DOM adaptor only when we actually run in a real
@@ -86,17 +83,21 @@ export function ensureMathJax(): Promise<void> {
                 document instanceof globalThis.Document
             if (isBrowserDocument) {
                 const {browserAdaptor} = cjsExport(
-                    await import("mathjax-full/js/adaptors/browserAdaptor.js")
+                    await import(
+                        "@mathjax/src/js/adaptors/browserAdaptor.js"
+                    )
                 )
                 adaptor = browserAdaptor()
             } else {
                 const {liteAdaptor} = cjsExport(
-                    await import("mathjax-full/js/adaptors/liteAdaptor.js")
+                    await import("@mathjax/src/js/adaptors/liteAdaptor.js")
                 )
                 adaptor = liteAdaptor()
             }
             RegisterHTMLHandler(adaptor)
-            const tex = new TeX({packages: AllPackages})
+            // MathJax 4 loads TeX extension packages on demand via its built-in
+            // autoload support; no AllPackages list needs to be passed.
+            const tex = new TeX()
             const svg = new SVG({fontCache: "none"})
             const html = mathjax.document("", {InputJax: tex, OutputJax: svg})
             mathConvert = (latex, display) => {
