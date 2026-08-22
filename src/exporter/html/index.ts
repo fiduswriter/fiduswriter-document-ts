@@ -125,7 +125,11 @@ export class HTMLExporter {
         const {html, imageIds, metaData, extraStyleSheets} =
             await this.converter.init()
         this.metaData = metaData
-        if (this.converter.features.math) {
+        if (this.converter.features.math && this.converter.mathOutput !== "svg") {
+            // Only MathML output needs the MathLive styles/fonts bundle; SVG
+            // equations are self-contained data-URI images. Skipping the zip in
+            // SVG mode avoids an otherwise-unnecessary (and possibly failing)
+            // fetch of mathlive_style.zip.
             this.includeZips.push({
                 directory: "css",
                 url: staticUrl("zip/mathlive_style.zip")
