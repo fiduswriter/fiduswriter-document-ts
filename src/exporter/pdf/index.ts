@@ -31,6 +31,16 @@ export interface PdfExporterOptions {
     /** Print-production options (crop marks, trim/bleed boxes, link borders,
         SVG rasterization). */
     printOptions?: PrintOptions
+    /**
+     * Place display (centered) figures as CSS page floats (moved to the top
+     * of the page). Injected as overridable default CSS. Default: true.
+     */
+    figurePageFloats?: boolean
+    /**
+     * Place tables as CSS page floats (moved to the top of the page).
+     * Injected as overridable default CSS. Default: true.
+     */
+    tablePageFloats?: boolean
 }
 
 /**
@@ -66,7 +76,11 @@ export class PdfExporter extends PrintExporter {
             csl,
             updated,
             documentStyles,
-            progressCallback
+            progressCallback,
+            {
+                figurePageFloats: options.figurePageFloats,
+                tablePageFloats: options.tablePageFloats
+            }
         )
         this.options = options
     }

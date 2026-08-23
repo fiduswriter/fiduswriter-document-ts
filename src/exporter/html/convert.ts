@@ -1043,21 +1043,31 @@ export class HTMLExporterConvert {
                 data-category="${tableCategory}"
             >`
                 end = "</table>" + end
-                if (tableCategory !== "none") {
-                    if (!this.categoryCounter[tableCategory]) {
-                        this.categoryCounter[tableCategory] = 0
-                    }
-                    const catCount = ++this.categoryCounter[tableCategory]
-                    const catLabel = `${getCat(tableCategory, this.docSettings.language || "en-US")} ${catCount}`
-                    start += `<label>${escapeText(catLabel)}</label>`
-                }
                 const tableContent = node.content || []
                 const caption =
                     attrs.caption && tableContent.length
                         ? tableContent[0].content || []
                         : []
-                if (caption.length) {
-                    start += `<caption><p>${caption.map((child: FidusNode) => this.walkJson(child)).join("")}</p></caption>`
+                if (tableCategory !== "none" || caption.length) {
+                    // The category label is placed inside <caption> so that it
+                    // renders on the same line as the caption text (see
+                    // document.css). A <label> directly inside <table> would
+                    // be invalid HTML and get moved in front of the table by
+                    // the HTML parser.
+                    let tableCaption = "<caption>"
+                    if (tableCategory !== "none") {
+                        if (!this.categoryCounter[tableCategory]) {
+                            this.categoryCounter[tableCategory] = 0
+                        }
+                        const catCount = ++this.categoryCounter[tableCategory]
+                        const catLabel = `${getCat(tableCategory, this.docSettings.language || "en-US")} ${catCount}`
+                        tableCaption += `<label>${escapeText(catLabel)}</label>`
+                    }
+                    if (caption.length) {
+                        tableCaption += `<p>${caption.map((child: FidusNode) => this.walkJson(child)).join("")}</p>`
+                    }
+                    tableCaption += "</caption>"
+                    start += tableCaption
                 }
                 start += "<tbody>"
                 end = "</tbody>" + end

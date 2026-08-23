@@ -206,6 +206,13 @@ div.figure-equation {
     overflow-x: auto;
 }
 
+/* The equation image/SVG must be inline-level so that the text-align above
+   can center it (img defaults to display: block further down). */
+div.figure-equation img,
+div.figure-equation svg {
+    display: inline-block;
+}
+
 /* ── Code blocks ───────────────────────────────────────────────────────────── */
 
 pre {
@@ -252,6 +259,21 @@ figcaption {
 figcaption label {
     font-weight: bold;
     margin-right: 0.4em;
+}
+
+/* Category label ("Figure 1") and caption text share a single line: the
+   caption paragraph is inline, and a colon separator is generated only when
+   a description actually follows the label (i.e. the label is not the last
+   child of figcaption/caption). */
+figcaption p,
+caption p {
+    display: inline;
+    margin: 0;
+}
+
+figcaption label:not(:last-child)::after,
+caption label:not(:last-child)::after {
+    content: ": ";
 }
 
 figure footer.copyright {
