@@ -21,6 +21,12 @@
  *   references), so the SVG is fully self-contained and survives both the
  *   browser and the vivliostyle-pdf SVG path (svg4pdf-lib) without external
  *   font or `<defs>/<use>` resolution.
+ * - Inline line-breaking is disabled (`linebreaks: {inline: false}`). With
+ *   MathJax 4's default, formulas containing operators are emitted as several
+ *   `<svg>` chunks separated by `<mjx-break>` elements — that markup cannot be
+ *   embedded in a single `<img>` data URI. As a safety net, `latexToSvg`
+ *   extracts exactly one root `<svg>` and falls back to MathML if MathJax
+ *   still produced a multi-part formula.
  */
 
 interface SvgMathResult {
@@ -98,7 +104,13 @@ export function ensureMathJax(): Promise<void> {
             // MathJax 4 loads TeX extension packages on demand via its built-in
             // autoload support; no AllPackages list needs to be passed.
             const tex = new TeX()
-            const svg = new SVG({fontCache: "none"})
+            // Inline line-breaking must be disabled: with MathJax 4's default
+            // (linebreaks.inline: true), formulas containing operators are
+            // split into MULTIPLE <svg> chunks joined by <mjx-break> elements.
+            // That output cannot be embedded in a single <img> data URI
+            // (multi-root SVG is invalid as an image), so we need MathJax to
+            // emit exactly one self-contained <svg> per formula.
+            const svg = new SVG({fontCache: "none", linebreaks: {inline: false}})
             const html = mathjax.document("", {InputJax: tex, OutputJax: svg})
             mathConvert = (latex, display) => {
                 const node = html.convert(latex, {display})
@@ -123,9 +135,10 @@ export function ensureMathJax(): Promise<void> {
  * Convert a LaTeX formula to an SVG `<img>` data URI sized in `em`.
  *
  * Must only be called after `ensureMathJax()` has resolved. Returns `null`
- * when MathJax is not initialised yet or the LaTeX could not be converted
- * (MathJax marks parse errors with `data-mml-node="merror"`); callers then
- * fall back to MathML output.
+ * when MathJax is not initialised yet, the LaTeX could not be converted
+ * (MathJax marks parse errors with `data-mml-node="merror"`), or MathJax
+ * unexpectedly produced a multi-part formula; callers then fall back to
+ * MathML output.
  */
 export function latexToSvg(
     latex: string,
@@ -134,11 +147,29 @@ export function latexToSvg(
     if (!mathConvert) {
         return null
     }
-    const svg = mathConvert(latex, display)
+    const svgMarkup = mathConvert(latex, display)
     // MathJax renders unparseable LaTeX as an error element rather than
     // throwing (throwOnError is not configurable in this version), so detect
     // that and let the caller fall back to MathML.
-    if (svg.includes('data-mml-node="merror"')) {
+    if (svgMarkup.includes('data-mml-node="merror"')) {
+        return null
+    }
+    // Extract exactly one root <svg> element. MathJax never nests <svg>
+    // elements (glyphs are inline <path> data), so the first "<svg …>…</svg>"
+    // span is the whole formula. Anything beyond it (e.g. the multi-<svg>
+    // chunks joined by <mjx-break> markers that MathJax 4 emits when inline
+    // line-breaking is enabled) cannot be embedded in a single <img> data
+    // URI, so fall back to MathML instead of producing a broken image.
+    const svgMatch = svgMarkup.match(/<svg[\s\S]*?<\/svg>/)
+    if (!svgMatch) {
+        return null
+    }
+    const svg = svgMatch[0]
+    const remainder = svgMarkup.slice(svgMatch.index! + svg.length)
+    if (svgMarkup.includes("<mjx-break") || remainder.includes("<svg")) {
+        console.warn(
+            "latexToSvg: MathJax produced a multi-part formula; falling back to MathML."
+        )
         return null
     }
     const viewBoxMatch = svg.match(/viewBox="([0-9.]+(?:[,\s][-0-9.]+){3})"/)
