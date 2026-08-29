@@ -13,8 +13,26 @@ export type ProgressCallback = (
     percentage?: number | null
 ) => void
 
+export interface PrintExporterOptions {
+    /**
+     * Place display figures as CSS page floats (moved to the top of the
+     * page). Only applies to centered figures — side-aligned figures
+     * (aligned-left/aligned-right) keep their regular inline float
+     * behaviour. Injected as low-specificity default CSS that the document
+     * style stylesheet (loaded later) can override. Default: true.
+     */
+    figurePageFloats?: boolean
+    /**
+     * Place tables as CSS page floats (moved to the top of the page).
+     * Injected as low-specificity default CSS that the document style
+     * stylesheet (loaded later) can override. Default: true.
+     */
+    tablePageFloats?: boolean
+}
+
 export class PrintExporter extends HTMLExporter {
     progressCallback?: ProgressCallback
+    options: PrintExporterOptions
 
     constructor(
         doc: ExportDoc,
@@ -27,12 +45,18 @@ export class PrintExporter extends HTMLExporter {
             contents: string
             documentstylefile_set: Array<[string, string]>
         }>,
-        progressCallback?: ProgressCallback
+        progressCallback?: ProgressCallback,
+        options: PrintExporterOptions = {}
     ) {
         super(doc, bibDB, imageDB, csl, updated, documentStyles, {
             relativeUrls: false
         })
         this.progressCallback = progressCallback
+        this.options = {
+            figurePageFloats: true,
+            tablePageFloats: true,
+            ...options
+        }
     }
 
     /**
@@ -48,7 +72,7 @@ export class PrintExporter extends HTMLExporter {
         this.docContent = removeHidden(this.doc.content) as FidusNode
 
         this.styleSheets = [
-            {url: staticUrl("css/editor/document.css")},
+            {url: staticUrl("css/document/document.css")},
             {
                 contents: `a.footnote, a.affiliation {
                     -adapt-template: url(data:application/xml,${encodeURI(
@@ -113,6 +137,30 @@ export class PrintExporter extends HTMLExporter {
                 }
                 span.deletion, [data-track="deletion"] {
                 	text-decoration: line-through;
+                }
+                ${
+                    this.options.figurePageFloats
+                        ? `/* Default: display (centered) figures become page floats,
+                   moved to the top of the page. Side-aligned figures keep
+                   their regular float. These are intentionally low-specificity
+                   defaults: the document style stylesheet is loaded after
+                   this sheet and can freely override them (e.g. to implement
+                   a more elaborate float scheme). */
+                figure[data-aligned="center"] {
+                    float-reference: page;
+                    float: top;
+                }`
+                        : ""
+                }
+                ${
+                    this.options.tablePageFloats
+                        ? `/* Default: tables become page floats, moved to the top of
+                   the page. Overridable by the document style stylesheet. */
+                table {
+                    float-reference: page;
+                    float: top;
+                }`
+                        : ""
                 }
                 body {
                     background-color: white;

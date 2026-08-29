@@ -42,6 +42,10 @@ await build({
         ".png": "file",
         ".svg": "file",
         ".woff2": "file",
+        // citeproc-plus ships compressed locale data as .gz assets that are
+        // imported from its dist JS. Copy them as files so the browser demo
+        // can load them at runtime.
+        ".gz": "file",
         ".csljson": "json"
     },
     define: {

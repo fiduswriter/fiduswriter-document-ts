@@ -15,6 +15,19 @@ import {htmlExportTemplate} from "./templates.js"
  Exporter to HTML
 */
 
+// The open-license (SIL OFL) Libertinus Serif + JetBrains Mono fallback fonts
+// bundled with @fiduswriter/document. css/document.css references them through
+// relative @font-face url()s (fonts/...), so they are shipped in the export
+// next to the stylesheet under css/fonts/ to keep the fallback self-contained.
+const FALLBACK_FONTS = [
+    "LibertinusSerif-Regular.ttf",
+    "LibertinusSerif-Bold.ttf",
+    "LibertinusSerif-Italic.ttf",
+    "LibertinusSerif-BoldItalic.ttf",
+    "JetBrainsMono-Regular.ttf",
+    "JetBrainsMono-Bold.ttf"
+]
+
 export class HTMLExporter {
     doc: ExportDoc
     bibDB: BibDB
@@ -85,7 +98,7 @@ export class HTMLExporter {
         // * a filename and contents - which means they will be included as a separate file
         // * only contents - which means they will be incldued inside <style></style> tags in the document header
         // * only filename - which means they will be referenced as a separate file. You need to add the file yourself.
-        this.styleSheets = [{url: staticUrl("css/editor/document.css")}]
+        this.styleSheets = [{url: staticUrl("css/document/document.css")}]
     }
 
     async init(): Promise<void> {
@@ -125,7 +138,11 @@ export class HTMLExporter {
         const {html, imageIds, metaData, extraStyleSheets} =
             await this.converter.init()
         this.metaData = metaData
-        if (this.converter.features.math) {
+        if (this.converter.features.math && this.converter.mathOutput !== "svg") {
+            // Only MathML output needs the MathLive styles/fonts bundle; SVG
+            // equations are self-contained data-URI images. Skipping the zip in
+            // SVG mode avoids an otherwise-unnecessary (and possibly failing)
+            // fetch of mathlive_style.zip.
             this.includeZips.push({
                 directory: "css",
                 url: staticUrl("zip/mathlive_style.zip")
@@ -133,6 +150,7 @@ export class HTMLExporter {
         }
         await this.addDoc(html)
         this.addImages(imageIds)
+        this.addFallbackFonts()
         await Promise.all(
             extraStyleSheets.map(
                 async (sheet: {filename?: string | null; contents?: string}) =>
@@ -188,6 +206,15 @@ export class HTMLExporter {
                     url: imageValue as string
                 })
             }
+        })
+    }
+
+    addFallbackFonts(): void {
+        FALLBACK_FONTS.forEach(filename => {
+            this.httpFiles.push({
+                filename: `css/fonts/${filename}`,
+                url: staticUrl(`css/document/fonts/${filename}`)
+            })
         })
     }
 

@@ -20,11 +20,11 @@ cp -r "$ROOT/dist" "$BUILD_DIR/"
 echo "Bundling demos..."
 PAGES_BUILD_DIR="$BUILD_DIR" node "$ROOT/scripts/build-demo.js"
 
-# Copy fwtoolkit CSS and the document export stylesheet so the demo has
-# consistent styling without a CDN.
+# Copy fwtoolkit CSS and the document export stylesheet (with its bundled
+# Libertinus fallback fonts) so the demo has consistent styling without a CDN.
 mkdir -p "$BUILD_DIR/css"
 cp "$ROOT/node_modules/fwtoolkit/css/fwtoolkit.css" "$BUILD_DIR/css/"
-cp "$ROOT/src/css/document.css" "$BUILD_DIR/css/"
+cp -r "$ROOT/css/." "$BUILD_DIR/css/document/"
 
 # Remove TypeScript sources and declaration/source-map files from the pages build.
 find "$BUILD_DIR" -name "*.ts" -delete

@@ -33,11 +33,13 @@ export class EpubExporter extends HTMLExporter {
             contents: string
             documentstylefile_set: Array<[string, string]>
         }>,
+        converterOptions: Record<string, unknown> = {},
         progressCallback?: ProgressCallback
     ) {
         super(doc, bibDB, imageDB, csl, updated, documentStyles, {
             xhtml: true,
-            epub: true
+            epub: true,
+            ...converterOptions
         })
         this.progressCallback = progressCallback
         // Overriden properties
@@ -144,7 +146,9 @@ export class EpubExporter extends HTMLExporter {
             date: timestamp.slice(0, 10),
             modified: timestamp,
             styleSheets,
-            math: this.converter.features.math,
+            math:
+                this.converter.features.math &&
+                this.converter.mathOutput !== "svg",
             images,
             fontFiles,
             copyright: this.doc.settings.copyright as

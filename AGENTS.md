@@ -62,7 +62,8 @@ Do **not** put in this repository:
 │   ├── bibliography/     # Bibliography helpers
 │   ├── transform/        # Document transforms
 │   ├── mathlive/         # MathLive re-export and OPF includes
-│   └── css/              # Document-related CSS (for EPUB/HTML exports)
+├── css/                  # Document-related CSS (for HTML/EPUB/print exports)
+│   └── fonts/            # Bundled Libertinus fallback fonts (SIL OFL)
 ├── dist/                 # Compiled JS, .d.ts and source maps (generated)
 ├── static-libs/          # Bundled MathLive CSS/fonts and zip (generated)
 ├── scripts/              # Build helpers

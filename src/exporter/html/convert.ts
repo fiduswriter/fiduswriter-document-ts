@@ -212,7 +212,11 @@ export class HTMLExporterConvert {
                 contents: await formatCss(this.citations.bibCSS)
             })
         }
-        if (this.features.math) {
+        if (this.features.math && this.mathOutput !== "svg") {
+            // The MathLive stylesheet is only needed for MathML output. When
+            // equations are rendered as SVG (`mathOutput: "svg"`) they are
+            // self-contained <img> data URIs that carry no MathLive styles, so
+            // referencing mathlive.css would only trigger an unnecessary fetch.
             this.extraStyleSheets.push({
                 filename: this.relativeUrls
                     ? "css/mathlive.css"
@@ -407,18 +411,17 @@ export class HTMLExporterConvert {
             }
         }
         const abstract = this.metaData.abstract
-        if (abstract) {
-            if (abstract.default) {
-                head += this.walkJson(abstract.default)
+        if (abstract && abstract.default) {
+            // The abstract is a `richtext_part` inside the document content and
+            // is already rendered in the body. Emitting it here as HTML put a
+            // block element inside <head>; HTML parsers move such content to the
+            // top of the body, duplicating the abstract above the title in the
+            // browser print preview and the vivliostyle-pdf output. Expose only
+            // a text-only meta description instead.
+            const abstractText = this.textWalkJson(abstract.default)
+            if (abstractText.length) {
+                head += `<meta name="description" content="${abstractText}"${this.endSlash}>`
             }
-            Object.keys(abstract)
-                .filter(language => language !== "default")
-                .forEach(language => {
-                    const abstractNode = abstract[language]
-                    if (abstractNode) {
-                        head += this.walkJson(abstractNode)
-                    }
-                })
         }
         if (this.metaData.keywords.length) {
             head += `<meta name="keywords" content="${escapeText(this.metaData.keywords.join(", "))}"${this.endSlash}>`
@@ -1040,21 +1043,31 @@ export class HTMLExporterConvert {
                 data-category="${tableCategory}"
             >`
                 end = "</table>" + end
-                if (tableCategory !== "none") {
-                    if (!this.categoryCounter[tableCategory]) {
-                        this.categoryCounter[tableCategory] = 0
-                    }
-                    const catCount = ++this.categoryCounter[tableCategory]
-                    const catLabel = `${getCat(tableCategory, this.docSettings.language || "en-US")} ${catCount}`
-                    start += `<label>${escapeText(catLabel)}</label>`
-                }
                 const tableContent = node.content || []
                 const caption =
                     attrs.caption && tableContent.length
                         ? tableContent[0].content || []
                         : []
-                if (caption.length) {
-                    start += `<caption><p>${caption.map((child: FidusNode) => this.walkJson(child)).join("")}</p></caption>`
+                if (tableCategory !== "none" || caption.length) {
+                    // The category label is placed inside <caption> so that it
+                    // renders on the same line as the caption text (see
+                    // document.css). A <label> directly inside <table> would
+                    // be invalid HTML and get moved in front of the table by
+                    // the HTML parser.
+                    let tableCaption = "<caption>"
+                    if (tableCategory !== "none") {
+                        if (!this.categoryCounter[tableCategory]) {
+                            this.categoryCounter[tableCategory] = 0
+                        }
+                        const catCount = ++this.categoryCounter[tableCategory]
+                        const catLabel = `${getCat(tableCategory, this.docSettings.language || "en-US")} ${catCount}`
+                        tableCaption += `<label>${escapeText(catLabel)}</label>`
+                    }
+                    if (caption.length) {
+                        tableCaption += `<p>${caption.map((child: FidusNode) => this.walkJson(child)).join("")}</p>`
+                    }
+                    tableCaption += "</caption>"
+                    start += tableCaption
                 }
                 start += "<tbody>"
                 end = "</tbody>" + end
