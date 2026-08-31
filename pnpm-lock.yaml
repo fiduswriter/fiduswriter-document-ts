@@ -90,8 +90,8 @@ importers:
         specifier: ^1.41.9
         version: 1.42.1
       vivliostyle-pdf:
-        specifier: ^0.2.5
-        version: 0.2.5
+        specifier: ^0.3.0
+        version: 0.3.0
       w3c-keyname:
         specifier: 2.2.8
         version: 2.2.8
@@ -1169,6 +1169,9 @@ packages:
   '@vivliostyle/print@2.44.1':
     resolution: {integrity: sha512-tqmj1TToxm+qwkM7oY76PH3/+oO9k3UcuMKkQd0A3w9WyIxerWgdlI32Nlb1rVWQSeQFYhAujq9EU/Bvfs5FvQ==}
 
+  '@vivliostyle/print@2.45.0':
+    resolution: {integrity: sha512-GB/SfUrL70LoMkOrryHdG5ykujoER2vnjf9/DDYnqtdlRU6n10yPIrmgJCQYJH1yuQlpRgj1uWQ3Y1iF1YouiA==}
+
   '@xml-tools/parser@1.0.11':
     resolution: {integrity: sha512-aKqQ077XnR+oQtHJlrAflaZaL7qZsulWc/i/ZEooar5JiWj1eLt0+Wg28cpa+XLney107wXqneC+oG1IZvxkTA==}
 
@@ -2092,6 +2095,9 @@ packages:
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
 
+  pages-to-pdf@0.3.5:
+    resolution: {integrity: sha512-tllwHsvO00SivdmoTLxqeV8v4J+RIR75j+vEJaBSAEt/zPwGXKQ2bsPyhSXACBOkcKfraSN15SpU5ZtrSIZGLg==}
+
   pako@0.2.9:
     resolution: {integrity: sha512-NUcwaKxUxWrZLpDG+z/xZaCgQITkA/Dv4V/T6bw7VON6l1Xz/VnrBqrYjZQ12TamKHzITTfOEIYUj48y2KXImA==}
 
@@ -2448,8 +2454,8 @@ packages:
     resolution: {integrity: sha512-kiGUalWN+rgBJ/1OHZsBtU4rXZOfj/7rKQxULKlIzwzQSvMJUUNgPwJEEh7gU6xEVxC0ahoOBvN2YI8GH6FNgA==}
     engines: {node: '>=10.12.0'}
 
-  vivliostyle-pdf@0.2.5:
-    resolution: {integrity: sha512-YG01UpDp4T9OLAQQroyPcoWxi5YhYz/imHmzpRcDF8BSf9CvC7Ot6+JJKEJbNd0gUUq3Cfqc1mR0PtukuF5wXQ==}
+  vivliostyle-pdf@0.3.0:
+    resolution: {integrity: sha512-T8ujJn25OO+trvyFX489SpK5SXwVdupks2cggNqgu/wDwAIOiL0N11FB43GPW34PZ30ych25W3t/UjU4TpTZlQ==}
 
   w3c-keyname@2.2.8:
     resolution: {integrity: sha512-dpojBhNsCNN7T82Tm7k26A6G9ML3NkhDsnw9n/eoxSRlVBB4CEtIQ/KTCLI2Fwf3ataSXRhYFkQi3SlnFwPvPQ==}
@@ -3512,6 +3518,8 @@ snapshots:
     optional: true
 
   '@vivliostyle/print@2.44.1': {}
+
+  '@vivliostyle/print@2.45.0': {}
 
   '@xml-tools/parser@1.0.11':
     dependencies:
@@ -4626,6 +4634,14 @@ snapshots:
 
   package-json-from-dist@1.0.1: {}
 
+  pages-to-pdf@0.3.5:
+    dependencies:
+      '@mathjax/src': 4.1.3
+      '@pdfme/pdf-lib': 6.1.12
+      fonteditor-core: 2.6.3
+      fontkit: 2.0.4
+      svg4pdf-lib: 0.1.2(@pdfme/pdf-lib@6.1.12)
+
   pako@0.2.9: {}
 
   pako@1.0.11: {}
@@ -5019,13 +5035,10 @@ snapshots:
       '@types/istanbul-lib-coverage': 2.0.6
       convert-source-map: 2.0.0
 
-  vivliostyle-pdf@0.2.5:
+  vivliostyle-pdf@0.3.0:
     dependencies:
-      '@pdfme/pdf-lib': 6.1.12
-      '@vivliostyle/print': 2.44.1
-      fonteditor-core: 2.6.3
-      fontkit: 2.0.4
-      svg4pdf-lib: 0.1.2(@pdfme/pdf-lib@6.1.12)
+      '@vivliostyle/print': 2.45.0
+      pages-to-pdf: 0.3.5
 
   w3c-keyname@2.2.8: {}
 
