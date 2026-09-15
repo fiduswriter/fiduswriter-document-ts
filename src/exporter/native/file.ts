@@ -1,9 +1,9 @@
-import download from "downloadjs"
 import {shortFileTitle, gettext} from "fwtoolkit"
 
 import {ShrinkFidus} from "./shrink.js"
 import {ZipFidus} from "./zip.js"
 import {createSlug} from "../tools/file.js"
+import {saveFile} from "../save.js"
 import type {ShrinkDoc} from "./shrink.js"
 
 import type {BibDB, ExportDoc, ImageDB, TemplateFiles} from "../../types.js"
@@ -85,9 +85,13 @@ export class ExportFidusFile {
             })
     }
 
-    download(blob: Blob): void | Promise<void> {
+    download(blob: Blob): Promise<boolean> {
         const title: string = shortFileTitle(this.doc.title, this.doc.path || "") || "untitled"
         const filename = `${createSlug(title)}.fidus`
-        return download(blob, filename, "application/vnd.fiduswriter+zip")
+        return saveFile(blob, filename, {
+            description: "Fidus Writer document",
+            mimeType: "application/vnd.fiduswriter+zip",
+            extensions: [".fidus"]
+        })
     }
 }
