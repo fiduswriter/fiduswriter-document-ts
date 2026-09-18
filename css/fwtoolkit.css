@@ -1,0 +1,3075 @@
+/* === colors.css === */
+:root {
+    --main-text-color: #2c2723;
+    --main-background-color: #f2f2f2;
+    --overlay-color: 170 170 170 / 0.3;
+    --input-focus-background-color: #fbf9d2;
+    --input-background-color: #ffffff;
+    --input-border-color: #c8c8c8;
+    --input-dialog-border-color: #e0e0e0;
+    --select-background-color: #f3f3f3;
+    --wait-active-background-color: 240 240 240 / 0.7;
+    --wait-active-full-background-color: 240 240 240 / 1;
+    --alert-box-shadow-color: 240 240 240 / 1;
+    --dropup-box-shadow-color: 0 0 0 / 0.11;
+    --tooltip-background-color: 38 38 38 / 0.6;
+    --info-text-color: #ffffff;
+    --info-background-color: 36 113 176 / 0.8;
+    --success-text-color: #ffffff;
+    --success-background-color: 109 164 147 / 0.8;
+    --warning-text-color: #ffffff;
+    --warning-background-color: 221 208 63 / 0.8;
+    --warning-border-color: 200 63 27 / 0.8;
+    --error-border-color: #af3515;
+    --error-background-color: #cc3f1a;
+    --error-text-color: #ffffff;
+    --pulldown-header-text-color: #ffffff;
+    --pulldown-header-background-color: #2c2723;
+    --pulldown-separator-color: #f2f2f2;
+    --pulldown-box-shadow-color: 0 0 0 / 0.2;
+    --menu-cursor-border-color: #63ab0d;
+
+    /* tabs */
+    --tabs-border-color: #e0e0e0;
+    --tabs-text-inactive: #888888;
+    --tabs-text-active: #333333;
+    --tabs-indicator-color: #42a061;
+
+    /* Color Schemes (CS) */
+
+    /* red text */
+    --cs-1-text: #b73717;
+    --cs-1-icon: #a7321f;
+    --cs-1-hover: #2c2723;
+
+    /* white on blue */
+    --cs-2-background-from: #0d78be;
+    --cs-2-background-to: #0d63ab;
+    --cs-2-background: #0d78be; /* flat */
+    --cs-2-border: #0557a1;
+    --cs-2-background-hover: #0d63ab;
+    --cs-2-background-selected: #63ab0d;
+    --cs-2-box-shadow: #3c9fdf;
+    --cs-2-text: #ffffff;
+
+    /* white on orange */
+    --cs-3-text: #ffffff;
+    --cs-3-background-from: #d3421c;
+    --cs-3-background-to: #b13615;
+    --cs-3-background-hover: #b13615;
+    --cs-3-border: #7d331f;
+
+    /* light green text */
+    --cs-4-text: #4c6860;
+
+    /* white on light green */
+    --cs-5-background: #4c6860;
+    --cs-5-text: #ffffff;
+    --cs-5-border: #f2f2f2;
+    --cs-5-background-hover: #97cdbe;
+
+    /* white on dark green */
+    --cs-6-text: #ffffff;
+    --cs-6-background: #5a7e73;
+    --cs-6-border: #7d948e;
+    --cs-6-background-focus: #8ab5a6;
+    --cs-6-background-hover: #96c6b8;
+
+    /* white on dark */
+    --cs-dark-text: #ffffff;
+    --cs-dark-hover: #e0e0e0;
+    --cs-dark-border: #4f4d4f;
+    --cs-dark-background-hover: #585858;
+    --cs-dark-background: #585858; /* flat */
+    --cs-dark-background-from: #6a6a6a;
+    --cs-dark-background-to: #585858;
+    --cs-dark-box-shadow: #7f7f7f;
+
+    /* dark on white-ish background */
+    --cs-light-text: #2c2723;
+    --cs-light-hover: #000000;
+    --cs-light-text-secondary: #6e6e6e;
+    --cs-light-border: #e0e0e0;
+    --cs-light-background: #f9f9f9;
+    --cs-light-background-hover: #e0e0e0;
+    --cs-light-box-shadow: #9e9e9e;
+
+    /* black on white */
+    --cs-white-text: #000000;
+    --cs-white-hover: #000000;
+    --cs-white-focus: #000000;
+    --cs-white-selected: #000000;
+    --cs-white-border: #cccccc;
+    --cs-white-header-border: #888888;
+    --cs-white-text-secondary: #727272;
+    --cs-white-placeholder-text: #cecece;
+    --cs-white-background: #ffffff;
+    --cs-white-background-hover: #cccccc;
+    --cs-white-background-focus: #cccccc;
+    --cs-white-background-selected: #dddddd;
+
+    /* disabled */
+    --cs-disabled: #a9a9a9;
+    --cs-disabled-background: #d3d3d3;
+    --cs-disabled-border: #a9a9a9;
+    --overview-checkbox-color: #000000;
+    --overview-checkbox-background-color-from: 255 255 255 / 1;
+    --overview-checkbox-background-color-to: 255 255 255 / 0;
+    --overview-checkbox-border: #a9a9a9;
+
+    /* template manager */
+
+    /* editor */
+
+    /* feedback tab */
+}
+
+/* === common.css === */
+body {
+    width: 100%;
+    height: 100%;
+    background-color: var(--main-background-color);
+    color: var(--main-text-color);
+    min-width: calc(380px - 100vw + 100%); /* to substract scrollbar width. */
+    overflow-y: hidden;
+}
+
+body.fw-scrollable {
+    overflow-y: auto;
+}
+
+.fw-header {
+    width: 100%;
+    height: auto;
+    background-color: var(--cs-5-background);
+    z-index: 2;
+}
+
+.fw-container {
+    position: relative;
+    height: auto;
+    margin: 0 auto;
+    padding: 0 34px;
+    overflow: hidden;
+}
+
+.fw-contents {
+    position: relative;
+    width: auto;
+    height: auto;
+    min-width: 985px;
+    margin: 0 213px;
+    padding: 40px 8px 20px;
+}
+
+@media (width <= 1429px) {
+    .fw-contents {
+        min-width: unset;
+        margin: 0 auto;
+        max-width: 1004px;
+    }
+}
+
+.fw-contents h1 {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 0.2em;
+}
+
+.fw-contents .fw-errorlist {
+    border: 2px solid var(--error-border-color);
+    background-color: var(--error-background-color);
+    color: var(--error-text-color);
+    margin: 10px 0;
+    display: inline-block;
+    font-size: 1.4em;
+}
+
+.fw-contents .fw-errorlist:empty {
+    display: none;
+}
+
+.fw-contents label[for="id-password1"],
+.fw-contents label[for="id-password2"] {
+    display: none;
+}
+
+.fw-contents input#id-password1,
+.fw-contents input#id-password2 {
+    margin: 10px 0;
+}
+
+table {
+    width: 100%;
+    text-align: left;
+}
+
+table .fw-inline {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    padding: 5px 0;
+}
+
+.fw-avatar {
+    border: solid 1px var(--cs-light-border);
+}
+
+.fw-string-avatar {
+    display: inline-block;
+    line-height: 1;
+    text-align: center;
+    text-transform: uppercase;
+    border-radius: 50%;
+    background-color: grey;
+    color: white;
+}
+
+.fw-string-avatar > span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.fw-string-avatar::before,
+.fw-string-avatar::after {
+    display: inline-block;
+    width: 0;
+    padding-top: 100%;
+    vertical-align: middle;
+    content: "";
+}
+
+.fw-avatar-card {
+    display: block;
+}
+
+.fw-avatar-card .fw-avatar-card-avatar .fw-avatar,
+.fw-avatar-card .fw-avatar-card-avatar .fw-string-avatar {
+    width: 56px;
+    height: 56px;
+    font-size: 23px;
+}
+
+.fw-avatar-card-avatar {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.fw-avatar-card-name {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 8px;
+    font-size: 17px;
+}
+
+.fw-avatar-card-email {
+    font-size: 13px;
+    display: block;
+    padding-top: 6px;
+    color: var(--cs-white-text-secondary);
+}
+
+.ProseMirror {
+    position: relative;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    white-space: break-spaces;
+    -webkit-font-variant-ligatures: none;
+    font-variant-ligatures: none;
+}
+
+.ProseMirror pre {
+    white-space: pre-wrap;
+}
+
+.ProseMirror span.fw-placeholder::before {
+    color: var(--cs-white-placeholder-text);
+    content: attr(data-placeholder);
+    cursor: text;
+}
+
+.ProseMirror-focused span.fw-placeholder.fw-selected {
+    display: none;
+}
+
+.ProseMirror-focused
+    .ProseMirror:not(.ProseMirror-focused)
+    span.fw-placeholder.fw-selected {
+    display: inline;
+}
+
+.fw-clearfix::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+div.fw-input {
+    box-sizing: border-box;
+    font-size: 14px;
+    line-height: 1.33em;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 11px 10px 0;
+    min-height: 38px;
+    color: var(--cs-light-text);
+    background-color: var(--cs-light-background);
+}
+
+.fw-access-key {
+    text-decoration: underline;
+    text-underline-offset: 2px; /* Adjust for better visibility */
+    pointer-events: none;
+}
+
+/* === add_remove_dialog.css === */
+.fw-ar-container {
+    display: inline-block;
+    width: 338px;
+    height: 360px;
+    background-color: var(--cs-white-background);
+    border: solid 1px var(--cs-white-border);
+    vertical-align: middle;
+    padding: 20px 14px 0;
+    overflow-y: auto;
+    margin-bottom: 16px;
+}
+
+.fw-ar-button {
+    display: inline-block;
+    margin: 0 16px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+/* === alerts.css === */
+#fw-alerts-outer-wrapper {
+    position: fixed;
+    right: 22px;
+    bottom: 10px;
+    direction: rtl;
+    column-width: 328px;
+    z-index: calc(var(--highest-dialog-z-index, 100) + 2);
+}
+
+#fw-alerts-wrapper {
+    z-index: 1600;
+    direction: ltr;
+}
+
+#fw-alerts-wrapper li {
+    display: block; /* else several of them will stack horizontally. */
+    position: relative;
+    width: 247px;
+    height: auto;
+    padding: 20px 20px 20px 60px;
+    border: none;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgb(var(--alert-box-shadow-color));
+    margin-bottom: 5px;
+    font-size: 15px;
+    line-height: 20px;
+    opacity: 1;
+    -webkit-column-break-inside: avoid;
+}
+
+#fw-alerts-wrapper li::before {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    font-size: 20px;
+    display: inline-block;
+    font-family:
+        "Font Awesome 7 Free", "Font Awesome 6 Free", "FontAwesome", monospace;
+    font-weight: 900;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: var(--fa, "");
+}
+
+#fw-alerts-wrapper .alerts-error {
+    color: var(--error-text-color);
+    background-color: var(--error-background-color);
+}
+
+#fw-alerts-wrapper .alerts-warning {
+    color: var(--warning-text-color);
+    background-color: rgb(var(--warning-background-color));
+}
+
+#fw-alerts-wrapper .alerts-info {
+    color: var(--info-text-color);
+    background-color: rgb(var(--info-background-color));
+}
+
+#fw-alerts-wrapper .alerts-success {
+    color: var(--success-text-color);
+    background-color: rgb(var(--success-background-color));
+}
+
+/* A form wasn't filled out correctly and the warning was added to the form. */
+div.fw-warning {
+    margin: 0 0 5px;
+    border: 1px solid rgb(var(--warning-border-color));
+    background-color: rgb(var(--warning-background-color));
+    padding: 6px;
+}
+
+/* === buttons.css === */
+.fw-button {
+    display: inline-block;
+    width: auto;
+    height: 34px;
+    line-height: 34px;
+    padding: 0 12px;
+    font-size: 14px;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    background: none;
+    box-shadow: none;
+    box-sizing: content-box;
+    position: relative;
+}
+
+.fw-button label {
+    cursor: pointer;
+}
+
+.fw-button:focus,
+.fw-button:active {
+    outline: 5px solid var(--cs-6-background-focus);
+}
+
+.fw-button.fw-uppercase {
+    text-transform: uppercase;
+}
+
+.fw-button.fw-large {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 10px;
+}
+
+.fw-button.fw-small {
+    height: 26px;
+    line-height: 26px;
+    padding: 0 6px;
+}
+
+.fw-button.fw-square {
+    width: 34px;
+    padding: 0;
+    text-align: center;
+}
+
+.fw-button.fw-large.fw-square {
+    width: 40px;
+}
+
+.fw-button .fw-button-icon::before {
+    line-height: 34px;
+    margin: 0;
+}
+
+.fw-button.fw-large .fw-button-icon::before {
+    line-height: 40px;
+}
+
+.fw-button.fw-small .fw-button-icon::before {
+    line-height: 26px;
+}
+
+.fw-button.fw-large.fw-dropdown {
+    padding-right: 22px;
+}
+
+.fw-button.fw-large.fw-dropdown .fa-caret-down {
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: 12px;
+}
+
+.fw-button.fw-light {
+    border-color: var(--cs-light-border);
+    background-color: var(--cs-light-background);
+    color: var(--cs-light-text);
+}
+
+.fw-button.fw-white {
+    border: 0 none;
+    background-color: var(--cs-white-background);
+    color: var(--cs-white-text);
+}
+
+.fw-button.fw-white.fw-state-active {
+    background-color: var(--cs-white-background-selected);
+    color: var(--cs-white-selected);
+}
+
+.fw-button.fw-white:not(.fw-disabled):hover {
+    background-color: var(--cs-white-background-hover);
+    color: var(--cs-white-hover);
+}
+
+.fw-button.fw-light:not(.fw-disabled):hover,
+.fw-button.fw-light.fw-state-active {
+    background-color: var(--cs-light-background-hover);
+    color: var(--cs-light-hover);
+}
+
+.fw-button.fw-green {
+    color: var(--cs-6-text);
+    border-color: var(--cs-6-border);
+    background-color: var(--cs-6-background);
+}
+
+.fw-button.fw-green:not(.fw-disabled):hover {
+    background-color: var(--cs-6-background-hover);
+}
+
+.fw-button.fw-orange {
+    color: var(--cs-3-text);
+    background: linear-gradient(
+        to bottom left,
+        var(--cs-3-background-from),
+        var(--cs-3-background-to)
+    );
+    border-color: var(--cs-3-border);
+}
+
+.fw-button.fw-orange:not(.fw-disabled):hover {
+    background: var(--cs-3-background-hover);
+}
+
+.fw-button.fw-dark {
+    color: var(--cs-dark-text);
+    background: linear-gradient(
+        to bottom left,
+        var(--cs-dark-background-from),
+        var(--cs-dark-background-to)
+    );
+    box-shadow: 0 1px 1px 0 var(--cs-dark-box-shadow) inset;
+    border-color: var(--cs-dark-border);
+}
+
+.fw-button.fw-dark:not(.fw-disabled):hover {
+    background: var(--cs-dark-background-hover);
+}
+
+.fw-button:disabled {
+    background: var(--cs-disabled-background);
+    color: var(--cs-disabled);
+    border-color: var(--cs-disabled-border);
+}
+
+.fw-button.fw-left {
+    float: left;
+}
+
+.fw-button.fw-strong {
+    font-weight: bold;
+}
+
+.fw-button.fw-em {
+    font-style: italic;
+}
+
+.fw-button.fw-smallcaps {
+    font-variant: small-caps;
+}
+
+.fw-button.fw-socialaccount {
+    display: inline-block;
+    width: auto;
+    height: 38px;
+    border-radius: 5px;
+    font-size: 15px;
+    vertical-align: top;
+    line-height: 35px;
+    padding: 0;
+    background: linear-gradient(
+        to bottom left,
+        var(--cs-2-background-from),
+        var(--cs-2-background-to)
+    );
+    box-shadow: 0 0 1px 1px var(--cs-2-box-shadow) inset;
+    border-color: var(--cs-2-border);
+    color: var(--cs-2-text);
+}
+
+.fw-button.fw-socialaccount:hover {
+    box-shadow: none;
+    background: var(--cs-2-background-hover);
+}
+
+.fw-button.fw-socialaccount > span {
+    display: inline-block;
+    width: 37px;
+    height: 100%;
+    text-align: center;
+    font-size: 15px;
+    margin-right: 12px;
+    line-height: 37px;
+    border-right: 1px solid var(--cs-2-border);
+    box-shadow: 1px 0 0 0 var(--cs-2-box-shadow);
+}
+
+.fw-plain-button {
+    display: block;
+    font-size: 11px;
+    line-height: 24px;
+    background-color: var(--cs-light-background);
+    font-weight: 700;
+    text-align: center;
+}
+
+.fw-plain-button:hover {
+    background-color: var(--cs-light-background-hover);
+}
+
+.fw-button.fw-disabled {
+    color: var(--cs-disabled);
+    cursor: default;
+}
+
+/* The remainder of this file uses application specific colors */
+
+.fw-button.fw-facebook {
+    background: linear-gradient(to bottom left, #0d78be, #0d63ab);
+    box-shadow: 0 0 1px 1px #3c9fdf inset;
+    border-color: #0557a1;
+}
+
+.fw-button.fw-facebook:hover {
+    background: #0d63ab;
+}
+
+.fw-button.fw-facebook > span {
+    border-right-color: #0557a1;
+    box-shadow: 1px 0 0 0 #3c9fdf;
+    font-size: 18px;
+}
+
+.fw-button.fw-twitter {
+    background: linear-gradient(to bottom left, #3ccfff, #17addf);
+    box-shadow: 0 0 1px 1px #3dcfff inset;
+    border-color: #2498be;
+}
+
+.fw-button.fw-twitter:hover {
+    background: #17addf;
+}
+
+.fw-button.fw-twitter > span {
+    border-right-color: #2498be;
+    box-shadow: 1px 0 0 0 #8ddffc;
+}
+
+.fw-button.fw-google {
+    background: linear-gradient(to bottom left, #879ded, #6d84d8);
+    box-shadow: 0 0 1px 1px #93a6e6 inset;
+    border-color: #6578bb;
+}
+
+.fw-button.fw-google:hover {
+    background: #6d84d8;
+}
+
+.fw-button.fw-google > span {
+    border-right-color: #6578bb;
+    box-shadow: 1px 0 0 0 #b1c0f2;
+    font-size: 18px;
+}
+
+.fw-button.fw-soundcloud {
+    background: linear-gradient(to bottom left, #f76700, #fa3219);
+    box-shadow: 0 0 1px 1px #f79955 inset;
+    border-color: #c53421;
+}
+
+.fw-button.fw-soundcloud:hover {
+    background: #fa1b19;
+}
+
+.fw-button.fw-soundcloud > span {
+    border-right-color: #c53421;
+    box-shadow: 1px 0 0 0 #f79955;
+    font-size: 18px;
+}
+
+.fw-button.fw-openid {
+    background: linear-gradient(to bottom left, #fae719, #fac219);
+    box-shadow: 0 0 1px 1px #fad819 inset;
+    border-color: #faad19;
+}
+
+.fw-button.fw-openid:hover {
+    background: #e8c817;
+}
+
+.fw-button.fw-openid > span {
+    border-right-color: #faad19;
+    box-shadow: 1px 0 0 0 #fad819;
+    font-size: 18px;
+}
+
+.fw-button.fw-persona {
+    background: linear-gradient(to bottom left, #17e861, #1bbd54);
+    box-shadow: 0 0 1px 1px #29e76c inset;
+    border-color: #168e40;
+}
+
+.fw-button.fw-persona:hover {
+    background: #17a74a;
+}
+
+.fw-button.fw-persona > span {
+    border-right-color: #168e40;
+    box-shadow: 1px 0 0 0 #29e76c;
+    font-size: 18px;
+}
+
+.fw-button.fw-linkedin {
+    background: linear-gradient(to bottom left, #c529e7, #ad22cb);
+    box-shadow: 0 0 1px 1px #d648f4 inset;
+    border-color: #841c9a;
+}
+
+.fw-button.fw-linkedin:hover {
+    background: #9720b0;
+}
+
+.fw-button.fw-linkedin > span {
+    border-right-color: #841c9a;
+    box-shadow: 1px 0 0 0 #d648f4;
+    font-size: 18px;
+}
+
+.fw-button.fw-github {
+    background: linear-gradient(to bottom left, #f95858, #f92958);
+    box-shadow: 0 0 1px 1px #f87795 inset;
+    border-color: #d20e3c;
+}
+
+.fw-button.fw-github:hover {
+    background: #e32653;
+}
+
+.fw-button.fw-github > span {
+    border-right-color: #d20e3c;
+    box-shadow: 1px 0 0 0 #f87795;
+    font-size: 18px;
+}
+
+.fw-button.fw-stackexchange {
+    background: linear-gradient(to bottom left, #fcff23, #eaed0d);
+    box-shadow: 0 0 1px 1px #fdff91 inset;
+    border-color: #ced03f;
+    color: #585854;
+}
+
+.fw-button.fw-stackexchange:hover {
+    background: #fcff00;
+}
+
+.fw-button.fw-stackexchange > span {
+    border-right-color: #ced03f;
+    box-shadow: 1px 0 0 0 #fdff91;
+    font-size: 18px;
+}
+
+.fw-add-button::after {
+    margin-left: 10px;
+}
+
+#fw-comment-filter-dropdown {
+    width: 100px;
+}
+
+/* === checkable_list.css === */
+.fw-checkable {
+    cursor: pointer;
+}
+
+.fw-checkable-label {
+    position: relative;
+    display: block;
+    width: 462px;
+    height: 36px;
+    line-height: 36px;
+    border: solid 1px var(--cs-light-border);
+    padding-left: 12px;
+    margin-bottom: 10px;
+}
+
+.fw-checkable-input {
+    display: none;
+}
+
+.fw-checkable-label.fw-checked::after {
+    display: inline-block;
+    font-family:
+        "Font Awesome 7 Free", "Font Awesome 6 Free", "FontAwesome", monospace;
+    font-weight: 900;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\f00c";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* === content_menu.css === */
+.fw-content-menu {
+    position: absolute;
+    color: var(--cs-white-text);
+    background-color: var(--cs-white-background);
+    box-shadow: 0 0 20px rgb(var(--dropup-box-shadow-color));
+    font-size: 14px;
+    z-index: 101;
+    padding: 0;
+    border: 0 none;
+    border-image: initial;
+    overflow: hidden;
+    border-radius: 6px;
+    outline: 0;
+}
+
+.fw-content-menu-content.fw-scrollable {
+    overflow-y: scroll;
+}
+
+.fw-content-menu-content {
+    position: relative;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.fw-overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(var(--overlay-color));
+    z-index: 100;
+    backdrop-filter: blur(2px);
+}
+
+.fw-overlay.fw-no-blur {
+    backdrop-filter: none;
+}
+
+.fw-content-menu-list {
+    list-style: none;
+    padding: 0 0 5px;
+    cursor: pointer;
+}
+
+.fw-content-menu-item {
+    padding: 18px 31px 15px;
+    color: var(--cs-white-text);
+    font-family: Lato, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1em;
+}
+
+.fw-content-menu-item.fw-disabled {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.fw-content-menu-item.fw-selected {
+    color: var(--cs-white-selected);
+    background-color: var(--cs-white-background-selected);
+}
+
+.fw-content-menu-item:hover {
+    color: var(--cs-white-hover);
+    background-color: var(--cs-white-background-hover);
+}
+
+.fw-content-menu-item:focus {
+    color: var(--cs-white-focus);
+    background-color: var(--cs-white-background-focus);
+    outline: none;
+}
+
+.fw-content-menu-item-divider {
+    border: 0 none;
+    border-top: 1px solid var(--pulldown-separator-color) !important;
+}
+
+.fw-content-menu-item-header {
+    line-height: 18px;
+    background-color: var(--pulldown-header-background-color);
+    color: var(--pulldown-header-text-color);
+    display: block;
+    text-align: center;
+}
+
+.fw-content-menu-item-icon {
+    position: absolute;
+    right: 40px;
+    color: var(--cs-white-text);
+}
+
+.fw-content-menu-columns {
+    display: flex;
+    flex-direction: row;
+}
+
+.fw-content-menu-columns .fw-content-menu-list {
+    flex: 1 0 200px;
+    min-width: 200px;
+    padding: 0 0 5px;
+}
+
+/* === data_table.css === */
+table.fw-data-table {
+    font-size: 13px;
+    line-height: 1.25;
+}
+
+/* Prevent the search/top bar from overflowing a padded parent */
+.datatable-top,
+.datatable-container,
+.datatable-search,
+.datatable-search .datatable-input {
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.datatable-search .datatable-input {
+    width: auto;
+}
+
+table.fw-data-table:focus {
+    outline: none;
+}
+
+table.fw-data-table thead,
+table.datatable-table thead {
+    font-weight: 900;
+    font-size: 11px;
+}
+
+/* simple-datatables wraps header text in a <button> - reset it to plain text */
+.datatable-table th button,
+.datatable-pagination-list button {
+    color: inherit;
+    border: 0;
+    background-color: inherit;
+    cursor: pointer;
+    text-align: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+}
+
+.datatable-sorter,
+.datatable-filter {
+    display: inline-block;
+    height: 100%;
+    position: relative;
+    width: 100%;
+}
+
+.datatable-sorter::before,
+.datatable-sorter::after {
+    content: "";
+    height: 0;
+    width: 0;
+    position: absolute;
+    right: 4px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    opacity: 0.2;
+}
+
+.datatable-sorter::before {
+    border-top: 4px solid currentColor;
+    bottom: 0;
+}
+
+.datatable-sorter::after {
+    border-bottom: 4px solid currentColor;
+    border-top: 4px solid transparent;
+    top: 0;
+}
+
+.datatable-ascending .datatable-sorter::after,
+.datatable-descending .datatable-sorter::before,
+.datatable-ascending .datatable-filter::after,
+.datatable-descending .datatable-filter::before {
+    opacity: 0.6;
+}
+
+table.datatable-table thead th a {
+    color: var(--cs-1-hover);
+}
+
+table.fw-data-table td,
+table.datatable-table td {
+    padding: 15px 0;
+    vertical-align: top;
+    border-bottom: solid 1px var(--cs-white-border);
+}
+
+/* Align text with top of images */
+table.fw-data-table tbody td {
+    vertical-align: top;
+}
+
+table.fw-data-table th,
+table.datatable-table th {
+    padding: 15px 0;
+    vertical-align: top;
+    border-bottom: solid 1px var(--cs-white-header-border);
+}
+
+table.fw-data-table th:last-child,
+table.fw-data-table td:last-child,
+table.datatable-table th:last-child,
+table.datatable-table td:last-child {
+    padding-right: 0;
+}
+
+table.fw-data-table:focus tbody td {
+    border-bottom-color: var(--menu-cursor-border-color);
+}
+
+table.fw-data-table .date,
+table.fw-data-table .fw-date,
+table.datatable-table .date,
+table.datatable-table .fw-date {
+    white-space: nowrap;
+}
+
+table.fw-data-table.fw-large tbody {
+    width: 985px;
+    max-height: calc(100vh - 320px);
+}
+
+table.fw-data-table.fw-middle tbody {
+    width: 600px;
+    max-height: calc(100vh - 320px);
+}
+
+table.fw-data-table.fw-small tbody {
+    width: 342px;
+    height: 270px;
+}
+
+table.fw-data-table.fw-min tbody {
+    width: 342px;
+    height: 225px;
+}
+
+table.fw-data-table td.td-icon {
+    text-align: center;
+}
+
+table.fw-data-table-title {
+    color: var(--cs-1-text);
+}
+
+table.fw-data-table-title i.fa,
+table.fw-data-table-title i.far,
+table.fw-data-table-title i.fas {
+    margin-right: 10px;
+}
+
+table.fw-data-table .icon-trash,
+table.fw-data-table .fw-icon-trash {
+    font-size: 15px;
+}
+
+.owned-by-user .icon-access-right,
+.fw-owned-by-user .fw-icon-access-right,
+table.fw-data-table .fa-clock,
+table.fw-data-table .fa-trash,
+table.fw-data-table .fa-download,
+table.fw-data-table .fa-history {
+    color: var(--cs-1-icon);
+    cursor: pointer;
+}
+
+.owned-by-user .icon-access-right:hover,
+.fw-owned-by-user .fw-icon-access-right:hover,
+table.fw-data-table .fa-clock:hover,
+table.fw-data-table .fa-trash:hover,
+table.fw-data-table .fa-download:hover,
+table.fw-data-table .fa-history:hover {
+    color: var(--cs-1-hover);
+}
+
+/* A deleted access rights row */
+.collaborator-tr[data-right="delete"],
+.fw-collaborator-tr[data-right="delete"] {
+    display: none;
+}
+
+table.fw-data-table .fw-avatar,
+table.fw-data-table .fw-string-avatar {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    vertical-align: top;
+    margin: -4px 10px -5px 0;
+}
+
+table.fw-data-table > tbody > tr > td:first-child {
+    padding-left: 2px;
+}
+
+table.fw-data-table:focus > tbody > tr.datatable-cursor,
+table.fw-data-table:focus > tbody > tr.fw-datatable-cursor {
+    background-color: var(--cs-white-background-selected);
+}
+
+/* the usermedia table */
+.fw-usermedia-title {
+    display: inline-block;
+    height: auto;
+}
+
+.fw-usermedia-type {
+    display: block;
+    margin-top: 3px;
+}
+
+.fw-usermedia-image {
+    display: inline-block;
+    max-width: 60px;
+    max-height: 60px;
+    overflow: hidden;
+    vertical-align: top;
+    margin: 0 14px 2px 0;
+}
+
+.fw-usermedia-image > img {
+    min-width: 100%;
+    min-height: 100%;
+}
+
+table.fw-data-table tbody td.checkable {
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+}
+
+table.fw-data-table tbody tr.checked td.checkable::after,
+table.fw-data-table tbody tr.fw-checked td.checkable::after {
+    display: inline-block;
+    font-family:
+        "Font Awesome 7 Free", "Font Awesome 6 Free", "FontAwesome", monospace;
+    font-weight: 900;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\f00c";
+    width: 1em;
+    height: 1em;
+    position: absolute;
+    right: 12px;
+    top: 12px;
+}
+
+/* Selection tables (e.g. dialog pickers) */
+table.fw-data-table.fw-selection-table tbody tr {
+    cursor: pointer;
+}
+
+/* Word counter dialog table */
+.fw-word-counter-tbody {
+    line-height: 38px;
+}
+
+/* Bulk action */
+.dt-bulk {
+    display: block;
+    position: relative;
+    min-width: 30px;
+}
+
+.dt-bulk .fw-check + label {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.dt-bulk-dropdown {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 3px;
+    cursor: pointer;
+}
+
+/* === dialog_table.css === */
+.fw-dialog-table td {
+    padding-bottom: 7px;
+    position: relative;
+}
+
+.fw-tablerow-title {
+    display: table-cell;
+    padding-top: 10px;
+    font-size: 11px;
+    line-height: 15px;
+    font-weight: bold;
+}
+
+.fw-dialog-table tr > td .fa-minus-circle,
+.fw-dialog-table tr > td .fa-plus-circle {
+    cursor: pointer;
+}
+
+.fw-input-list-wrapper > tbody > tr:last-child > td > .fa-minus-circle {
+    display: none;
+}
+
+.fw-tablerow-title.fw-wtooltip {
+    position: relative;
+}
+
+.fw-tablerow-title.fw-wtooltip::after {
+    display: inline-block;
+    vertical-align: baseline;
+    content: "?";
+    line-height: 1;
+    color: white;
+    background-color: rgb(var(--tooltip-background-color));
+    width: 12px;
+    height: 10px;
+    border-radius: 6px;
+    margin-left: 5px;
+    text-align: center;
+    padding-top: 2px;
+}
+
+/* Shared tooltip box styling. Standalone selectors so the styles also apply
+   when the tooltip is portal-rendered in document.body (see src/tooltip.ts). */
+.fw-tooltip {
+    min-width: 260px;
+    background-color: var(--cs-dark-background);
+    color: var(--cs-dark-text);
+    border-radius: 6px;
+    line-height: 1.5;
+    padding: 14px 18px;
+    font-size: 12px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 1s;
+    z-index: 1;
+}
+
+/* In-place positioning only (no-JS fallback). Portal-rendered tooltips are
+   positioned by src/tooltip.ts instead, so this rule stays scoped to the
+   trigger. */
+.fw-tablerow-title .fw-tooltip {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: calc(100% - 13px);
+}
+
+/* These rules are the no-JS fallback. When src/tooltip.ts is active it adds
+   `fw-tooltip-active` to the trigger and renders the tooltip in
+   document.body, so it no longer matches these descendant selectors. */
+.fw-tablerow-title.fw-wtooltip:not(.fw-tooltip-active):hover .fw-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Show the table-row tooltip on keyboard focus as well as hover. */
+.fw-tablerow-title.fw-wtooltip:not(.fw-tooltip-active):focus .fw-tooltip,
+.fw-tablerow-title.fw-wtooltip:not(.fw-tooltip-active):focus-within
+    .fw-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.fw-tooltip em {
+    font-style: italic;
+}
+
+/* Inline info tooltip (e.g. for dialog options) */
+.fw-info-tooltip {
+    position: relative;
+    display: inline-block;
+    margin-left: 4px;
+    color: var(--cs-2-background);
+    cursor: help;
+}
+
+/* The trigger is a real button so it is keyboard focusable. */
+.fw-info-tooltip-trigger {
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    line-height: inherit;
+    color: inherit;
+    cursor: help;
+    border-radius: 4px;
+}
+
+.fw-info-tooltip-trigger:hover,
+.fw-info-tooltip-trigger:focus-visible {
+    color: var(--cs-link-color, var(--cs-2-background));
+}
+
+/* Shared tooltip box styling (applies in-place and portal-rendered). */
+.fw-info-tooltip-text {
+    min-width: 280px;
+    max-width: 360px;
+    background-color: var(--cs-dark-background);
+    color: var(--cs-dark-text);
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 12px;
+    line-height: 1.5;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 100;
+    pointer-events: none;
+    text-align: left;
+    font-weight: normal;
+    font-style: normal;
+    white-space: normal;
+}
+
+/* In-place positioning only (no-JS fallback). */
+.fw-info-tooltip .fw-info-tooltip-text {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.fw-info-tooltip:not(.fw-tooltip-active):hover .fw-info-tooltip-text,
+.fw-info-tooltip:not(.fw-tooltip-active):focus-within .fw-info-tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.fw-info-tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--cs-dark-background) transparent transparent transparent;
+}
+
+/* When the portal tooltip is flipped below its trigger because there was no
+   room above, point the arrow up instead of down. */
+.fw-info-tooltip-text.fw-tooltip-flipped::after {
+    top: auto;
+    bottom: 100%;
+    border-color: transparent transparent var(--cs-dark-background) transparent;
+}
+
+.fw-info-tooltip-text ul {
+    margin: 6px 0 0 16px;
+    padding: 0;
+    list-style-type: disc;
+}
+
+.fw-info-tooltip-text li {
+    margin-bottom: 4px;
+}
+
+/* === dialog.css === */
+.fw-dialog {
+    position: absolute;
+    background-color: var(--cs-light-background);
+    font-size: 14px;
+    overflow: visible;
+    outline: 0;
+    padding: 0 19px 19px;
+    box-shadow: none;
+    border: 0 none;
+    border-image: initial;
+    border-radius: 0;
+    z-index: 1000; /* Ensure dialog stays on top */
+    user-select: none; /* Prevent interaction with background content */
+}
+
+.fw-dialog-fullpage {
+    position: initial !important;
+}
+
+.fw-dialog-content.fw-scrollable {
+    overflow-y: auto;
+}
+
+.fw-dialog-titlebar {
+    position: relative;
+    margin: 0 -19px;
+    padding: 19px 40px 19px 19px;
+    background: var(--cs-dark-background);
+    color: var(--cs-dark-text);
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    user-select: none;
+}
+
+.fw-dialog-title {
+    font-size: 15px;
+    font-weight: 400;
+    text-transform: none;
+}
+
+.fw-dialog-titlebar-close {
+    right: 19px;
+}
+
+.fw-dialog-titlebar-help {
+    right: 39px;
+}
+
+.fw-dialog-button-icon-only {
+    width: 2em;
+    box-sizing: border-box;
+    text-indent: -9999px;
+    white-space: nowrap;
+}
+
+.fw-dialog-titlebar .fw-dialog-button-icon-only {
+    color: var(--cs-dark-text);
+}
+
+.fw-dialog-titlebar .fw-dialog-button-icon-only:hover {
+    color: var(--cs-dark-hover);
+}
+
+.fw-dialog-button-icon-only .fw-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-top: -2px;
+    margin-left: 0;
+}
+
+.fw-dialog-content {
+    position: relative;
+    margin-top: 24px;
+    /* Tooltips escape the scroll container because they are portal-rendered
+       in document.body (see src/tooltip.ts). `visible auto` would be coerced
+       by browsers to `auto auto` (visible + auto is not representable), so
+       hidden on the x-axis avoids a horizontal scrollbar while the y-axis
+       scrolls when the content grows too tall. */
+    overflow: hidden auto;
+    padding: 6px;
+    max-height: calc(100vh - 133px);
+    min-height: 20px;
+    max-width: calc(100vw - 4px);
+}
+
+.fw-input-list-wrapper > tbody > tr:last-child > td {
+    padding-bottom: 0;
+}
+
+.fw-input-list-wrapper td.fw-input-field-list-ctrl {
+    padding-right: 20px;
+    text-align: right;
+    vertical-align: middle;
+}
+
+.fw-input-list-wrapper td.fw-input-field-list-ctrl .fa {
+    display: inline;
+}
+
+.fw-entry-field input[type="text"],
+.fw-entry-field input[type="number"] {
+    margin: 0;
+}
+
+.fw-dialog-buttonpane {
+    padding-top: 20px;
+}
+
+.fw-dialog-buttonset {
+    position: relative;
+    text-align: right;
+}
+
+.fw-dialog-buttonset .fw-button {
+    margin-left: 6px;
+}
+
+.fw-overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(var(--overlay-color));
+    z-index: 100;
+    backdrop-filter: blur(2px);
+}
+
+.fw-overlay.fw-no-blur {
+    backdrop-filter: none;
+}
+
+.fw-dialog-content textarea {
+    min-height: 112px;
+    min-width: 350px;
+    height: auto;
+}
+
+.fw-media-file-input {
+    display: none;
+}
+
+.fw-dialog-content .fw-note-el {
+    margin-bottom: 10px;
+    font-size: smaller;
+    color: var(--error-background-color);
+}
+
+.fw-dialog-content .fw-note-el.fw-hide {
+    display: none;
+}
+
+.fw-dialog form {
+    padding: 8px;
+}
+
+/* Rules migrated from the old ui_dialogs.css so that dialogs render correctly
+   without loading a separate stylesheet. */
+.fw-dialog-titlebar .fw-dialog-titlebar-button {
+    font-size: 14px;
+    line-height: 1em;
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+.fw-dialog-titlebar-close,
+.fw-dialog-titlebar-help {
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0;
+    padding: 1px;
+}
+
+.fw-dialog-button-icon-only .fw-icon::before {
+    display: inline-block;
+    font-family:
+        "Font Awesome 7 Free", "Font Awesome 6 Free", "FontAwesome", monospace;
+    font-weight: 900;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-indent: 5019px;
+}
+
+.fw-icon-close::before {
+    width: 0.7em;
+    height: 1em;
+    padding-top: 5px;
+    content: "\f00d";
+}
+
+.fw-icon-help::before {
+    width: 0.7em;
+    height: 1em;
+    padding-top: 5px;
+    content: "\f128";
+}
+
+.fw-dialog-titlebar .fw-dialog-button-icon-only {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px;
+    background: transparent;
+    border: none;
+}
+
+.fw-dialog-titlebar .fw-dialog-button-icon-only:focus {
+    outline: 2px solid var(--cs-dark-text);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* === drop_up.css === */
+/* Generic drop-up widget */
+
+.fw-drop-up-outer {
+    all: revert;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 100%;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    text-transform: none;
+    letter-spacing: normal;
+    line-height: normal;
+    color: inherit;
+    background: transparent;
+    contain: layout style;
+    isolation: isolate;
+    white-space: initial;
+    position: absolute;
+}
+
+.fw-drop-up-inner {
+    position: relative;
+    background-color: var(--cs-white-background);
+    z-index: 1;
+    font-weight: normal;
+    color: var(--cs-white-text);
+    left: 10px;
+    box-shadow: 0 0 20px rgb(var(--dropup-box-shadow-color));
+    border-radius: 6px;
+}
+
+.fw-drop-up-head {
+    padding: 20px 22px;
+    background-color: var(--cs-dark-background);
+    color: var(--cs-dark-text);
+    font-family: Lato, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0.13px;
+    border-radius: 6px 6px 0 0;
+}
+
+.fw-drop-up-head > * + * {
+    margin-top: 14px;
+}
+
+.fw-drop-up-head a {
+    color: var(--cs-dark-text);
+    font-family: Lato, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.fw-drop-up-options {
+    list-style: none;
+    padding: 0 0 12px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.fw-drop-up-option {
+    border-top: 1px solid var(--cs-light-border);
+    padding: 16px 30px;
+    color: var(--cs-light-text);
+    background: var(--cs-light-background);
+    font-family: Lato, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1em;
+}
+
+.fw-drop-up-option:hover,
+.fw-drop-up-option.fw-focused {
+    background-color: var(--cs-light-background-hover);
+}
+
+.fw-drop-up-option.fw-focused {
+    outline: 2px solid var(--cs-light-border);
+    outline-offset: -2px;
+}
+
+.fw-drop-up-option:focus {
+    outline: none;
+}
+
+/* === faq_dialog.css === */
+div.fw-faq {
+    line-height: 1.5em;
+}
+
+.fw-faq-answer {
+    padding: 5px;
+    font-size: medium;
+}
+
+.fw-faq-item {
+    padding: 10px;
+}
+
+.fw-faq-question i {
+    padding: 3px;
+}
+
+/* === file_selector.css === */
+.fw-file-selector {
+    line-height: 1.2em;
+    padding: 10px 10px 10px 20px;
+}
+
+.fw-file-selector p.fw-file {
+    text-indent: -10px;
+}
+
+.fw-file-selector .fa-plus-square,
+.fw-file-selector .fa-minus-square {
+    margin-left: -16px;
+}
+
+.fw-file-selector .fa-plus-square,
+.fw-file-selector .fa-minus-square,
+.fw-file-selector .fw-file-name,
+.fw-file-selector .fw-folder-name {
+    cursor: pointer;
+}
+
+.fw-file-selector .fw-file-name.fw-selected,
+.fw-file-selector .fw-folder-name.fw-selected {
+    text-decoration: underline;
+}
+
+/* === forms.css === */
+input,
+textarea,
+button {
+    font-family: Lato, sans-serif;
+    margin: 0;
+    outline-width: 0;
+}
+
+textarea {
+    padding: 2px;
+}
+
+input[type="text"]:not(.fw-inline),
+input[type="password"]:not(.fw-inline),
+input[type="search"]:not(.fw-inline),
+input[type="email"]:not(.fw-inline),
+input[type="number"]:not(.fw-inline),
+textarea {
+    box-sizing: border-box;
+    width: 100%;
+    height: 40px;
+    padding: 0 10px;
+    font-size: 14px;
+    line-height: 1.33em;
+    box-shadow: none;
+    border-radius: 0;
+    margin: 5px 0;
+    color: var(--cs-white-text);
+    background-color: var(--input-background-color);
+    border: 0 none;
+    border-bottom: 1px solid var(--input-border-color);
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+    background-color: var(--input-focus-background-color);
+}
+
+.fw-dialog input[type="text"]:not(.fw-inline),
+.fw-dialog input[type="password"]:not(.fw-inline),
+.fw-dialog input[type="search"]:not(.fw-inline),
+.fw-dialog input[type="email"]:not(.fw-inline),
+.fw-dialog input[type="number"]:not(.fw-inline),
+.fw-dialog textarea,
+.fw-dialog div[contenteditable="true"],
+.fw-dialog select,
+.fw-dialog .fw-entry-field select {
+    border: 1px solid var(--input-dialog-border-color);
+}
+.fw-entry-field .ProseMirror {
+    border: 1px solid var(--input-border-color);
+    border-radius: 4px;
+    min-height: 2.5rem;
+    padding: 0.25rem;
+    background: var(--input-background-color);
+}
+
+/**
+ * Checkbox
+ */
+.fw-check {
+    position: absolute;
+    opacity: 0;
+}
+
+.fw-check + label {
+    position: relative;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.fw-check + label::before {
+    content: "";
+    position: relative;
+    display: block;
+    width: 13px;
+    height: 13px;
+    border: 1px solid var(--overview-checkbox-border);
+    border-radius: 2px;
+    background: linear-gradient(
+        to bottom,
+        rgb(var(--overview-checkbox-background-color-from)) 0%,
+        rgb(var(--overview-checkbox-background-color-to)) 100%
+    );
+}
+
+.fw-check:checked + label::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    display: block;
+    width: 3px;
+    height: 7px;
+    border-bottom: 2px solid var(--overview-checkbox-color);
+    border-right: 2px solid var(--overview-checkbox-color);
+    transform: rotate(45deg);
+}
+
+.fw-label-check + label {
+    line-height: 15px;
+}
+
+.fw-label-check + label::before {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 6px;
+}
+
+/*
+ * checkbox in a fw-button
+ */
+.fw-button input[type="checkbox"] {
+    margin-right: 3px;
+}
+
+/* -----------------------------------------------------------------
+ * Override: remove the default border-bottom on form inputs
+ * ----------------------------------------------------------------- */
+input[type="text"]:not(.fw-inline),
+input[type="password"]:not(.fw-inline),
+input[type="search"]:not(.fw-inline),
+input[type="email"]:not(.fw-inline),
+input[type="number"]:not(.fw-inline),
+textarea {
+    border-bottom: 0 none;
+}
+
+/* -----------------------------------------------------------------
+ * Category form — narrow inline input next to an add button
+ * ----------------------------------------------------------------- */
+input[type="text"].category-form {
+    width: calc(100% - 38px);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* -----------------------------------------------------------------
+ * Focus states — extend the base rules with :focus-within support
+ * ----------------------------------------------------------------- */
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="email"]:focus,
+div.fw-input:focus-within,
+textarea:focus {
+    background-color: var(--input-focus-background-color);
+}
+
+/* -----------------------------------------------------------------
+ * Select containers
+ * ----------------------------------------------------------------- */
+.fw-select-container select {
+    display: inline-block;
+    width: calc(100% - 22px);
+    appearance: none;
+    cursor: pointer;
+}
+
+.fw-select-container select option.fw-placeholder {
+    display: none;
+}
+
+.fw-select-container {
+    margin-bottom: 18px;
+    position: relative;
+}
+
+.fw-select-container .fw-select-arrow {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    pointer-events: none;
+}
+
+/* -----------------------------------------------------------------
+ * Entry field widths (ProseMirror inputs, selects)
+ * ----------------------------------------------------------------- */
+.fw-entry-field .ProseMirror,
+.fw-entry-field input[type="text"],
+.fw-entry-field input[type="number"] {
+    width: 686px;
+    max-width: 80vw;
+}
+
+.fw-entry-field select {
+    padding: 0 3px 0 13px;
+    border: 0 none;
+    color: var(--cs-light-text);
+    background-color: var(--select-background-color);
+    height: 38px;
+    width: 561px;
+    appearance: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.fw-entry-field select.fw-large {
+    width: 664px;
+}
+
+/* -----------------------------------------------------------------
+ * Form label
+ * ----------------------------------------------------------------- */
+.form-label {
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* -----------------------------------------------------------------
+ * Name input fields (first name / last name pairs)
+ * ----------------------------------------------------------------- */
+.fw-name-input {
+    width: 226px;
+}
+
+.fw-name-input.fw-first {
+    margin-right: 23px;
+}
+
+/* -----------------------------------------------------------------
+ * Checkable table rows (app-specific positioning; base styles in
+ * fwtoolkit/css/checkable_list.css)
+ * ----------------------------------------------------------------- */
+.fw-checkable-td,
+.fw-checkable > td {
+    position: relative;
+}
+
+.fw-checkable-td.fw-checked::after,
+tr.fw-checkable.fw-checked > td:last-child::after {
+    top: 17px;
+}
+
+/* -----------------------------------------------------------------
+ * Addable input list
+ * ----------------------------------------------------------------- */
+.fw-add-input {
+    cursor: pointer;
+    margin-left: 14px;
+}
+
+.fw-add-input::before {
+    width: 0.7em;
+}
+
+.fw-list-input {
+    margin-top: 7px;
+}
+
+.fw-list-input:first-child {
+    margin-top: 0;
+}
+
+/* -----------------------------------------------------------------
+ * Form error
+ * ----------------------------------------------------------------- */
+.fw-fomt-error {
+    color: #ff0000;
+}
+
+/* -----------------------------------------------------------------
+ * AJAX file uploader
+ * ----------------------------------------------------------------- */
+.ajax-upload input[type="file"] {
+    display: none;
+}
+
+.ajax-upload-label {
+    margin-left: 10px;
+}
+
+/* -----------------------------------------------------------------
+ * Radio buttons
+ * ----------------------------------------------------------------- */
+.fw-radio input[type="radio"] {
+    display: inline-block;
+    width: 40px;
+    margin-bottom: 20px;
+}
+
+/* -----------------------------------------------------------------
+ * Type-switch field-part sizing overrides
+ * (Base type-switch styles are in fwtoolkit/css/type_switch.css)
+ * ----------------------------------------------------------------- */
+.fw-type-switch-input-inner .field-part {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.fw-type-switch-input-inner .field-part:last-child {
+    margin-right: 0;
+}
+
+.field-part-short .ProseMirror {
+    width: 64px;
+}
+
+.fw-type-switch-input-inner .field-part-huge input,
+.fw-type-switch-input-inner .field-part-huge .ProseMirror {
+    width: 250px;
+}
+
+.fw-type-switch-input-inner .field-part-long input,
+.fw-type-switch-input-inner .field-part-long .ProseMirror {
+    width: 130px;
+}
+
+.fw-type-switch-input-inner .field-part-single {
+    width: 100% !important;
+}
+
+.fw-type-switch-input-inner .field-part-single .ProseMirror {
+    width: 100%;
+}
+
+/* -----------------------------------------------------------------
+ * Dialog table header cell sizing
+ * ----------------------------------------------------------------- */
+.fw-dialog-table th {
+    vertical-align: top;
+    padding: 0 6px 0 8px;
+    width: 164px;
+}
+
+/* -----------------------------------------------------------------
+ * List input wrapper — add/remove buttons
+ * ----------------------------------------------------------------- */
+.list-input-wrapper .add-remove-list {
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 14px;
+}
+
+.list-input-wrapper .add-remove-list::before {
+    content: "\2796";
+    width: 0.7em;
+}
+
+.list-input-wrapper:last-child .add-remove-list::before {
+    content: "\2795";
+}
+
+/* -----------------------------------------------------------------
+ * Responsive breakpoints
+ * ----------------------------------------------------------------- */
+@media screen and (width <= 740px) {
+    .fw-entry-field .ProseMirror,
+    .fw-entry-field input[type="text"],
+    .fw-entry-field input[type="number"] {
+        max-width: 70vw;
+    }
+
+    .fw-type-switch-input-wrapper {
+        max-width: 70vw;
+    }
+
+    .tokenfield {
+        max-width: 70vw;
+    }
+}
+
+@media screen and (width <= 560px) {
+    .fw-entry-field .ProseMirror,
+    .fw-entry-field input[type="text"],
+    .fw-entry-field input[type="number"] {
+        max-width: 50vw;
+    }
+
+    .fw-type-switch-input-wrapper {
+        max-width: 50vw;
+    }
+
+    .tokenfield {
+        max-width: 50vw;
+    }
+
+    .fw-type-switch {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .fw-type-switch-input-inner {
+        width: auto;
+    }
+}
+
+@media screen and (width <= 460px) {
+    .fw-entry-field .ProseMirror,
+    .fw-entry-field input[type="text"],
+    .fw-entry-field input[type="number"] {
+        max-width: 40vw;
+    }
+
+    .fw-type-switch-input-wrapper {
+        max-width: 40vw;
+    }
+
+    .tokenfield {
+        max-width: 40vw;
+    }
+
+    .fw-dialog-table th {
+        width: 140px;
+    }
+
+    .fw-tabs-panel {
+        overflow-x: hidden;
+    }
+}
+
+/* === inline_tools.css === */
+.inline-tools {
+    position: absolute;
+    left: auto;
+    top: auto;
+    margin-top: 3px;
+    display: none;
+}
+
+.ProseMirror-focused + .inline-tools {
+    display: block;
+    z-index: 10;
+}
+
+.inline-tools .menuicon {
+    position: relative;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    overflow: hidden;
+    text-indent: -999px;
+    background-color: var(--cs-2-background);
+    color: var(--cs-2-text);
+    cursor: pointer;
+}
+
+.inline-tools .menuicon:hover {
+    background-color: var(--cs-2-background-hover);
+}
+
+.inline-tools .menuicon.fw-active {
+    background-color: var(--cs-2-background-selected);
+}
+
+.inline-tools .menuicon + .menuicon {
+    margin-left: 2px;
+}
+
+.inline-tools .menuicon::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    text-indent: 0;
+    text-align: center;
+    line-height: 25px;
+    font-size: 13px;
+}
+
+.menuicon.strong::before,
+.menuicon.em::before,
+.menuicon.sup::before,
+.menuicon.sub::before {
+    font-family: "Font Awesome 7 Free", monospace;
+    font-weight: 900;
+}
+
+.menuicon.strong::before {
+    content: "\f032";
+}
+
+.menuicon.em::before {
+    content: "\f033";
+}
+
+.menuicon.sup::before {
+    content: "\f12b";
+}
+
+.menuicon.sub::before {
+    content: "\f12c";
+}
+
+.menuicon.smallcaps::before {
+    content: "Tt";
+    font-weight: bold;
+    font-variant: small-caps;
+}
+
+.menuicon.nocase::before {
+    content: "cP";
+    font-weight: bold;
+}
+
+/* === input_list.css === */
+.fw-input-list-wrapper {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.fw-input-list-wrapper tr {
+    vertical-align: top;
+}
+
+.fw-input-list-wrapper td {
+    padding: 2px 0;
+}
+
+.fw-input-list-item-cell {
+    width: 100%;
+}
+
+.fw-input-field-list-ctrl {
+    white-space: nowrap;
+    padding-left: 8px;
+    padding-top: 10px;
+    color: var(--cs-light-text);
+}
+
+.fw-input-field-list-ctrl .fa-minus-circle,
+.fw-input-field-list-ctrl .fa-plus-circle {
+    cursor: pointer;
+}
+
+.fw-input-list-wrapper tr.fw-form-error .fw-input-list-item-cell input,
+.fw-input-list-wrapper tr.fw-form-error .fw-input-list-item-cell textarea {
+    background-color: var(--input-error-background-color);
+}
+
+/* === loader.css === */
+#fw-wait i {
+    display: none;
+}
+
+#fw-wait.fw-active {
+    position: fixed;
+    inset: 0;
+    background-color: rgb(var(--wait-active-background-color));
+    z-index: 1500;
+}
+
+#fw-wait.fw-active.fw-full {
+    background-color: rgb(var(--wait-active-full-background-color));
+}
+
+#fw-wait.fw-active i {
+    display: block;
+    height: 1em;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    font-size: 24px;
+    margin-top: -0.5em;
+    margin-left: -0.5em;
+}
+
+#fw-wait span {
+    display: none;
+}
+
+#fw-wait.fw-active span.fw-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 105vh;
+    font-size: 15px;
+    margin-top: 20px;
+}
+
+/* === overview_menu.css === */
+.fw-overview-menu-wrapper {
+    position: relative;
+    background-color: var(--cs-white-background);
+    padding: 11px 8px;
+}
+
+#fw-overview-menu,
+#fw-overview-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#fw-overview-menu {
+    position: relative;
+    margin: 0 213px;
+}
+
+#fw-overview-menu::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+@media (width <= 1429px) {
+    #fw-overview-menu {
+        margin: 0 auto;
+        max-width: 1004px;
+    }
+}
+
+.fw-overview-menu-item {
+    position: relative;
+    float: left;
+    margin-right: 14px;
+}
+
+.fw-search-field-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.fw-search-field-container .fw-search-label {
+    position: absolute;
+    left: 20px;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    pointer-events: none; /* Makes the label non-interactive */
+    user-select: none;
+    z-index: 1;
+}
+
+.fw-search-field-container input.fw-search-field[type="search"] {
+    position: relative;
+    z-index: 2;
+    background: transparent; /* Makes input background transparent to show label */
+}
+
+.fw-search-field-container:has(
+        input.fw-search-field[type="search"]:not(:placeholder-shown)
+    )
+    label.fw-search-label {
+    display: none;
+}
+
+.fw-search-field-container i.fa {
+    position: relative;
+    z-index: 3;
+    margin-left: 8px;
+}
+
+.fw-overview-menu-item.fw-search {
+    float: right;
+    margin-right: 0;
+}
+
+.fw-overview-menu-item.fw-search div.fw-button.fw-disabled {
+    background-color: var(--input-background-color);
+}
+
+.fw-overview-menu-item.fw-search div.fw-button.fw-disabled:focus-within {
+    background-color: var(--input-focus-background-color);
+}
+
+.fw-button .fw-search-label {
+    margin-right: 8px;
+    display: inline-block;
+}
+
+/* Hide label visually while keeping it accessible for screen readers
+   when the search box is narrow */
+@media (width <= 600px) {
+    .fw-button .fw-search-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        border: 0;
+    }
+}
+
+.fw-button input[type="text"] {
+    border: 1px solid #cccccc;
+    padding: 4px 8px;
+    border-radius: 4px;
+    width: calc(100% - 30px);
+    height: 30px;
+}
+
+.fw-button input[type="text"]:focus {
+    outline: 2px solid #007bff;
+    border-color: #007bff;
+}
+
+.fw-text-menu {
+    height: 40px;
+    color: var(--cs-white-text-secondary);
+    padding: 0;
+    border: 0 none;
+    background-color: transparent;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+    padding-left: 5px;
+}
+
+.fw-text-menu:focus::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px; /* Width of the border */
+    background-color: var(--menu-cursor-border-color); /* Color of the border */
+}
+
+.fw-text-menu:hover {
+    color: var(--cs-white-text);
+}
+
+.fw-dropdown-menu {
+    padding-top: 14px;
+    font-size: 14px;
+    color: var(--cs-white-text-secondary);
+    cursor: pointer;
+    height: 40px;
+    box-sizing: border-box;
+}
+
+.fw-dropdown-menu:hover {
+    color: var(--cs-white-text);
+}
+
+.fw-dropdown-menu label {
+    cursor: pointer;
+}
+
+div.select-action {
+    cursor: pointer;
+    min-width: 38px;
+}
+
+div.select-action input[type="checkbox"] {
+    cursor: default;
+}
+
+span.select-action-dropdown {
+    margin-left: 5px;
+}
+
+.fw-button.fw-white input[type="text"] {
+    color: var(--cs-light-text);
+    background-color: var(--cs-light-background);
+}
+
+.fw-button.fw-white:focus-within {
+    background-color: var(--input-focus-background-color);
+}
+
+.fw-button.fw-white input[type="text"]:focus,
+.fw-white.fw-input:hover {
+    background-color: var(--input-focus-background-color);
+}
+
+.fw-pulldown-item.fw-selected {
+    background-color: #f0f0f0;
+}
+
+/* === progress_task.css === */
+#fw-progress-outer-wrapper {
+    position: fixed;
+    left: 22px;
+    bottom: 10px;
+    z-index: calc(var(--highest-dialog-z-index, 100) + 3);
+    pointer-events: none;
+}
+
+#fw-progress-wrapper {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.fw-progress-task {
+    display: block;
+    width: 300px;
+    padding: 14px 16px;
+    margin-top: 8px;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgb(var(--alert-box-shadow-color));
+    background-color: var(--cs-white-background);
+    color: var(--main-text-color);
+    font-size: 14px;
+    line-height: 20px;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+    pointer-events: none;
+}
+
+.fw-progress-task.fw-closing {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.fw-progress-task.fw-progress-info {
+    border-left: 4px solid rgb(var(--info-background-color));
+}
+
+.fw-progress-task.fw-progress-success {
+    border-left: 4px solid rgb(var(--success-background-color));
+}
+
+.fw-progress-task.fw-progress-warning {
+    border-left: 4px solid rgb(var(--warning-background-color));
+}
+
+.fw-progress-task.fw-progress-error {
+    border-left: 4px solid var(--error-background-color);
+}
+
+.fw-progress-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fw-progress-icon {
+    font-size: 16px;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.fw-progress-title {
+    flex: 1;
+    font-weight: 600;
+}
+
+.fw-progress-cancel {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    color: inherit;
+    font-size: 14px;
+    line-height: 1;
+    opacity: 0.6;
+    pointer-events: auto;
+}
+
+.fw-progress-cancel:hover {
+    opacity: 1;
+}
+
+.fw-progress-message {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--cs-light-text-secondary);
+}
+
+.fw-progress-bar {
+    height: 6px;
+    background-color: var(--cs-light-border);
+    border-radius: 3px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.fw-progress-fill {
+    height: 100%;
+    background-color: rgb(var(--info-background-color));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.fw-progress-success .fw-progress-fill {
+    background-color: rgb(var(--success-background-color));
+}
+
+.fw-progress-warning .fw-progress-fill {
+    background-color: rgb(var(--warning-background-color));
+}
+
+.fw-progress-error .fw-progress-fill {
+    background-color: var(--error-background-color);
+}
+
+.fw-progress-bar.fw-indeterminate .fw-progress-fill {
+    width: 50%;
+    animation: fw-progress-indeterminate 1.5s infinite ease-in-out;
+    border-radius: 3px;
+}
+
+@keyframes fw-progress-indeterminate {
+    0% {
+        transform: translateX(-100%);
+    }
+    50% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* === pulldown_menu.css === */
+/* Horizontal pulldown menu bar */
+
+.fw-pulldown-menu-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: Lato, sans-serif;
+    font-size: 14px;
+}
+
+.fw-pulldown-menu-header {
+    position: relative;
+}
+
+.fw-pulldown-menu-title {
+    display: inline-block;
+    padding: 8px 12px;
+    color: var(--cs-white-text-secondary);
+    cursor: pointer;
+    border-radius: 4px;
+    user-select: none;
+}
+
+.fw-pulldown-menu-title:hover,
+.fw-pulldown-menu-title:focus {
+    color: var(--cs-white-text);
+    background-color: var(--cs-white-background-hover);
+    outline: none;
+}
+
+.fw-pulldown-menu-title.fw-disabled {
+    color: var(--cs-disabled);
+    cursor: not-allowed;
+}
+
+.fw-pulldown-menu-title .fw-access-key {
+    text-decoration: underline;
+}
+
+.fw-pulldown-menu-header > .fw-pulldown {
+    top: 100%;
+    margin-top: 4px;
+}
+
+.fw-pulldown-menu-item.fw-cursor {
+    background-color: var(--cs-white-background-hover);
+}
+
+/* === pulldown.css === */
+/* pulldown menu box */
+.fw-pulldown {
+    position: absolute;
+    display: none;
+    z-index: 101;
+    box-shadow: 0 0 20px rgb(var(--pulldown-box-shadow-color));
+    background-color: var(--cs-white-background);
+    border-radius: 6px;
+    color: var(--cs-white-text);
+}
+
+.fw-pulldown.fw-open {
+    display: block;
+}
+
+.fw-pulldown.fw-left,
+.fw-pulldown.fw-center {
+    left: -10px;
+}
+
+.fw-pulldown.fw-right {
+    right: 0;
+}
+
+/* sub menu */
+.fw-pulldown .fw-pulldown {
+    top: 0;
+    left: 100%;
+    margin-top: 0;
+}
+
+.fw-marginbox-options.fw-pulldown .fw-pulldown {
+    right: 100%;
+    left: auto;
+}
+
+.fw-pulldown.fw-right .fw-pulldown {
+    left: auto;
+    right: 100%;
+}
+
+.fw-pulldown > ul {
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 12px 0;
+    border: 0 none;
+}
+
+.fw-pulldown-item {
+    position: relative;
+    display: block;
+    width: auto;
+    height: auto;
+    min-width: 110px;
+    padding: 16px 30px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1;
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.fw-disabled .fw-pulldown-item,
+.fw-pulldown-item.fw-disabled {
+    color: var(--cs-disabled);
+    cursor: not-allowed;
+}
+
+.fw-pulldown-item.fw-selected {
+    color: var(--cs-white-selected);
+    background-color: var(--cs-white-background-selected);
+}
+
+.fw-pulldown-item:hover,
+.fw-pulldown-item.fw-selected:hover {
+    color: var(--cs-white-hover);
+    background-color: var(--cs-white-background-hover);
+}
+
+.fw-pulldown li:last-child .fw-pulldown-item {
+    border-bottom: 0 none;
+}
+
+.fw-pulldown-item .fw-icon-right {
+    position: absolute;
+    right: 10px;
+}
+
+.fw-pulldown li {
+    position: relative;
+}
+
+.fw-pulldown hr {
+    width: 80%;
+    display: block;
+    height: 1px;
+    border: 0;
+    background-color: var(--pulldown-separator-color);
+}
+
+.fw-pulldown .fw-delete-comment::after {
+    font-family: "Font Awesome 7 Free", monospace;
+    content: "\f2ed";
+    opacity: 0.4;
+    float: right;
+    display: block;
+}
+
+.fw-pulldown-icon {
+    margin-left: 0;
+}
+
+.fw-pulldown input[type="radio"] {
+    display: none;
+}
+
+/* === text.css === */
+.fw-basic-text {
+    font-family: Lato, sans-serif;
+    font-size: 13px;
+    line-height: 1.33em;
+    color: var(--cs-1-hover);
+    font-weight: 400;
+}
+
+a,
+.fw-link-text {
+    cursor: pointer;
+    color: var(--cs-1-text);
+}
+
+a:hover,
+.fw-link-text:hover {
+    cursor: pointer;
+    color: var(--cs-1-hover);
+}
+
+.fw-header-text {
+    color: var(--cs-5-text);
+    font-size: 14px;
+}
+
+.fw-header-navigation-text {
+    color: var(--cs-5-text);
+    font-weight: 400;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    font-size: 15px;
+}
+
+.fw-green-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--cs-4-text);
+}
+
+/* === two_pane_selector.css === */
+.fw-ar-container {
+    display: inline-block;
+    width: 338px;
+    height: 360px;
+    background-color: var(--cs-white-background);
+    border: solid 1px var(--cs-white-border);
+    vertical-align: middle;
+    padding: 20px 14px 0;
+    overflow-y: auto;
+    margin-bottom: 16px;
+}
+
+.fw-ar-button {
+    display: inline-block;
+    margin: 0 16px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.fw-two-pane-selector {
+    display: flex;
+    align-items: center;
+}
+
+.fw-two-pane-list {
+    height: calc(100% - 40px);
+    overflow-y: auto;
+}
+
+.fw-two-pane-item {
+    cursor: pointer;
+}
+
+.fw-two-pane-item.fw-selected {
+    background-color: var(--cs-light-background-hover);
+}
+
+.fw-two-pane-controls {
+    text-align: center;
+}
+
+.fw-two-pane-controls .fw-ar-button {
+    display: block;
+    margin: 8px auto;
+}
+
+/* === type_switch.css === */
+.fw-type-switch {
+    position: relative;
+    width: 140px;
+    height: 38px;
+    float: left;
+    margin-right: 5px;
+    font-size: 14px;
+    color: var(--cs-6-text);
+    background-color: var(--cs-6-background);
+    border: 0 none;
+    border-radius: 19px;
+    white-space: nowrap;
+    padding: 0;
+    line-height: 38px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.fw-type-switch.fw-disabled {
+    color: var(--cs-disabled);
+    background-color: var(--cs-disabled-background);
+}
+
+.fw-type-switch-inner {
+    position: absolute;
+    display: block;
+    left: 0;
+    top: 0;
+    width: calc(200% - 38px);
+    transition: left 0.3s;
+}
+
+.fw-type-switch-inner::after {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    left: calc(50% - 19px);
+    top: 0;
+    content: "";
+    width: 38px;
+    height: 38px;
+    border-radius: 19px;
+    background-color: var(--cs-light-background);
+    border: 1px solid var(--cs-light-border);
+}
+
+.fw-value2 .fw-type-switch-inner {
+    left: calc(-100% + 38px);
+}
+
+.fw-type-switch-label {
+    box-sizing: border-box;
+    display: block;
+    width: 50%;
+    float: left;
+}
+
+.fw-type-switch-label:first-child {
+    padding-right: 12px;
+}
+
+.fw-type-switch-label:last-child {
+    padding-left: 12px;
+}
+
+.fw-type-switch-input-wrapper {
+    width: 686px;
+    max-width: 80vw;
+}
+
+.fw-type-switch-input-wrapper::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.fw-type-switch-input-inner {
+    position: relative;
+    float: left;
+    width: calc(100% - 145px);
+}
+
+/* === ui_tabs.css === */
+.fw-tabs-nav {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+    border-bottom: 2px solid var(--tabs-border-color);
+    height: auto;
+    width: auto;
+}
+
+.fw-tabs-nav > li {
+    position: relative;
+    padding: 6px 18px;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--tabs-text-inactive);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition:
+        color 0.15s,
+        border-color 0.15s;
+    float: none;
+    margin-right: 0;
+}
+
+.fw-tabs-nav > li:hover {
+    color: var(--tabs-text-active);
+}
+
+.fw-tabs-nav .fw-button {
+    color: var(--tabs-text-inactive);
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+.fw-tabs-nav .fw-tabs-active,
+.fw-tabs-nav .fw-current-tab {
+    color: var(--tabs-text-active);
+    border-bottom-color: var(--tabs-indicator-color);
+}
+
+.fw-tabs-nav .fw-tabs-active .fw-button,
+.fw-tabs-nav .fw-current-tab .fw-button {
+    color: var(--tabs-text-active);
+    background: transparent;
+}
+
+.fw-tabs-nav > li:hover .fw-button {
+    color: var(--tabs-text-active);
+}
+
+.fw-tabs-panel {
+    height: auto;
+    overflow: auto;
+    min-height: 220px;
+    padding: 0;
+    margin-top: 24px;
+}
+
+.fw-tab-link-inner {
+    display: block;
+    margin-left: 20px;
+    color: var(--cs-light-text-secondary);
+}
