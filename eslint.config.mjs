@@ -11,7 +11,8 @@ export default tseslint.config(
             "test/**/*.ts",
             "test/**/*.js",
             "scripts/**/*.ts",
-            "scripts/**/*.js"
+            "scripts/**/*.js",
+            "scripts/**/*.mjs"
         ],
         languageOptions: {
             ecmaVersion: 2020,
@@ -42,7 +43,7 @@ export default tseslint.config(
         }
     },
     {
-        files: ["test/**/*.js", "scripts/**/*.js"],
+        files: ["test/**/*.js", "scripts/**/*.js", "scripts/**/*.mjs"],
         languageOptions: {
             globals: {
                 ...globals.node,

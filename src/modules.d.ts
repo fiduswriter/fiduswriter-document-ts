@@ -16,15 +16,3 @@ declare module "downloadjs" {
     ): void
     export default download
 }
-
-declare module "@vivliostyle/print" {
-    /**
-     * Render the given HTML with Vivliostyle for printing.
-     * @param html - HTML content to print.
-     * @param config - Optional print configuration.
-     */
-    export function printHTML(
-        html: string,
-        config?: Record<string, unknown>
-    ): Promise<unknown>
-}

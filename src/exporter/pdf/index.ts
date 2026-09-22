@@ -1,15 +1,16 @@
 import download from "downloadjs"
 import {addAlert, gettext, shortFileTitle, staticUrl} from "fwtoolkit"
-import {printHTML} from "@vivliostyle/print"
 import {
-    emitPdfFromVivliostyleWindow,
+    emitPdfFromWindow,
     type EmitAttachment,
     type EmitMetadata,
+    type PdfOptions,
     type PrintOptions
-} from "vivliostyle-pdf"
+} from "pages-to-pdf"
 
 import type {BibDB, CSL, ExportDoc, FidusNode, ImageDB} from "../../types.js"
 import {PrintExporter} from "../print/index.js"
+import {getPrintEngine} from "../print/engines/registry.js"
 import {createSlug} from "../tools/file.js"
 
 export interface PdfExporterOptions {
@@ -32,6 +33,29 @@ export interface PdfExporterOptions {
         SVG rasterization). */
     printOptions?: PrintOptions
     /**
+     * Request PDF/A-4 archival conformance. Embedded files (e.g. an attached
+     * `.fidus` source or an embedded source HTML) require PDF/A-4f instead;
+     * the exporter upgrades the setting automatically in that case.
+     */
+    pdfA?: boolean | "4" | "4f"
+    /**
+     * Request PDF/UA-2 accessibility conformance (tagged PDF with a
+     * structure tree).
+     */
+    pdfUa?: boolean
+    /**
+     * Embed the source HTML in the PDF as an attachment. Either `true`
+     * (stored as "document.html") or a custom filename. Implies PDF/A-4f
+     * when `pdfA` is requested.
+     */
+    embedSourceHtml?: boolean | string
+    /**
+     * The pagination engine to use. Must have been made available through
+     * `registerPrintEngine()` if it is not the default. Defaults to
+     * "paged-with-floats".
+     */
+    printEngine?: string
+    /**
      * Place display (centered) figures as CSS page floats (moved to the top
      * of the page). Injected as overridable default CSS. Default: true.
      */
@@ -45,9 +69,10 @@ export interface PdfExporterOptions {
 
 /**
  * Export the document directly to a PDF, client-side, without the browser
- * print dialog. Reuses the print pipeline's HTML generation (vivliostyle
- * pagination) and then runs vivliostyle-pdf's DOM-to-PDF emitter on the
- * paginated iframe to produce a real vector PDF, which is downloaded.
+ * print dialog. Reuses the print pipeline's HTML generation (pagination by
+ * the selected print engine) and then runs the pages-to-pdf DOM-to-PDF
+ * emitter on the paginated iframe to produce a real vector PDF, which is
+ * downloaded.
  */
 export class PdfExporter extends PrintExporter {
     options: PdfExporterOptions
@@ -78,6 +103,7 @@ export class PdfExporter extends PrintExporter {
             documentStyles,
             progressCallback,
             {
+                printEngine: options.printEngine,
                 figurePageFloats: options.figurePageFloats,
                 tablePageFloats: options.tablePageFloats
             }
@@ -172,57 +198,69 @@ export class PdfExporter extends PrintExporter {
             addAlert("error", message)
         }
 
-        printHTML(html, {
-            removeIframe: false,
-            hideIframe: true,
-            errorCallback: (errorMessage: string) => {
-                fail(`${gettext("PDF export failed.")} ${errorMessage}`)
-            },
-            printCallback: (iframeWin: Window) => {
-                void (async () => {
-                    try {
-                        const bytes = await emitPdfFromVivliostyleWindow(
-                            iframeWin,
-                            (message: string) =>
-                                this.progressCallback?.(
-                                    `${title}: ${message}`,
-                                    null
-                                ),
-                            {
-                                sourceHtml: html,
-                                metadata,
-                                printOptions: this.options.printOptions,
-                                // The vivliostyle-pdf fallback fonts and the
-                                // WOFF2 decoder wasm are bundled in
-                                // static-libs/ and served from the app's
-                                // static files (see the vivliostyle-pdf
-                                // README). If they are missing, exports still
-                                // work whenever the document's own fonts can
-                                // be embedded.
-                                baseUrl: staticUrl(""),
-                                woff2WasmUrl: staticUrl("woff2/woff2.wasm"),
-                                attachments
-                            }
-                        )
-                        download(
-                            new Blob([bytes as BlobPart], {
-                                type: "application/pdf"
-                            }),
-                            filename,
-                            "application/pdf"
-                        )
-                        this.progressCallback?.(
-                            `${title}: ${gettext("PDF export complete.")}`,
-                            100
-                        )
-                    } catch (error) {
-                        console.error(error)
-                        fail(gettext("PDF export failed."))
-                    } finally {
-                        iframeWin.frameElement?.remove()
-                    }
-                })()
+        const engine = getPrintEngine(this.options.printEngine)
+
+        const pdfOptions: PdfOptions = {}
+        if (this.options.pdfUa) {
+            pdfOptions.pdfUa = 2
+        }
+        if (this.options.pdfA) {
+            // PDF/A-4 forbids embedded files — the conformance level is
+            // upgraded to PDF/A-4f whenever files are attached.
+            const embedsFiles =
+                attachments.length > 0 || this.options.embedSourceHtml !== undefined
+            pdfOptions.pdfA =
+                embedsFiles && this.options.pdfA !== "4f"
+                    ? "4f"
+                    : this.options.pdfA
+        }
+
+        try {
+            const paginated = await engine.preparePagination({
+                html,
+                title: metaData.title,
+                polyfillURL: staticUrl("paged/paged.polyfill.js"),
+                errorCallback: (errorMessage: string) => {
+                    fail(`${gettext("PDF export failed.")} ${errorMessage}`)
+                }
+            })
+            try {
+                const bytes = await emitPdfFromWindow(paginated.win, {
+                    onProgress: (message: string) =>
+                        this.progressCallback?.(`${title}: ${message}`, null),
+                    sourceHtml: html,
+                    metadata,
+                    printOptions: this.options.printOptions,
+                    embedSourceHtml: this.options.embedSourceHtml,
+                    // The fallback fonts, the WOFF2 decoder wasm and the
+                    // PDF/A sRGB ICC profile are bundled in static-libs/
+                    // and served from the app's static files. If they are
+                    // missing, exports still work whenever the document's
+                    // own fonts can be embedded, and the output intent is
+                    // skipped.
+                    baseUrl: staticUrl(""),
+                    woff2WasmUrl: staticUrl("woff2/woff2.wasm"),
+                    attachments,
+                    pdfOptions,
+                    backend: engine.backend
+                })
+                download(
+                    new Blob([bytes as BlobPart], {
+                        type: "application/pdf"
+                    }),
+                    filename,
+                    "application/pdf"
+                )
+                this.progressCallback?.(
+                    `${title}: ${gettext("PDF export complete.")}`,
+                    100
+                )
+            } finally {
+                paginated.cleanup()
             }
-        })
+        } catch (error) {
+            console.error(error)
+            fail(gettext("PDF export failed."))
+        }
     }
 }

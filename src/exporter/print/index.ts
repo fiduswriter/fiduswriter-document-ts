@@ -1,4 +1,3 @@
-import {printHTML} from "@vivliostyle/print"
 import {shortFileTitle, gettext, staticUrl} from "fwtoolkit"
 
 import {PAPER_SIZES} from "../../schema/const.js"
@@ -7,6 +6,19 @@ import {HTMLExporter} from "../html/index.js"
 import {HTMLExporterConvert} from "../html/convert.js"
 import type {HTMLExportMetadata} from "../html/convert.js"
 import {removeHidden} from "../tools/doc_content.js"
+import {getPrintEngine} from "./engines/registry.js"
+
+export {
+    registerPrintEngine,
+    getPrintEngine,
+    DEFAULT_PRINT_ENGINE
+} from "./engines/registry.js"
+export type {
+    PaginateConfig,
+    PaginatedWindow,
+    PrintEngine,
+    PrintEngineName
+} from "./engines/types.js"
 
 export type ProgressCallback = (
     message: string,
@@ -14,6 +26,12 @@ export type ProgressCallback = (
 ) => void
 
 export interface PrintExporterOptions {
+    /**
+     * The pagination engine to use. Must have been made available through
+     * `registerPrintEngine()` if it is not the default. Defaults to
+     * "paged-with-floats".
+     */
+    printEngine?: string
     /**
      * Place display figures as CSS page floats (moved to the top of the
      * page). Only applies to centered figures — side-aligned figures
@@ -60,10 +78,11 @@ export class PrintExporter extends HTMLExporter {
     }
 
     /**
-     * Build the vivliostyle-ready HTML string (and its metadata) shared by the
-     * print dialog and the PDF exporter: document content with the print CSS
-     * (pagination, footnotes, TOC page numbers) and the document style (with
-     * asset URLs made absolute so fonts/images resolve inside the iframe).
+     * Build the pagination-ready HTML string (and its metadata) shared by
+     * the print dialog and the PDF exporter: document content with the print
+     * CSS (pagination, footnotes, TOC page numbers) and the document style
+     * (with asset URLs made absolute so fonts/images resolve inside the
+     * iframe).
      */
     protected async buildPaginatedHtml(): Promise<{
         html: string
@@ -201,9 +220,9 @@ export class PrintExporter extends HTMLExporter {
                 // Render tracked changes when the document still contains the
                 // marks (resolved exports simply have none to render).
                 trackChanges: true,
-                // Formulas as SVG so the vivliostyle-pdf emitter (and the
-                // browser print pipeline) render fractions, radicals and
-                // stretchy delimiters faithfully.
+                // Formulas as SVG so the DOM-to-PDF emitter (and the browser
+                // print pipeline) render fractions, radicals and stretchy
+                // delimiters faithfully.
                 mathOutput: "svg"
             }
         )
@@ -225,32 +244,17 @@ export class PrintExporter extends HTMLExporter {
             100
         )
 
-        const config: {title?: string; printCallback?: (iframeWin: Window) => void} = {
-            title: metaData.title
+        const engine = getPrintEngine(this.options.printEngine)
+        // Marker for hosts and tests: the print pipeline has generated the
+        // HTML and is about to paginate, regardless of the engine in use.
+        ;(window as unknown as {printInstance?: unknown}).printInstance = {
+            engine: engine.name
         }
-
-        if (navigator.userAgent.includes("Gecko/")) {
-            // Firefox has issues printing images when in iframe. This workaround can be
-            // removed once that has been fixed. TODO: Add gecko bug number if there is one.
-            config.printCallback = iframeWin => {
-                const oldBody = document.body
-                document.body.parentElement!.dataset.vivliostylePaginated = "true"
-                document.body = iframeWin.document.body
-                document.body
-                    .querySelectorAll("figure, table")
-                    .forEach(el => delete (el as HTMLElement).dataset.category)
-                iframeWin.document
-                    .querySelectorAll("style")
-                    .forEach(el => document.body.appendChild(el))
-                const backgroundStyle = document.createElement("style")
-                backgroundStyle.innerHTML = "body {background-color: white;}"
-                document.body.appendChild(backgroundStyle)
-                window.print()
-                document.body = oldBody
-                delete document.body.parentElement!.dataset.vivliostylePaginated
-            }
-        }
-        await printHTML(html, config)
+        await engine.print({
+            html,
+            title: metaData.title,
+            polyfillURL: staticUrl("paged/paged.polyfill.js")
+        })
         this.progressCallback?.(
             `${shortFileTitle(this.doc.title, this.doc.path || "")}: ${gettext("Printing complete.")}`,
             100
