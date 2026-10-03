@@ -18,16 +18,16 @@ const makeEngine = (name: string): PrintEngine => ({
 
 describe("Print engine registry", () => {
     it("falls back to the default engine", () => {
-        expect(DEFAULT_PRINT_ENGINE).toEqual("paged-with-floats")
-        expect(getPrintEngine().name).toEqual("paged-with-floats")
-        expect(getPrintEngine("paged-with-floats").name).toEqual(
-            "paged-with-floats"
+        expect(DEFAULT_PRINT_ENGINE).toEqual("paginate-for-print")
+        expect(getPrintEngine().name).toEqual("paginate-for-print")
+        expect(getPrintEngine("paginate-for-print").name).toEqual(
+            "paginate-for-print"
         )
     })
 
     it("falls back to the default engine when an unknown engine is requested", () => {
         expect(getPrintEngine("does-not-exist").name).toEqual(
-            "paged-with-floats"
+            "paginate-for-print"
         )
     })
 

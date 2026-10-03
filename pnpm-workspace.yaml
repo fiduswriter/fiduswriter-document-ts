@@ -11,3 +11,5 @@ overrides:
   '@xmldom/xmldom': 0.9.12
 minimumReleaseAgeExclude:
   - paged-with-floats@0.11.1
+  - pages-to-pdf@0.4.1
+  - paginate-for-print@1.1.0

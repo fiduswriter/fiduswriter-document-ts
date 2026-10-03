@@ -52,7 +52,7 @@ export interface PdfExporterOptions {
     /**
      * The pagination engine to use. Must have been made available through
      * `registerPrintEngine()` if it is not the default. Defaults to
-     * "paged-with-floats".
+     * "paginate-for-print".
      */
     printEngine?: string
     /**

@@ -3,12 +3,12 @@ import type {BackendConfig} from "pages-to-pdf"
 /**
  * Identifiers of the pagination engines available to the exporters. Each
  * name matches the npm package that provides the engine: the default engine
- * is `paged-with-floats`; further engines — such as `vivliostyle-pdf`,
+ * is `paginate-for-print`; further engines — such as `vivliostyle-pdf`,
  * which wraps the AGPL licensed `@vivliostyle/print` — ship as adapters
  * inside their own packages and are made available through
  * `registerPrintEngine()`.
  */
-export type PrintEngineName = "paged-with-floats" | (string & {})
+export type PrintEngineName = "paginate-for-print" | (string & {})
 
 export interface PaginateConfig {
     /** The complete HTML document to paginate. */
@@ -19,7 +19,7 @@ export interface PaginateConfig {
     errorCallback?: (message: string) => void
     /**
      * URL of the pagination engine's script bundle (e.g. the
-     * paged-with-floats polyfill) to load inside the print iframe. Engines
+     * paginate-for-print polyfill) to load inside the print iframe. Engines
      * that load a bundle by URL honor this setting; others ignore it. The
      * hosting application serves the bundle from its static files and pins
      * the URL here.

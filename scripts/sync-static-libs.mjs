@@ -2,7 +2,7 @@
  * Refreshes the vendored PDF-export assets in static-libs/ from the npm
  * dependencies that ship them:
  *
- *   paged/paged.polyfill.js  ← paged-with-floats/dist/
+ *   paged/paged.polyfill.js  ← paginate-for-print/dist/
  *   icc/*                    ← pages-to-pdf/public/icc/
  *   woff2/woff2.wasm         ← pages-to-pdf/public/woff2/
  *   fonts/*                  ← pages-to-pdf/public/fonts/
@@ -44,7 +44,7 @@ function copyDir(from, to) {
     console.log(`synced ${to}`)
 }
 
-const pagedDist = packageDir("paged-with-floats")
+const pagedDist = packageDir("paginate-for-print")
 const pagesToPdf = packageDir("pages-to-pdf")
 
 copyFile(

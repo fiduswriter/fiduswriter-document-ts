@@ -1,15 +1,15 @@
-import {pagedWithFloatsEngine} from "paged-with-floats"
+import {paginateForPrintEngine} from "paginate-for-print"
 import type {PrintEngine} from "./types.js"
 
-export const DEFAULT_PRINT_ENGINE = "paged-with-floats"
+export const DEFAULT_PRINT_ENGINE = "paginate-for-print"
 
 const engines = new Map<string, PrintEngine>([
-    [pagedWithFloatsEngine.name, pagedWithFloatsEngine]
+    [paginateForPrintEngine.name, paginateForPrintEngine]
 ])
 
 /**
  * Make an additional pagination engine available to the exporters. Engine
- * adapters ship inside their own packages — both `paged-with-floats`
+ * adapters ship inside their own packages — both `paginate-for-print`
  * (bundled by default) and `vivliostyle-pdf` export a `PrintEngine`-
  * compatible object. Host applications that bundle additional engines must
  * import them from their packages and register them here at startup, which
@@ -22,7 +22,7 @@ export function registerPrintEngine(engine: PrintEngine): void {
 
 /**
  * Look up a pagination engine by name. Falls back to the default
- * (paged-with-floats) when the name is unknown, so that a missing optional
+ * (paginate-for-print) when the name is unknown, so that a missing optional
  * engine degrades gracefully.
  */
 export function getPrintEngine(name?: string): PrintEngine {

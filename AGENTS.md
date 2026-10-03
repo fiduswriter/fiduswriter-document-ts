@@ -34,8 +34,8 @@ Code in this repository should be limited to:
   `@fiduswriter/document/mathlive` re-export.
 - PDF-export static assets generated into `static-libs/` (not committed):
   the per-glyph fallback fonts, the WOFF2 decoder wasm, the PDF/A sRGB ICC
-  profile and the paged-with-floats polyfill, copied from the
-  paged-with-floats and pages-to-pdf packages during
+  profile and the paginate-for-print polyfill, copied from the
+  paginate-for-print and pages-to-pdf packages during
   `prepare`/`prepublishOnly`. Hosting apps copy them into their own
   `static-libs/` during postinstall, so they must ship with the npm package
   (transitive deps are not reliably hoisted under pnpm).
@@ -78,7 +78,7 @@ Do **not** put in this repository:
 ├── scripts/              # Build helpers
 │   ├── bundle-mathlive.ts # Bundles MathLive assets into static-libs/
 │   ├── sync-static-libs.mjs # Refreshes vendored PDF-export assets from
-│   │                       # the paged-with-floats/pages-to-pdf packages
+│   │                       # the paginate-for-print/pages-to-pdf packages
 │   ├── export-schema.js  # Writes schema.json
 │   └── deploy-pages.sh   # Deploys demo/ to git-pages
 ├── demo/                 # git-pages demo

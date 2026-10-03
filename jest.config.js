@@ -22,7 +22,7 @@ export default {
         "^downloadjs$": "<rootDir>/test/exporter/mocks/downloadjs.js",
         "^mathlive$": "<rootDir>/test/exporter/mocks/mathlive.js",
         "^mathml2omml$": "<rootDir>/test/exporter/mocks/mathml2omml.js",
-                "^paged-with-floats$": "<rootDir>/test/exporter/mocks/paged-with-floats.js",
+                "^paginate-for-print$": "<rootDir>/test/exporter/mocks/paginate-for-print.js",
         "^pages-to-pdf$": "<rootDir>/test/exporter/mocks/pages-to-pdf.js",
         "^pretty$": "<rootDir>/test/exporter/mocks/pretty.js",
         "^bibliojson$": "<rootDir>/test/exporter/mocks/bibliojson.js",
