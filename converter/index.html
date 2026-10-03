@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@fiduswriter/document — File converter</title>
+        <link rel="stylesheet" href="../css/fwtoolkit.css" />
+        <link rel="stylesheet" href="../demo.css" />
+        <link rel="icon" type="image/png" href="../favicon.png" />
+    </head>
+    <body>
+        <main class="demo-container">
+            <h1>File converter</h1>
+            <p>
+                Export a small sample Fidus Writer document to several formats.
+                All processing happens in the browser.
+            </p>
+
+            <div class="demo-field">
+                <label for="style-select">Citation style</label>
+                <select id="style-select">
+                    <option value="apa">APA 7th</option>
+                    <option value="chicago-author-date">Chicago author-date 17th</option>
+                    <option value="ieee">IEEE</option>
+                </select>
+            </div>
+
+            <div class="demo-field">
+                <label for="doc-json">Document JSON</label>
+                <textarea id="doc-json"></textarea>
+            </div>
+
+            <div class="demo-field">
+                <label for="bib-json">Bibliography DB JSON</label>
+                <textarea id="bib-json"></textarea>
+            </div>
+
+            <div class="demo-field">
+                <label for="docx-template">
+                    DOCX template
+                    <span class="demo-field-hint">(leave empty to use the built-in Classic template)</span>
+                </label>
+                <input type="file" id="docx-template" accept=".docx" />
+            </div>
+
+            <div class="demo-field">
+                <label for="odt-template">
+                    ODT template
+                    <span class="demo-field-hint">(leave empty to use the built-in Free template)</span>
+                </label>
+                <input type="file" id="odt-template" accept=".odt" />
+            </div>
+
+            <div class="demo-actions">
+                <button id="export-jats" class="fw-button fw-dark">
+                    JATS
+                </button>
+                <button id="export-html" class="fw-button fw-dark">
+                    HTML
+                </button>
+                <button id="export-latex" class="fw-button fw-dark">
+                    LaTeX
+                </button>
+                <button id="export-pandoc" class="fw-button fw-dark">
+                    Pandoc JSON
+                </button>
+                <button id="export-epub" class="fw-button fw-dark">
+                    EPUB
+                </button>
+                <button id="export-docx" class="fw-button fw-dark">
+                    DOCX
+                </button>
+                <button id="export-odt" class="fw-button fw-dark">
+                    ODT
+                </button>
+                <button id="export-native" class="fw-button fw-dark">
+                    Native Fidus
+                </button>
+            </div>
+
+            <pre id="log" class="demo-output">Click a button to export.</pre>
+
+            <p><a href="../index.html">← Back to demos</a></p>
+        </main>
+
+        <script type="module" src="./index.js"></script>
+    </body>
+</html>
