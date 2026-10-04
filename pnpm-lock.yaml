@@ -58,8 +58,8 @@ importers:
         specifier: ^0.4.1
         version: 0.4.1
       paginate-for-print:
-        specifier: ^1.1.1
-        version: 1.1.1(@pdfme/pdf-lib@6.2.2)
+        specifier: ^1.1.2
+        version: 1.1.2(@pdfme/pdf-lib@6.2.2)
       prettier:
         specifier: ^3.9.9
         version: 3.9.9
@@ -2167,8 +2167,8 @@ packages:
   pages-to-pdf@0.4.1:
     resolution: {integrity: sha512-Y91uRab9lJNzw9M89QPzX6pd/ITG9MGSMx7RCA9cY7l3SM3oh5Tj9i8XTrIBxUyffiHFWVcsz+W6MotuwMwqBA==}
 
-  paginate-for-print@1.1.1:
-    resolution: {integrity: sha512-iqf/fgTj/cpUGKKLW3StiFqQjd2f2CHWNq9iqDxYTRTOWmjiHdPqZWLo9/b8jCtFsrKZchUEo6V61Luj0hodEg==}
+  paginate-for-print@1.1.2:
+    resolution: {integrity: sha512-8lgEyfIsuaN7E3aFBjbQIp0LxHoG/MNvDSZZIvausrMwFXEUvOYRTJUf5wKn/RREHrLnnw5SxjMK0Tm2NiVOYA==}
 
   pako@0.2.9:
     resolution: {integrity: sha512-NUcwaKxUxWrZLpDG+z/xZaCgQITkA/Dv4V/T6bw7VON6l1Xz/VnrBqrYjZQ12TamKHzITTfOEIYUj48y2KXImA==}
@@ -4742,7 +4742,7 @@ snapshots:
       fontkit: 2.0.4
       svg4pdf-lib: 0.1.2(@pdfme/pdf-lib@6.2.2)
 
-  paginate-for-print@1.1.1(@pdfme/pdf-lib@6.2.2):
+  paginate-for-print@1.1.2(@pdfme/pdf-lib@6.2.2):
     dependencies:
       '@babel/runtime': 7.29.7
       '@chenglou/pretext': 0.0.8

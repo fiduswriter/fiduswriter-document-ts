@@ -188,7 +188,7 @@
     "mathml2omml": "^0.5.0",
     "orderedmap": "^2.1.1",
     "pages-to-pdf": "^0.4.1",
-    "paginate-for-print": "^1.1.1",
+    "paginate-for-print": "^1.1.2",
     "prettier": "^3.9.9",
     "prosemirror-commands": "^1.7.2",
     "prosemirror-gapcursor": "^1.4.1",
