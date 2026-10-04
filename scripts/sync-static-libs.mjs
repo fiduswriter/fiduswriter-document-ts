@@ -2,7 +2,7 @@
  * Refreshes the vendored PDF-export assets in static-libs/ from the npm
  * dependencies that ship them:
  *
- *   paged/paged.polyfill.js  ← paginate-for-print/dist/
+ *   paged/paged.polyfill.js  ← paginate-for-print/dist/paginate.polyfill.js
  *   icc/*                    ← pages-to-pdf/public/icc/
  *   woff2/woff2.wasm         ← pages-to-pdf/public/woff2/
  *   fonts/*                  ← pages-to-pdf/public/fonts/
@@ -25,14 +25,30 @@ function packageDir(dep) {
     return path.dirname(path.dirname(entry))
 }
 
-function assertExists(dir) {
-    if (!existsSync(dir)) {
-        throw new Error(`Missing asset source: ${dir}`)
+function assertExists(target) {
+    if (!existsSync(target)) {
+        throw new Error(`Missing asset source: ${target}`)
     }
 }
 
+// The polyfill was renamed from `paged.polyfill.js` to
+// `paginate.polyfill.js` in paginate-for-print 1.1.1; accept both names.
+const POLYFILL_NAMES = ["paginate.polyfill.js", "paged.polyfill.js"]
+
+function resolvePolyfill(distDir) {
+    for (const name of POLYFILL_NAMES) {
+        const candidate = path.join(distDir, name)
+        if (existsSync(candidate)) {
+            return candidate
+        }
+    }
+    throw new Error(
+        `Missing asset source: none of ${POLYFILL_NAMES.join(", ")} in ${distDir}`
+    )
+}
+
 function copyFile(from, to) {
-    assertExists(path.dirname(from))
+    assertExists(from)
     mkdirSync(path.dirname(to), {recursive: true})
     copyFileSync(from, to)
     console.log(`synced ${to}`)
@@ -47,8 +63,10 @@ function copyDir(from, to) {
 const pagedDist = packageDir("paginate-for-print")
 const pagesToPdf = packageDir("pages-to-pdf")
 
+// Vendored under its historic name: staticUrl("paged/paged.polyfill.js") is
+// part of this package's contract with the apps serving static-libs/.
 copyFile(
-    path.join(pagedDist, "dist", "paged.polyfill.js"),
+    resolvePolyfill(path.join(pagedDist, "dist")),
     path.join("static-libs", "paged", "paged.polyfill.js")
 )
 copyDir(path.join(pagesToPdf, "public", "icc"), path.join("static-libs", "icc"))
