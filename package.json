@@ -183,7 +183,7 @@
     "fast-xml-parser": "^5.11.2",
     "fwtoolkit": "^0.2.26",
     "jszip": "^3.10.2",
-    "mathlive": "^0.110.0",
+    "mathlive": "^0.111.0",
     "mathml-to-latex": "^1.8.0",
     "mathml2omml": "^0.5.0",
     "orderedmap": "^2.1.1",
