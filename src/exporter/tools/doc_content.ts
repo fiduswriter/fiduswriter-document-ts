@@ -98,24 +98,43 @@ interface TableCellAttrs {
 
 const addCoveredTableCells = (node: FidusNode): void => {
     const rows = node.content!
-    const columns = (rows[0].content || []).reduce(
-        (cols, cell) => cols + ((cell.attrs?.colspan as number) || 1),
-        0
+    // Covered cells carry rowspan=0 & colspan=0. They are (re-)created by
+    // this function, so filtering them out first makes it idempotent.
+    const isCoveredMarker = (cell: FidusNode): boolean =>
+        (cell.attrs as TableCellAttrs | undefined)?.rowspan === 0 &&
+        (cell.attrs as TableCellAttrs | undefined)?.colspan === 0
+    // Grid width: the widest row, ignoring covered cells.
+    const columns = rows.reduce((max, row) => {
+        const rowWidth = (row.content || [])
+            .filter(cell => !isCoveredMarker(cell))
+            .reduce(
+                (cols, cell) => cols + (((cell.attrs as TableCellAttrs | undefined)?.colspan as number) || 1),
+                0
+            )
+        return Math.max(max, rowWidth)
+    }, 0)
+    if (!columns) {
+        return
+    }
+    // A matrix with one slot per grid position. Slots start out undefined
+    // ("free") and are filled with the real cell or with a covered-cell
+    // marker as the cells are placed.
+    const matrix: Array<Array<FidusNode | undefined>> = Array.from(
+        {length: rows.length},
+        () => Array.from({length: columns}, () => undefined)
     )
-    // Add empty cells for col/rowspan
-    const fixedTableMatrix: FidusNode[] = Array.from({length: rows.length}, () => ({
-        type: "table_row",
-        content: Array.from({length: columns}, () => ({} as FidusNode))
-    }))
-    let rowIndex = -1
-    rows.forEach(row => {
+    const coveredCell = (): FidusNode => ({
+        type: "table_cell",
+        attrs: {rowspan: 0, colspan: 0}
+    })
+    rows.forEach((row, currentRow) => {
         let columnIndex = 0
-        rowIndex++
-        if (!row.content) {
-            return
-        }
-        row.content.forEach(cell => {
-            while (fixedTableMatrix[rowIndex].content![columnIndex]) {
+        ;(row.content || []).forEach(cell => {
+            if (isCoveredMarker(cell)) {
+                return
+            }
+            // Skip positions that are covered by an earlier row/colspan.
+            while (matrix[currentRow][columnIndex]) {
                 columnIndex++
             }
             const rowspan = ((cell.attrs as TableCellAttrs)?.rowspan as number) || 1
@@ -126,21 +145,31 @@ const addCoveredTableCells = (node: FidusNode): void => {
                     if (i === 0 && j === 0) {
                         fixedCell = cell
                     } else {
-                        fixedCell = {
-                            type: "table_cell",
-                            attrs: {
-                                rowspan: rowspan > 1 ? 0 : 1,
-                                colspan: colspan > 1 ? 0 : 1
-                            } as TableCellAttrs
-                        }
+                        fixedCell = coveredCell()
                     }
-                    fixedTableMatrix[rowIndex + i].content![columnIndex + j] =
-                        fixedCell
+                    if (
+                        currentRow + i < rows.length &&
+                        columnIndex + j < columns
+                    ) {
+                        matrix[currentRow + i][columnIndex + j] = fixedCell
+                    }
                 }
             }
         })
     })
-    node.content = fixedTableMatrix
+    // Fill any grid positions that no cell covers (ragged rows, or cells
+    // clipped by a rowspan/colspan overshoot) so the grid stays rectangular.
+    matrix.forEach(rowCells =>
+        rowCells.forEach((cell, index) => {
+            if (!cell) {
+                rowCells[index] = coveredCell()
+            }
+        })
+    )
+    node.content = matrix.map(cells => ({
+        type: "table_row",
+        content: cells.map(cell => cell as FidusNode)
+    }))
 }
 
 export const fixTables = (node: FidusNode): FidusNode => {

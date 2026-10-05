@@ -464,6 +464,10 @@ export class HTMLExporterConvert {
      * When rendering tracked changes, mark block-level nodes that carry a
      * `track` attribute (deleted/inserted blocks) with `data-track`, so CSS
      * (and the vivliostyle-pdf emitter's decoration walk) can style them.
+     *
+     * The full track data (author, date, approval) is additionally written as
+     * `data-track-json` — the same JSON form the document schema uses in the
+     * editor DOM — so that importers can restore the tracked changes exactly.
      */
     blockTrackData(attrs: Record<string, unknown>): string {
         if (!this.trackChanges) {
@@ -471,6 +475,8 @@ export class HTMLExporterConvert {
         }
         const track = attrs.track
         if (Array.isArray(track)) {
+            let dataTrack = ""
+            let dataTrackJson = ""
             const type = (track as Array<{type?: string}>).find(
                 (t: {type?: string}) =>
                     t &&
@@ -478,10 +484,27 @@ export class HTMLExporterConvert {
                     t.type !== "block_change"
             )?.type
             if (type) {
-                return ` data-track="${escapeText(type)}"`
+                dataTrack = ` data-track="${escapeText(type)}"`
             }
+            if (track.length) {
+                dataTrackJson = ` data-track-json="${escapeText(JSON.stringify(track))}"`
+            }
+            return dataTrack + dataTrackJson
         }
         return ""
+    }
+
+
+    /**
+     * `data-metadata` attribute carrying a part's metadata field. Without it,
+     * the metadata would only be recoverable from the bare class name, which
+     * is ambiguous.
+     */
+    partMetadata(attrs: Record<string, unknown>): string {
+        const metadata = attrs.metadata
+        return typeof metadata === "string" && metadata
+            ? ` data-metadata="${escapeText(metadata)}"`
+            : ""
     }
 
     walkJson(node: FidusNode, options: Record<string, unknown> = {}): string {
@@ -497,7 +520,7 @@ export class HTMLExporterConvert {
                 end = "</div>" + end
                 break
             case "heading_part":
-                start += `<div class="doc-part doc-heading doc-${attrs.id} ${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
+                start += `<div class="doc-part doc-heading doc-${attrs.id} ${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${this.partMetadata(attrs)}${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
                 end = "</div>" + end
                 break
             case "contributor":
@@ -505,7 +528,7 @@ export class HTMLExporterConvert {
                 break
             case "contributors_part":
                 if (node.content) {
-                    start += `<div class="doc-part doc-contributors doc-${attrs.id} ${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
+                    start += `<div class="doc-part doc-contributors doc-${attrs.id} ${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${this.partMetadata(attrs)}${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
                     end = "</div>" + end
                     let counter = 0
                     const contributorOutputs: string[] = []
@@ -568,7 +591,7 @@ export class HTMLExporterConvert {
                 break
             case "tags_part":
                 if (node.content) {
-                    start += `<div class="doc-part doc-tags doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
+                    start += `<div class="doc-part doc-tags doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${this.partMetadata(attrs)}${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
                     end = "</div>" + end
                 }
                 break
@@ -579,7 +602,7 @@ export class HTMLExporterConvert {
                 break
             case "richtext_part":
                 if (node.content) {
-                    start += `<div class="doc-part doc-richtext doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
+                    start += `<div class="doc-part doc-richtext doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${this.partMetadata(attrs)}${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
                     end = "</div>" + end
                 }
                 break
@@ -602,11 +625,11 @@ export class HTMLExporterConvert {
                 break
             }
             case "separator_part":
-                content += `<hr class="doc-part doc-separator doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}">`
+                content += `<hr class="doc-part doc-separator doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${this.partMetadata(attrs)}>`
                 break
             case "table_part":
                 if (node.content) {
-                    start += `<div class="doc-part doc-table doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
+                    start += `<div class="doc-part doc-table doc-${attrs.id} doc-${attrs.metadata || "other"}" id="${this.idPrefix}${attrs.id}"${this.partMetadata(attrs)}${attrs.language ? ` lang="${attrs.language}"` : ""}${this.blockTrackData(attrs)}>`
                     end = "</div>" + end
                 }
                 break
@@ -844,21 +867,27 @@ export class HTMLExporterConvert {
                 break
             }
             case "citation": {
-                if (!this.citations.citationTexts.length) {
-                    // There are no citations. This may happen while analyzing.
-                    return ""
-                }
                 const citationText =
-                    this.citations.citationTexts[this.citationCount++]
+                    this.citations.citationTexts[this.citationCount++] || ""
+                const format =
+                    typeof attrs.format === "string" ? attrs.format : ""
+                const references = Array.isArray(attrs.references)
+                    ? (attrs.references as Array<{id?: string | number}>)
+                    : []
+                // The references attribute lets importers restore the
+                // citation node even without the rendered text.
+                const wrappedCitation = `<span class="citation" data-format="${escapeText(format)}" data-references="${escapeText(
+                    references.map(ref => String(ref.id)).join(",")
+                )}">${citationText}</span>`
                 if (
                     options.inFootnote ||
                     this.citations.type !== "note"
                 ) {
-                    content += citationText
+                    content += wrappedCitation
                 } else {
                     content += `<a class="footnote"${this.epub ? 'epub:type="noteref" ' : ""} href="#fn-${++this.fnCounter}">${this.fnCounter}</a>`
                     this.footnotes.push(
-                        `<aside class="footnote"${this.epub ? 'epub:type="footnote" ' : ""} id="fn-${this.fnCounter}"><label>${this.fnCounter}</label><p id="${this.idPrefix}p-${++this.parCounter}">${citationText}</p></aside>`
+                        `<aside class="footnote"${this.epub ? 'epub:type="footnote" ' : ""} id="fn-${this.fnCounter}"><label>${this.fnCounter}</label><p id="${this.idPrefix}p-${++this.parCounter}">${wrappedCitation}</p></aside>`
                     )
                 }
                 break
@@ -909,7 +938,9 @@ export class HTMLExporterConvert {
                 const figureAligned =
                     typeof attrs.aligned === "string" ? attrs.aligned : ""
                 const figureWidth =
-                    typeof attrs.width === "string" ? attrs.width : ""
+                    typeof attrs.width === "string" || typeof attrs.width === "number"
+                        ? String(attrs.width)
+                        : ""
                 if (
                     figureCategory === "none" &&
                     imageUrl &&
@@ -1025,7 +1056,9 @@ export class HTMLExporterConvert {
             case "table": {
                 const tableId = typeof attrs.id === "string" ? attrs.id : ""
                 const tableWidth =
-                    typeof attrs.width === "string" ? attrs.width : ""
+                    typeof attrs.width === "string" || typeof attrs.width === "number"
+                        ? String(attrs.width)
+                        : ""
                 const tableAligned =
                     typeof attrs.aligned === "string" ? attrs.aligned : ""
                 const tableLayout =
@@ -1111,12 +1144,12 @@ export class HTMLExporterConvert {
                         end = "</span>" + end
                         content = `<img class="equation-svg" src="${svgMath.src}" alt="${escapeText(equation)}" style="width:${svgMath.widthEm}em;height:${svgMath.heightEm}em">`
                     } else {
-                        start += '<span class="equation"><math>'
+                        start += `<span class="equation" data-equation="${escapeText(equation)}"><math>`
                         end = "</math></span>" + end
                         content = convertLatexToMathMl(equation)
                     }
                 } else {
-                    start += '<span class="equation"><math>'
+                    start += `<span class="equation" data-equation="${escapeText(equation)}"><math>`
                     end = "</math></span>" + end
                     content = convertLatexToMathMl(equation)
                 }

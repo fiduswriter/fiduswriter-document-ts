@@ -17,8 +17,28 @@ export class CSLExporter {
 }
 
 export class BibLatexExporter {
-    constructor() {
+    constructor(bibDB) {
+        this.bibDB = bibDB
         this.items = []
+    }
+
+    // Minimal but valid BibLaTeX output for the exported entries.
+    parse() {
+        let bib = ""
+        Object.entries(this.bibDB).forEach(([, entry]) => {
+            const fields = entry.fields || {}
+            const fieldStrings = Object.entries(fields)
+                .filter(([key]) => key !== "entry_key" && key !== "entry_type")
+                .map(
+                    ([key, value]) => `${key} = {${String(value).replace(/[{}]/g, "")}}`
+                )
+            bib += `@${entry.bib_type || "misc"}{${entry.entry_key || "Undefined"},\n`
+            bib += fieldStrings.length
+                ? `${fieldStrings.map(line => `  ${line}`).join(",\n")}\n`
+                : ""
+            bib += "}\n\n"
+        })
+        return bib
     }
 }
 

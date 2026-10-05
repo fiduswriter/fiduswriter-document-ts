@@ -1,0 +1,56 @@
+interface HeaderTemplateOptions {
+    authors: string
+    title: string
+    date: string
+    keywords: string
+    subtitle: string
+    abstract: string
+    publicationStmt: string
+}
+
+export const header = ({
+    authors,
+    title,
+    date,
+    keywords,
+    subtitle,
+    abstract,
+    publicationStmt
+}: HeaderTemplateOptions): string => `
+<teiHeader>
+    <fileDesc>
+        <titleStmt>
+            <title type="full">
+                ${title}
+                ${subtitle}
+            </title>
+            ${authors}
+        </titleStmt>
+        <editionStmt>
+            <edition>
+                <date>${date}</date>
+            </edition>
+        </editionStmt>
+        <publicationStmt>
+            ${publicationStmt}
+        </publicationStmt>
+        <sourceDesc>
+            <p>Based on a Fidus Writer document</p>
+        </sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+        <appInfo>
+            <application ident="Fidus-Writer-TEI-Exporter" version="1.0">
+            <label>Fidus Writer TEI Exporter</label>
+            </application>
+        </appInfo>
+    </encodingDesc>
+    <profileDesc>
+        <textClass>
+            ${keywords}
+        </textClass>
+        <abstract>
+            ${abstract}
+        </abstract>
+    </profileDesc>
+</teiHeader>`

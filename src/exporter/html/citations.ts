@@ -137,7 +137,11 @@ export class HTMLExporterCitations {
                     const sortedItems = ((citFm.citations[index] as unknown as {sortedItems: Array<[unknown, {id: string}]>}).sortedItems)
                     const citId = sortedItems[conIndex][1].id
                     const htmlId = this.htmlIdConvert[citId]
-                    return `${prefix}<a class="bibliography" href="#ref-${htmlId}">${citationText}</a>${suffix}`
+                    // data-references carries the internal bibliography
+                    // database id so that importers can map the link back to
+                    // the original entry without relying on the order of the
+                    // rendered bibliography.
+                    return `${prefix}<a class="bibliography" href="#ref-${htmlId}" data-references="${escapeText(String(citId))}">${citationText}</a>${suffix}`
                 })
                 .join(origCitationLayout.delimiter || "")
             return content

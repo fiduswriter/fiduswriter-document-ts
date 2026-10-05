@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="copyright" content="© 2024 Jane Doe" />
+        <title>Test Document for Export/Import</title>
+        <meta name="author" content="Jane Doe, John Smith" />
+        <link rel="schema.dcterms" href="http://purl.org/dc/terms/" />
+        <meta name="dcterms.dateCopyrighted" content="2024" />
+        <meta name="dcterms.rightsHolder" content="Jane Doe" />
+        <link
+            rel="license"
+            href="https://creativecommons.org/licenses/by/4.0/"
+        />
+        <meta name="keywords" content="testing, export, fiduswriter" />
+        <link rel="stylesheet" type="text/css" href="css/document.css" />
+        <link rel="stylesheet" type="text/css" href="css/mathlive.css" />
+    </head>
+    <body class="doc user-contents">
+        <div id="body">
+            <div class="doc-part doc-title" id="title">
+                Test Document for Export/Import
+            </div>
+            <div
+                class="doc-part doc-contributors doc-undefined authors"
+                id="undefined"
+                data-metadata="authors"
+            >
+                <span id="undefined-0" class="person"
+                    ><span class="name"
+                        ><span class="firstname">Jane</span>
+                        <span class="lastname">Doe</span></span
+                    ><a class="affiliation" href="#aff-1">A</a></span
+                >,
+                <span id="undefined-1" class="person"
+                    ><span class="name"
+                        ><span class="firstname">John</span>
+                        <span class="lastname">Smith</span></span
+                    ><a class="affiliation" href="#aff-2">AB</a></span
+                >
+            </div>
+            <div
+                class="doc-part doc-tags doc-undefined doc-keywords"
+                id="undefined"
+                data-metadata="keywords"
+            >
+                <span class="tag">testing</span><span class="tag">export</span
+                ><span class="tag">fiduswriter</span>
+            </div>
+            <div
+                class="doc-part doc-richtext doc-abstract doc-other"
+                id="abstract"
+            >
+                <p id="p-1">
+                    This is a comprehensive test document used to verify the
+                    fidelity of DOCX and ODT import and export filters in Fidus
+                    Writer. It covers all supported features including
+                    <strong>bold</strong>, <em>italic</em>,
+                    <span class="underline">underline</span>,
+                    <sup>superscript</sup>, <sub>subscript</sub>,
+                    <code>code</code>, and smallcaps formatting.
+                </p>
+            </div>
+            <div
+                class="doc-part doc-heading doc-introduction other"
+                id="introduction"
+            >
+                <h1 id="intro-heading">Introduction</h1>
+                <p id="p-2">
+                    This section demonstrates various block-level elements and
+                    inline formatting.
+                </p>
+                <h2 id="text-formatting">Text Formatting</h2>
+                <p id="p-3">
+                    <em><strong>Bold and italic combined</strong></em> and
+                    <a href="https://fiduswriter.org">a hyperlink</a>.
+                </p>
+                <p id="p-4">
+                    <span
+                        class="anchor"
+                        id="my-anchor"
+                        data-id="my-anchor"
+                    ></span
+                    >This paragraph has an anchor named &quot;my-anchor&quot;
+                    for cross-referencing.
+                </p>
+                <p id="p-5">
+                    Cross-reference to
+                    <a class="reference" href="#intro-heading">Introduction</a>.
+                </p>
+                <figure class="code-block-figure" id="">
+                    <figcaption><span class="label"> 1: </span></figcaption>
+                    <pre
+                        data-language="javascript"
+                        data-category=""
+                        data-title=""
+                        data-id=""
+                    ><code>function hello() {
+  console.log(&quot;Hello, World!&quot;);
+}</code></pre>
+                </figure>
+                <blockquote>
+                    <p id="p-6">
+                        This is a blockquote. It should be rendered as a
+                        quotation in both DOCX and ODT.
+                    </p>
+                </blockquote>
+                <h3 id="lists">Lists</h3>
+                <ul id="list-1">
+                    <li><p id="p-7">First bullet item</p></li>
+                    <li>
+                        <p id="p-8">
+                            Second bullet item with <strong>bold text</strong>
+                        </p>
+                    </li>
+                    <li><p id="p-9">Third bullet item</p></li>
+                </ul>
+                <ol id="list-2">
+                    <li><p id="p-10">First ordered item</p></li>
+                    <li><p id="p-11">Second ordered item</p></li>
+                </ol>
+            </div>
+            <div
+                class="doc-part doc-heading doc-figures-and-tables other"
+                id="figures-and-tables"
+            >
+                <h1 id="figures">Figures</h1>
+                <figure
+                    id="figure-1"
+                    class="aligned-center image-width-80"
+                    data-aligned="center"
+                    data-width="80"
+                    data-category="figure"
+                >
+                    <img src="images/sample-image-1.png" />
+                    <figcaption>
+                        <label>Figure 1</label>
+                        <p>A sample figure caption</p>
+                    </figcaption>
+                </figure>
+                <figure
+                    id="figure-2"
+                    class="aligned-left image-width-50"
+                    data-aligned="left"
+                    data-width="50"
+                    data-category="none"
+                >
+                    <div class="figure-equation" data-equation="E = mc^2">
+                        <math display="block"
+                            ><mrow
+                                ><mi>E</mi><mo>=</mo><mi>m</mi
+                                ><msup><mi>c</mi><mn>2</mn></msup></mrow
+                            ></math
+                        >
+                    </div>
+                </figure>
+                <p id="p-12">
+                    Cross-reference to
+                    <a class="reference" href="#figure-1">Figure 1</a>.
+                </p>
+                <h1 id="tables">Tables</h1>
+                <table
+                    id="table-1"
+                    class="table-100 table-center table-"
+                    data-width="100"
+                    data-aligned="center"
+                    data-layout=""
+                    data-category="table"
+                >
+                    <caption>
+                        <label>Table 1</label>
+                        <p>A sample table</p>
+                    </caption>
+                    <tbody>
+                        <tr>
+                            <th>
+                                <p id="p-13"><strong>Header 1</strong></p>
+                            </th>
+                            <th>
+                                <p id="p-14"><strong>Header 2</strong></p>
+                            </th>
+                            <th>
+                                <p id="p-15"><strong>Header 3</strong></p>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td><p id="p-16">Row 1, Cell 1</p></td>
+                            <td><p id="p-17">Row 1, Cell 2</p></td>
+                            <td><p id="p-18">Row 1, Cell 3</p></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <p id="p-19">Merged cell (colspan=2)</p>
+                            </td>
+                            <td><p id="p-20">Row 2, Cell 3</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div
+                class="doc-part doc-heading doc-footnotes-citations other"
+                id="footnotes-citations"
+            >
+                <h1 id="footnotes-section">Footnotes</h1>
+                <p id="p-21">
+                    This is a paragraph with a footnote<a
+                        class="footnote"
+                        href="#fn-1"
+                        >1</a
+                    >
+                    at the end.
+                </p>
+                <p id="p-23">
+                    This paragraph has an equation:
+                    <span
+                        class="equation"
+                        data-equation="\int_{a}^{b} f(x) \, dx"
+                        ><math
+                            ><mrow
+                                ><msubsup
+                                    ><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup
+                                ><mi>f</mi><mo>&#x2061;</mo
+                                ><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow
+                                ><mspace width="0.16666666666666666em" /><mi
+                                    >d</mi
+                                ><mo>&#8290;</mo><mi>x</mi></mrow
+                            ></math
+                        ></span
+                    >
+                    inline with text.
+                </p>
+                <p id="p-24">
+                    This paragraph contains a citation:
+                    <span
+                        class="citation"
+                        data-format="autocite"
+                        data-references="1"
+                    ></span
+                    >.
+                </p>
+            </div>
+            <div
+                class="doc-part doc-heading doc-tracked-changes other"
+                id="tracked-changes"
+            >
+                <h1 id="changes-section">Tracked Changes</h1>
+                <p id="p-25">
+                    This paragraph contains inserted text and deleted text with
+                    tracked changes.
+                </p>
+                <p id="p-26">This paragraph was changed from a heading.</p>
+                <p id="p-27">Inline format changed text here.</p>
+            </div>
+            <div
+                class="doc-part doc-heading doc-comments-section other"
+                id="comments-section"
+            >
+                <h1 id="comments">Comments</h1>
+                <p id="p-28">This paragraph has a commented word in it.</p>
+            </div>
+        </div>
+        <div id="back">
+            <section id="affiliations" class="affiliations">
+                <aside class="affiliation" id="aff-1">
+                    <label>A</label>
+                    <div>Test University</div>
+                </aside>
+                <aside class="affiliation" id="aff-2">
+                    <label>AB</label>
+                    <div>Research Lab</div>
+                </aside>
+            </section>
+            <section
+                class="fnlist footnotes"
+                role="doc-footnotes"
+                id="footnotes"
+            >
+                <aside class="footnote" role="doc-footnote" id="fn-1">
+                    <label>1</label>
+                    <p id="p-22">
+                        This is the footnote content with <em>italic text</em>.
+                    </p>
+                </aside>
+            </section>
+        </div>
+        <div>© 2024 Jane Doe</div>
+        <div>
+            <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"
+                >CC BY 4.0 (2024)</a
+            >
+        </div>
+    </body>
+</html>
