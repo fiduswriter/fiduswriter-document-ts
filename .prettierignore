@@ -7,6 +7,8 @@ test/
 jest.config.js
 scripts/
 package-lock.json
+pnpm-lock.yaml
+pnpm-workspace.yaml
 package.json
 .mathlive_bundle_cache.json
 static-libs/

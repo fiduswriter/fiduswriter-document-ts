@@ -12,6 +12,7 @@ const sampleDoc = JSON.parse(
 const sampleSettings = JSON.parse(
     readFileSync(join(__dirname, "fixtures", "sample-settings.json"), "utf-8")
 )
+const {expectValidTei} = await import("../helpers/tei-validation.js")
 
 const IMAGE_DB = {
     db: {
@@ -269,9 +270,13 @@ describe("TEI template helpers", () => {
 describe("TEI exporter: schema coverage", () => {
     let TEIExporter
     let docSchema
+    let tei
     beforeAll(async () => {
         ;({TEIExporter} = await import("../../src/exporter/tei/index.js"))
         ;({docSchema} = await import("../../src/schema/document/index.js"))
+        // Export the full-coverage fixture once; most assertions below run
+        // against this shared output.
+        tei = await exportTei(makeDoc())
     })
 
     const makeDoc = () => ({
@@ -308,8 +313,11 @@ describe("TEI exporter: schema coverage", () => {
         expect(gaps.missingMarkAttrs).toEqual([])
     })
 
-    it("exports heading levels 4-6 in nested numbered divs", async () => {
-        const tei = await exportTei(makeDoc())
+    it("exports schema-valid TEI XML", () => {
+        expectValidTei(tei)
+    })
+
+    it("exports heading levels 4-6 in nested numbered divs", () => {
         expect(flat(tei)).toContain('rend="DH-Heading4"')
         expect(flat(tei)).toContain('rend="DH-Heading5"')
         expect(flat(tei)).toContain('rend="DH-Heading6"')
@@ -317,22 +325,21 @@ describe("TEI exporter: schema coverage", () => {
         expect(flat(tei)).toContain("<head>7.1.1.1.1.1 Level Six</head>")
     })
 
-    it("exports hard breaks and horizontal rules as line breaks", async () => {
-        const tei = await exportTei(makeDoc())
+    it("exports hard breaks and horizontal rules as line breaks", () => {
         // hard_break inside a paragraph renders <lb/>, the horizontal rule
         // renders as a rule line break.
         expect(tei.match(/<lb \/>/g).length).toBeGreaterThanOrEqual(1)
         expect(flat(tei)).toContain('<lb rend="rule" />')
     })
 
-    it("exports code blocks with their content", async () => {
-        const tei = await exportTei(makeDoc())
-        expect(tei).toContain("<code>")
+    it("exports code blocks with their content", () => {
+        // TEI P5 has no <code> element; code blocks render as anonymous
+        // blocks with a code rendition.
+        expect(flat(tei)).toContain('<ab rend="code">')
         expect(tei).toContain("def hello():")
     })
 
-    it("exports ordered and unordered lists, tracked items included", async () => {
-        const tei = await exportTei(makeDoc())
+    it("exports ordered and unordered lists, tracked items included", () => {
         expect(flat(tei)).toContain('<list type="ordered">')
         expect(flat(tei)).toContain('<list type="unordered">')
         expect(tei).toContain("Ordered item starting at three")
@@ -340,7 +347,6 @@ describe("TEI exporter: schema coverage", () => {
     })
 
     it("exports image and equation figures with captions", async () => {
-        const tei = await exportTei(makeDoc())
         expect(flat(tei)).toContain(
             '<graphic url="images/sample-image-1.png" />'
         )
@@ -364,8 +370,7 @@ describe("TEI exporter: schema coverage", () => {
         expect(imageFiles.length).toBe(1)
     })
 
-    it("exports tables with header rows, rowspan cells and table part tables", async () => {
-        const tei = await exportTei(makeDoc())
+    it("exports tables with header rows, rowspan cells and table part tables", () => {
         expect(flat(tei)).toContain('<row role="label">')
         expect(flat(tei)).toContain('<cell rows="2">')
         expect(tei).toContain("A second table")
@@ -373,24 +378,21 @@ describe("TEI exporter: schema coverage", () => {
         expect(tei).toContain("Single cell table")
     })
 
-    it("exports footnotes containing lists", async () => {
-        const tei = await exportTei(makeDoc())
+    it("exports footnotes containing lists", () => {
         expect(flat(tei)).toContain('target="ftn2"')
         expect(tei).toContain("Footnote with a list:")
         expect(tei).toContain("Footnote bullet")
     })
 
-    it("exports author ORCID identifiers", async () => {
-        const tei = await exportTei(makeDoc())
+    it("exports author ORCID identifiers", () => {
         expect(flat(tei)).toContain(
             '<idno type="ORCID">0000-0001-2345-6789</idno>'
         )
     })
 
-    it("keeps paragraph text around unresolved citations and missing cross reference targets", async () => {
+    it("keeps paragraph text around unresolved citations and missing cross reference targets", () => {
         // Without a citation style the citations cannot be resolved; the
         // surrounding text must survive and the export must not fail.
-        const tei = await exportTei(makeDoc())
         expect(flat(tei)).toContain(
             "A textcite citation and a missing-target cross reference."
         )
@@ -434,6 +436,7 @@ describe("TEI exporter: schema coverage", () => {
         const opens = (tei.match(/<div[\s>]/g) || []).length
         const closes = (tei.match(/<\/div>/g) || []).length
         expect(closes).toBe(opens)
+        expectValidTei(tei)
     })
 
     it("balances divs when the first heading of the document is deeper than h1", async () => {
@@ -465,6 +468,7 @@ describe("TEI exporter: schema coverage", () => {
         const opens = (tei.match(/<div[\s>]/g) || []).length
         const closes = (tei.match(/<\/div>/g) || []).length
         expect(closes).toBe(opens)
+        expectValidTei(tei)
     })
 })
 
@@ -515,6 +519,7 @@ describe("TEI exporter with real document", () => {
         expect(teiFile.contents).toContain('rend="footnote text"')
         // The closing tags balance.
         expect(teiFile.contents).toContain("</TEI>")
+        expectValidTei(teiFile.contents)
     })
 
     it("escapes XML special characters in the text", async () => {
@@ -538,6 +543,7 @@ describe("TEI exporter with real document", () => {
             file.filename.endsWith(".tei.xml")
         )
         expect(teiFile.contents).toContain("a &lt; b &amp; c")
+        expectValidTei(teiFile.contents)
     })
 
     it("supports a custom publicationStmt option", async () => {
@@ -554,5 +560,90 @@ describe("TEI exporter with real document", () => {
             file.filename.endsWith(".tei.xml")
         )
         expect(teiFile.contents).toContain("<publisher>Test Press</publisher>")
+        expectValidTei(teiFile.contents)
+    })
+})
+
+describe("TEI bibliography", () => {
+    let teiBib
+    let templates
+    beforeAll(async () => {
+        ;({teiBib} = await import("../../src/exporter/tei/bibliography.js"))
+        templates = await import("../../src/exporter/tei/templates/index.js")
+    })
+
+    it("renders a journal article as a bibl entry", () => {
+        const bib = {
+            type: "article-journal",
+            title: "My title",
+            "container-title": "My journal",
+            author: [
+                {family: "Doe", given: "John"},
+                {family: "Smith", given: "Jane"}
+            ],
+            issued: {"date-parts": [[2012]]},
+            volume: "7",
+            issue: "3",
+            page: "1-10",
+            DOI: "10.1000/xyz"
+        }
+        const xml = teiBib(bib, 1)
+        expect(xml).toContain('<bibl xml:id="ref-1">')
+        expect(xml).toContain('<title level="a">My title</title>')
+        expect(xml).toContain('<title level="j">My journal</title>')
+        expect(xml).toContain("<surname>Doe</surname>")
+        expect(xml).toContain('<date when="2012">2012</date>')
+        expect(xml).toContain('<biblScope unit="volume">7</biblScope>')
+        expect(xml).toContain('<idno type="DOI">10.1000/xyz</idno>')
+    })
+
+    it("a document with bibliography entries produces valid TEI", () => {
+        const bib = {
+            type: "article-journal",
+            title: "My title",
+            "container-title": "My journal",
+            author: [{family: "Doe", given: "John"}],
+            issued: {"date-parts": [[2012]]}
+        }
+        const items = teiBib(bib, 1)
+        const tei = templates.TEITemplate(
+            "bib-test",
+            templates.header({
+                authors: "",
+                title: '<title type="main">Bibliography test</title>',
+                date: "",
+                keywords: "",
+                subtitle: "",
+                abstract: "",
+                publicationStmt: "<publisher />"
+            }),
+            templates.body(
+                '<p>Text with <ref corresp="#ref-1">(Doe 2012)</ref>.</p>'
+            ),
+            templates.back("", "Bibliography", items)
+        )
+        expect(tei).toContain('<listBibl>')
+        expect(tei).toContain('<head>Bibliography</head>')
+        expectValidTei(tei)
+    })
+
+    it("a document without bibliography entries has no empty listBibl", async () => {
+        const {convert} = await import("../../src/exporter/tei/convert.js")
+        const {TeiCitationsExporter} = await import(
+            "../../src/exporter/tei/citations.js"
+        )
+        const {TeiExporterMath} = await import("../../src/exporter/tei/math.js")
+        const citations = new TeiCitationsExporter(sampleSettings, {db: {}}, {})
+        await citations.init([])
+        const conversion = convert(
+            "no-bib",
+            sampleDoc,
+            {db: {}},
+            citations,
+            new TeiExporterMath(),
+            sampleSettings
+        )
+        expect(conversion.tei).not.toContain("listBibl")
+        expectValidTei(conversion.tei)
     })
 })

@@ -150,6 +150,13 @@ Tests live in `test/` and run with Jest.
 - Use `pnpm test` to run the full suite.
 - Tests use `happy-dom` for DOM APIs where needed.
 - Import/export tests often round-trip fixture files.
+- TEI exporter tests validate the generated XML against the official TEI P5
+  RelaxNG schema (`tei_allPlus.rng`, vendored in
+  `test/exporter/fixtures/`). The schema check shells out to `xmllint`
+  (libxml2), which must be installed for those tests to run; refresh the
+  fixture from
+  `https://tei-c.org/release/xml/tei/custom/schema/relaxng/tei_allPlus.rng`
+  when TEI P5 is updated.
 
 ## MathLive bundling
 

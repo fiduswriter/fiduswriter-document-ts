@@ -324,7 +324,9 @@ export function richText(
         }
 
         if (item.type === "code_block") {
-            return wrapText("code", textContent(item))
+            // TEI P5 has no <code> element; <ab> (anonymous block) is the
+            // standard container for pre-formatted code.
+            return wrapText("ab", textContent(item), {rend: "code"})
         }
 
         if (item.type === "ordered_list") {

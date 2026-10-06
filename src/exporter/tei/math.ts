@@ -33,12 +33,24 @@ const ENTITY_REPLACEMENTS: Array<[RegExp, string]> = [
     [/&#xd7;/gi, "\u00d7"]
 ]
 
+const MATHML_NS = "http://www.w3.org/1998/Math/MathML"
+
 export class TeiExporterMath {
     latexToMathML(latex: string): string {
         let mathml = convertLatexToMathMl(latex)
         ENTITY_REPLACEMENTS.forEach(([pattern, replacement]) => {
             mathml = mathml.replace(pattern, replacement)
         })
-        return `<math xmlns="http://www.w3.org/1998/Math/MathML">${mathml}</math>`
+        // Some mathlive versions return a full <math> element rather than an
+        // inner fragment. Wrapping that in another <math> would nest the
+        // content in the TEI namespace, so declare the MathML namespace on the
+        // returned element instead.
+        if (/^<math[\s>]/.test(mathml)) {
+            if (mathml.slice(0, 250).includes("xmlns=")) {
+                return mathml
+            }
+            return mathml.replace(/^<math/, `<math xmlns="${MATHML_NS}"`)
+        }
+        return `<math xmlns="${MATHML_NS}">${mathml}</math>`
     }
 }

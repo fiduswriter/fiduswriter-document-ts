@@ -49,8 +49,6 @@ export const header = ({
         <textClass>
             ${keywords}
         </textClass>
-        <abstract>
-            ${abstract}
-        </abstract>
+        ${abstract ? `<abstract>\n            ${abstract}\n        </abstract>` : ""}
     </profileDesc>
 </teiHeader>`
