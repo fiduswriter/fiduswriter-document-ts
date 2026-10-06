@@ -71,11 +71,21 @@ export class GetImages {
                 e.filename ===
                 `images/${String(imageEntry.image).split("/").pop()}`
         )
-        if (!entry) {
-            return
+        if (entry) {
+            try {
+                const response = await get(entry.url)
+                this.imageEntries[this.counter]["file"] = await response.blob()
+            } catch (error) {
+                // A missing or unreachable image must not cancel the whole
+                // import; the image will simply be missing.
+                console.warn(
+                    `Could not load image ${entry.url}:`,
+                    error instanceof Error ? error.message : error
+                )
+            }
+        } else {
+            console.warn(`No source found for image ${imageEntry.image}`)
         }
-        const response = await get(entry.url)
-        this.imageEntries[this.counter]["file"] = await response.blob()
         this.counter++
         await this.getImageUrlEntry()
     }
