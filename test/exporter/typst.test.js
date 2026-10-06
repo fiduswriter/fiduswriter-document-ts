@@ -230,6 +230,13 @@ describe("typst exporter: schema coverage", () => {
             '#align(center)[#text(weight: "bold", size: 1.4em)[Test Document for Export/Import]]'
         )
         expect(typst).toContain("#align(center)[Jane Doe, John Smith]")
+        // Typst document authors are plain name strings; the remaining
+        // contributor fields have no equivalent and are not emitted.
+        expect(typst).not.toContain("jane@example.com")
+        expect(typst).not.toContain("Test University")
+        expect(typst).not.toContain("0000-0001-2345-6789")
+        // The copyright setting has no typst document() equivalent.
+        expect(typst).not.toContain("creativecommons.org")
     })
 
     it("renders the abstract under an unnumbered heading", () => {
@@ -242,6 +249,12 @@ describe("typst exporter: schema coverage", () => {
     it("marks document parts with comments", () => {
         expect(typst).toContain("// doc-part: introduction (heading_part)")
         expect(typst).toContain("// doc-part: coverage (richtext_part)")
+    })
+
+    it("exports the table of contents part as a typst outline", () => {
+        expect(typst).toContain(
+            "// doc-part: toc (table_of_contents)\n#outline(title: [Table of Contents])"
+        )
     })
 
     it("exports headings with labels for all six levels", () => {
@@ -261,6 +274,30 @@ describe("typst exporter: schema coverage", () => {
         expect(typst).toContain("<my-anchor>")
     })
 
+    it("drops link titles, which typst links cannot carry", () => {
+        expect(typst).not.toContain('"Fidus Writer"')
+        expect(typst).not.toContain("title: [Fidus Writer]")
+    })
+
+    it("keeps the text of comments and annotation tags but drops the marks", () => {
+        expect(typst).toContain("This paragraph has a commented word in it.")
+        expect(typst).toContain("an annotated word, and a")
+        expect(typst).not.toContain("annotation_tag")
+    })
+
+    it("drops track marks and block track data but keeps the text", () => {
+        // As in the markdown and TEI exporters, tracked changes are not
+        // representable in typst; the marked text survives without any
+        // track markup.
+        expect(typst).toContain(
+            "This paragraph contains inserted text and deleted text with tracked changes."
+        )
+        expect(typst).toContain("Inline format changed text here.")
+        expect(typst).toContain("This paragraph was changed from a heading.")
+        expect(typst).not.toContain("1700000000")
+        expect(typst).not.toContain("block_change")
+    })
+
     it("exports cross references as links when the target exists", () => {
         expect(typst).toContain("#link(<intro-heading>)[Introduction]")
         // The fixture also references a target that does not exist; Typst
@@ -275,6 +312,9 @@ describe("typst exporter: schema coverage", () => {
             "#figure(caption: [A listing], kind: raw)[````python"
         )
         expect(typst).toContain("<code-2>")
+        // The fidus code category (e.g. "listing") has no typst raw figure
+        // equivalent and is not emitted.
+        expect(typst).not.toContain("category")
     })
 
     it("exports bullet and ordered lists, with enum start for late starters", () => {
@@ -282,6 +322,9 @@ describe("typst exporter: schema coverage", () => {
         expect(typst).toMatch(/\+ First ordered item/)
         expect(typst).toMatch(/#block\[\n#set enum\(start: 3\)\n/)
         expect(typst).toContain("+ Ordered item starting at three")
+        // List ids have no typst equivalent and are not emitted.
+        expect(typst).not.toContain("bullet-list-1")
+        expect(typst).not.toContain("bullet-list-2")
     })
 
     it("exports blockquotes and horizontal rules", () => {
@@ -329,6 +372,15 @@ describe("typst exporter: schema coverage", () => {
         expect(typst).toContain(
             "#show figure.where(kind: table): set figure.caption(position: top)"
         )
+        // The fidus table width, fixed layout and cell colwidths have no
+        // typst table equivalent and are not emitted.
+        const tableFigure = typst.match(
+            /#figure\(align\(center\)\[#table\([\s\S]*?\], kind: table, caption: \[A sample table\]\) <table-1>/
+        )
+        expect(tableFigure).not.toBeNull()
+        expect(tableFigure[0]).not.toContain("width")
+        expect(tableFigure[0]).not.toContain("layout")
+        expect(tableFigure[0]).not.toContain("colwidth")
     })
 
     it("exports footnotes, including lists inside footnotes", () => {
@@ -351,8 +403,10 @@ describe("typst exporter: schema coverage", () => {
         expect(typst).toContain(
             '#cite(<wilm2026coverage>, form: "prose", supplement: [see also, 12-14])'
         )
+        // The bibliography title comes from the doc's bibliography_header
+        // setting ("References" in the fixture settings).
         expect(typst).toContain(
-            '#bibliography("bibliography.bib", title: [Bibliography])'
+            '#bibliography("bibliography.bib", title: [References])'
         )
         expect(bibContents).toContain("@article{doe2020test")
     })

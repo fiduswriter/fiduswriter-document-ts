@@ -14,6 +14,8 @@
  *   Typst math on a best-effort basis (see ./math.ts).
  * - Tables map to Typst `table` figures; colspan/rowspan become
  *   `table.cell(colspan:)`/`table.cell(rowspan:)`.
+ * - A table_of_contents part becomes Typst's `#outline()` (with the part's
+ *   title as `title:` when one is set).
  * - Document parts become `// doc-part …` comments so the structure stays
  *   visible without affecting the compiled output.
  * @module
@@ -246,8 +248,14 @@ export class TypstExporterConvert {
     }
 
     bibliographyHeader(): string {
+        const settingsHeader = (
+            this.settings.bibliography_header as unknown as
+                | Record<string, string>
+                | undefined
+        )?.[this.language]
         return escapeTypstContent(
-            (BIBLIOGRAPHY_HEADERS as Record<string, string>)[this.language] ||
+            settingsHeader ||
+                (BIBLIOGRAPHY_HEADERS as Record<string, string>)[this.language] ||
                 "Bibliography"
         )
     }
@@ -264,7 +272,19 @@ export class TypstExporterConvert {
             .map(node => this.walkBlock(node))
             .filter(block => block.length)
             .join("\n\n")
+        if (part.type === "table_of_contents") {
+            return `// doc-part: ${id} (${part.type})${metadataAttr}\n${this.walkTableOfContents(part)}`
+        }
         return `// doc-part: ${id} (${part.type})${metadataAttr}\n${content}`
+    }
+
+    /** A table of contents maps to Typst's built-in outline. */
+    walkTableOfContents(node: FidusNode): string {
+        const title = node.attrs?.title
+        if (typeof title === "string" && title) {
+            return `#outline(title: [${escapeTypstContent(title)}])`
+        }
+        return "#outline()"
     }
 
     /** Walk a list of block nodes and join them with blank lines. */
@@ -308,6 +328,8 @@ export class TypstExporterConvert {
             case "horizontal_rule":
                 this.usesHorizontalRule = true
                 return "#horizontalrule"
+            case "table_of_contents":
+                return this.walkTableOfContents(node)
             default:
                 return ""
         }
