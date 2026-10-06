@@ -59,6 +59,10 @@
       "types": "./dist/importer/pandoc/index.d.ts",
       "default": "./dist/importer/pandoc/index.js"
     },
+    "./importer/html": {
+      "types": "./dist/importer/html/index.d.ts",
+      "default": "./dist/importer/html/index.js"
+    },
     "./importer/*": {
       "types": "./dist/importer/*.d.ts",
       "default": "./dist/importer/*.js"
@@ -98,6 +102,14 @@
     "./exporter/template": {
       "types": "./dist/exporter/template/index.d.ts",
       "default": "./dist/exporter/template/index.js"
+    },
+    "./exporter/tei": {
+      "types": "./dist/exporter/tei/index.d.ts",
+      "default": "./dist/exporter/tei/index.js"
+    },
+    "./exporter/markdown": {
+      "types": "./dist/exporter/markdown/index.d.ts",
+      "default": "./dist/exporter/markdown/index.js"
     },
     "./exporter/*": {
       "types": "./dist/exporter/*.d.ts",
