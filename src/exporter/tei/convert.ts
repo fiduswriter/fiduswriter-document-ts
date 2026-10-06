@@ -382,9 +382,24 @@ export function richText(
             const order = parseInt(item.type.slice(-1))
             const closing =
                 order <= divLevel ? "</div>".repeat(divLevel + 1 - order) : ""
+            let opening: string
+            if (order > divLevel + 1) {
+                // Skipped levels (the first heading is deeper than h1 or a
+                // level is skipped): open the intermediate divs without
+                // heads so the number of open divs matches divLevel and the
+                // final closing balances.
+                const divs: string[] = []
+                for (let level = divLevel + 1; level <= order; level++) {
+                    divs.push(
+                        `<div type="div${level}" rend="DH-Heading${level}">`
+                    )
+                }
+                opening = divs.join("")
+            } else {
+                opening = `<div type="div${order}" rend="DH-Heading${order}">`
+            }
             divLevel = order
-            const opening = `<div type="div${divLevel}" rend="DH-Heading${divLevel}">`
-            const head = wrap("head", nextHeadingPrefix(divLevel) + content)
+            const head = wrap("head", nextHeadingPrefix(order) + content)
             return `${closing}${opening}${head}`
         }
 

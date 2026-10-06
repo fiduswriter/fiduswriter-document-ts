@@ -397,6 +397,75 @@ describe("TEI exporter: schema coverage", () => {
         // Resolved cross references render their title.
         expect(tei.match(/Introduction/g).length).toBeGreaterThanOrEqual(2)
     })
+
+    it("balances divs when heading levels are skipped", async () => {
+        // A document whose first heading is deeper than h1 (e.g. imported
+        // from a format without h1 headings) still produces well-formed
+        // XML: the intermediate divs are opened without heads.
+        const doc = makeDoc()
+        const body = doc.content.content.find(
+            part => part.type === "richtext_part" && part.attrs.id === "coverage"
+        )
+        body.content = [
+            {
+                type: "heading3",
+                attrs: {id: "H1", track: []},
+                content: [{type: "text", text: "Skipped Levels"}]
+            },
+            {
+                type: "paragraph",
+                attrs: {track: []},
+                content: [{type: "text", text: "Body text."}]
+            },
+            {
+                type: "heading6",
+                attrs: {id: "H2", track: []},
+                content: [{type: "text", text: "Deep"}]
+            }
+        ]
+        const tei = await exportTei(doc)
+        // The skipped levels are opened as intermediate divs without heads
+        // (the heading counters carry over from the preceding part, hence
+        // the 6.0.1 numbering).
+        expect(tei).toMatch(
+            /<div type="div2" rend="DH-Heading2">\s*<div type="div3" rend="DH-Heading3">\s*<head>6\.0\.1 Skipped Levels<\/head>/
+        )
+        // The closing tags balance: as many </div> as <div> overall.
+        const opens = (tei.match(/<div[\s>]/g) || []).length
+        const closes = (tei.match(/<\/div>/g) || []).length
+        expect(closes).toBe(opens)
+    })
+
+    it("balances divs when the first heading of the document is deeper than h1", async () => {
+        const doc = makeDoc()
+        // Replace the entire body with a single part whose first heading
+        // is an h2.
+        doc.content.content = [
+            {
+                type: "richtext_part",
+                attrs: {id: "body", title: "Body"},
+                content: [
+                    {
+                        type: "heading2",
+                        attrs: {id: "H1", track: []},
+                        content: [{type: "text", text: "Start At Two"}]
+                    },
+                    {
+                        type: "paragraph",
+                        attrs: {track: []},
+                        content: [{type: "text", text: "Body text."}]
+                    }
+                ]
+            }
+        ]
+        const tei = await exportTei(doc)
+        expect(tei).toMatch(
+            /<div type="div1" rend="DH-Heading1">\s*<div type="div2" rend="DH-Heading2">\s*<head>0\.1 Start At Two<\/head>/
+        )
+        const opens = (tei.match(/<div[\s>]/g) || []).length
+        const closes = (tei.match(/<\/div>/g) || []).length
+        expect(closes).toBe(opens)
+    })
 })
 
 describe("TEI exporter with real document", () => {
