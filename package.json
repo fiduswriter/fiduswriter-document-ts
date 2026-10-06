@@ -1,6 +1,6 @@
 {
   "name": "@fiduswriter/document",
-  "version": "0.3.25",
+  "version": "0.3.26",
   "description": "Fidus Writer document schema, importers and exporters",
   "keywords": [
     "fiduswriter",
