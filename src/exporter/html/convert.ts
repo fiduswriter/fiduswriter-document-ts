@@ -713,6 +713,9 @@ export class HTMLExporterConvert {
                 start += "<blockquote>"
                 end = "</blockquote>" + end
                 break
+            case "horizontal_rule":
+                start += `<hr${this.blockTrackData(attrs)}>`
+                break
             case "ordered_list": {
                 const order =
                     typeof attrs.order === "number" ? attrs.order : 1

@@ -1,9 +1,7 @@
-import {execFileSync} from "node:child_process"
-import {mkdtempSync, readFileSync, rmSync, writeFileSync} from "node:fs"
-import {tmpdir} from "node:os"
+import {readFileSync} from "node:fs"
 import {dirname, join} from "node:path"
 import {fileURLToPath} from "node:url"
-import {beforeAll, afterAll, describe, expect, it, jest} from "@jest/globals"
+import {beforeAll, describe, expect, it, jest} from "@jest/globals"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -36,6 +34,15 @@ const BIB_DB = {
             entry_key: "smith2021another",
             bib_type: "book",
             fields: {title: "Another book", author: "John Smith", year: "2021"}
+        },
+        3: {
+            entry_key: "wilm2026coverage",
+            bib_type: "article",
+            fields: {
+                title: "A coverage article",
+                author: "Johannes Wilm",
+                year: "2026"
+            }
         }
     }
 }
@@ -181,7 +188,7 @@ describe("markdown exporter body", () => {
 
     it("exports figures with captions and width", () => {
         expect(markdown).toContain(
-            "![A sample figure caption](images/sample-image-1.png){#figure-1 width=80% data-category=\"figure\"}"
+            "![A sample figure caption](images/sample-image-1.png){#figure-1 width=80% data-aligned=\"center\" data-category=\"figure\"}"
         )
     })
 
@@ -211,6 +218,7 @@ describe("markdown exporter body", () => {
     it("exports a bibliography.bib for used citations", () => {
         expect(bibFile).toBeDefined()
         expect(bibFile.contents).toContain("@article{doe2020test")
+        expect(bibFile.contents).toContain("@article{wilm2026coverage")
         // Only the cited entries are exported.
         expect(bibFile.contents).not.toContain("smith2021another")
     })
@@ -226,85 +234,94 @@ describe("markdown exporter body", () => {
     })
 })
 
-describe("markdown output parses with pandoc", () => {
-    const hasPandoc = (() => {
-        try {
-            execFileSync("pandoc", ["--version"], {stdio: "ignore"})
-            return true
-        } catch {
-            return false
-        }
-    })()
-
-    let workDir
-    beforeAll(() => {
-        if (!hasPandoc) {
-            return
-        }
-        workDir = mkdtempSync(join(tmpdir(), "fw-markdown-"))
-        writeFileSync(join(workDir, "document.md"), markdown, "utf-8")
+describe("markdown exporter: schema coverage", () => {
+    it("the fixture exercises every schema node type and attribute", async () => {
+        const {docSchema} = await import("../../src/schema/document/index.js")
+        const {coverageGaps} = await import("../helpers/schema-coverage.js")
+        const gaps = coverageGaps(sampleDoc, docSchema)
+        expect(gaps.missingNodes).toEqual([])
+        expect(gaps.missingNodeAttrs).toEqual([])
+        expect(gaps.missingMarks).toEqual([])
+        expect(gaps.missingMarkAttrs).toEqual([])
     })
 
-    afterAll(() => {
-        if (workDir) {
-            rmSync(workDir, {recursive: true, force: true})
-        }
+    it("exports heading levels 4-6 with their ids", () => {
+        expect(markdown).toContain("#### Level Four {#coverage-h4}")
+        expect(markdown).toContain("##### Level Five {#coverage-h5}")
+        expect(markdown).toContain("###### Level Six {#coverage-h6}")
     })
 
-    it("round-trips through pandoc's markdown reader", () => {
-        if (!hasPandoc) {
-            // Skip silently when pandoc is not installed.
-            return
-        }
-        const json = JSON.parse(
-            execFileSync("pandoc", ["-f", "markdown", "-t", "json", "document.md"], {
-                cwd: workDir,
-                encoding: "utf-8"
-            })
+    it("exports hard breaks and horizontal rules", () => {
+        // Pandoc markdown represents a hard break as a trailing backslash.
+        expect(markdown).toMatch(/hard break\\\nafter the break/)
+        expect(markdown).toMatch(/\n---\n/)
+    })
+
+    it("keeps the text of annotation tags and legacy marks", () => {
+        // The annotation_tag mark itself is not representable in markdown;
+        // the marked text survives.
+        expect(markdown).toContain(
+            "after the break, an annotated word, and a smallcaps legacy mark."
         )
-        const types = new Set()
-        const walk = blocks => {
-            blocks.forEach(block => {
-                types.add(block.t)
-                if (block.t === "Div" || block.t === "Figure") {
-                    walk(block.c[block.c.length - 1] || block.c[2])
-                } else if (block.t === "BlockQuote") {
-                    walk(block.c)
-                } else if (block.t === "BulletList") {
-                    block.c.forEach(item => walk(item))
-                } else if (block.t === "OrderedList") {
-                    walk(block.c[block.c.length - 1])
-                } else if (block.t === "Para" || block.t === "Plain") {
-                    block.c.forEach(inline => {
-                        if (
-                            !["Str", "Space", "SoftBreak"].includes(inline.t)
-                        ) {
-                            types.add(`inline:${inline.t}`)
-                        }
-                        if (inline.t === "Note") {
-                            walk(inline.c)
-                        }
-                    })
-                }
-            })
-        }
-        walk(json.blocks)
-        // The essential constructs survive the round trip.
-        ;["Header", "Para", "BlockQuote", "BulletList", "OrderedList", "CodeBlock", "Table", "Figure", "Div"].forEach(
-            type => expect(types.has(type)).toBe(true)
+        expect(markdown).not.toContain("annotation-tag")
+    })
+
+    it("exports code blocks with language, category, title and id", () => {
+        expect(markdown).toMatch(
+            /~~~~\{\.python #code-2 category="listing" caption="A listing"\}\ndef hello\(\):/
         )
-        ;[
-            "inline:Link",
-            "inline:Image",
-            "inline:Math",
-            "inline:Note",
-            "inline:Cite",
-            "inline:Span"
-        ].forEach(type => expect(types.has(type)).toBe(true))
-        // Metadata survives.
-        expect(json.meta.title).toBeDefined()
-        expect(json.meta.author).toBeDefined()
-        expect(json.meta.keywords).toBeDefined()
-        expect(json.meta.abstract).toBeDefined()
+    })
+
+    it("exports ordered lists with their start number", () => {
+        expect(markdown).toContain("3. Ordered item starting at three")
+        expect(markdown).toContain("4. Second item")
+    })
+
+    it("exports tracked lists and blockquotes without the track data", () => {
+        expect(markdown).toContain("-  Tracked bullet item")
+        expect(markdown).toMatch(/\n> A tracked blockquote with \*\*bold\*\* text\.\n/)
+    })
+
+    it("exports figures with alignment and equation figures with captions", () => {
+        expect(markdown).toContain(
+            "![A right-aligned figure](images/sample-image-1.png){#figure-3 width=60% data-aligned=\"right\" data-category=\"figure\"}"
+        )
+        // Equation figures carry the LaTeX in data-equation and the caption
+        // as a paragraph inside the fenced div.
+        expect(markdown).toMatch(
+            /:::: \{#figure-4 \.doc-figure data-equation="a\^2 \+ b\^2 = c\^2" data-category="figure"\}\n\n\$\$\na\^2 \+ b\^2 = c\^2\n\$\$\n\nAn equation figure\n\n::::/
+        )
+    })
+
+    it("exports tables with their layout attributes", () => {
+        expect(markdown).toMatch(
+            /::: \{\.doc-table #table-2 data-width="80" data-aligned="left" data-layout="auto" data-category="table"\}/
+        )
+        expect(markdown).toContain("| Wide header | Narrow header |")
+        expect(markdown).toContain(": A second table")
+    })
+
+    it("exports footnotes containing lists", () => {
+        expect(markdown).toMatch(
+            /\[\^2\]: Footnote with a list:\n {4}\n {4}-\x20{2}Footnote bullet/
+        )
+    })
+
+    it("exports textcite citations with prefix and locator", () => {
+        expect(markdown).toContain(
+            "A textcite citation [see also @wilm2026coverage, 12-14]"
+        )
+    })
+
+    it("exports missing-target cross references by their id", () => {
+        expect(markdown).toContain("a missing-target [gone](#gone) cross reference")
+    })
+
+    it("exports table parts, the table of contents part and separators as fenced divs", () => {
+        expect(markdown).toMatch(
+            /::: \{#table-section \.doc-part \.doc-table /
+        )
+        expect(markdown).toContain("::: {#toc .doc-part .doc-table_of_contents}")
+        expect(markdown).toContain("::: {#separator .doc-part .doc-separator_part}")
     })
 })

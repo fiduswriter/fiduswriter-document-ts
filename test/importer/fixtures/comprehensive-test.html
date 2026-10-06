@@ -22,17 +22,20 @@
                 Test Document for Export/Import
             </div>
             <div
-                class="doc-part doc-contributors doc-undefined authors"
-                id="undefined"
+                class="doc-part doc-contributors doc-authors authors"
+                id="authors"
                 data-metadata="authors"
             >
-                <span id="undefined-0" class="person"
+                <span id="authors-0" class="person"
                     ><span class="name"
                         ><span class="firstname">Jane</span>
                         <span class="lastname">Doe</span></span
-                    ><a class="affiliation" href="#aff-1">A</a></span
+                    ><a class="affiliation" href="#aff-1">A</a
+                    ><span class="contributor-id"
+                        >ORCID: 0000-0001-2345-6789</span
+                    ></span
                 >,
-                <span id="undefined-1" class="person"
+                <span id="authors-1" class="person"
                     ><span class="name"
                         ><span class="firstname">John</span>
                         <span class="lastname">Smith</span></span
@@ -40,8 +43,8 @@
                 >
             </div>
             <div
-                class="doc-part doc-tags doc-undefined doc-keywords"
-                id="undefined"
+                class="doc-part doc-tags doc-keywords doc-keywords"
+                id="keywords"
                 data-metadata="keywords"
             >
                 <span class="tag">testing</span><span class="tag">export</span
@@ -161,10 +164,10 @@
                 <h1 id="tables">Tables</h1>
                 <table
                     id="table-1"
-                    class="table-100 table-center table-"
+                    class="table-100 table-center table-fixed"
                     data-width="100"
                     data-aligned="center"
-                    data-layout=""
+                    data-layout="fixed"
                     data-category="table"
                 >
                     <caption>
@@ -258,6 +261,169 @@
                 <h1 id="comments">Comments</h1>
                 <p id="p-28">This paragraph has a commented word in it.</p>
             </div>
+            <div
+                class="doc-part doc-richtext doc-coverage doc-other"
+                id="coverage"
+            >
+                <h1 id="coverage-heading">Coverage Additions</h1>
+                <h2 id="coverage-h2">Deep Nesting</h2>
+                <h3 id="coverage-h3">Level Three</h3>
+                <h4 id="coverage-h4">Level Four</h4>
+                <h5 id="coverage-h5">Level Five</h5>
+                <h6 id="coverage-h6">Level Six</h6>
+                <p id="p-29">
+                    A paragraph with a hard break<br />after the break, an
+                    annotated word, and a smallcaps legacy mark.
+                </p>
+                <hr />
+                <blockquote>
+                    <p id="p-30">
+                        A tracked blockquote with <strong>bold</strong> text.
+                    </p>
+                </blockquote>
+                <figure class="code-block-figure" id="code-2">
+                    <figcaption>
+                        <span class="label">Listing 1: A listing</span>
+                    </figcaption>
+                    <pre
+                        data-language="python"
+                        data-category="listing"
+                        data-title="A listing"
+                        data-id="code-2"
+                    ><code>def hello():
+    return True</code></pre>
+                </figure>
+                <ol id="list-3" start="3">
+                    <li><p id="p-31">Ordered item starting at three</p></li>
+                    <li><p id="p-32">Second item</p></li>
+                </ol>
+                <ul id="list-4">
+                    <li><p id="p-33">Tracked bullet item</p></li>
+                </ul>
+                <figure
+                    id="figure-3"
+                    class="aligned-right image-width-60"
+                    data-aligned="right"
+                    data-width="60"
+                    data-category="figure"
+                >
+                    <img src="images/sample-image-1.png" />
+                    <figcaption>
+                        <label>Figure 2</label>
+                        <p>A right-aligned figure</p>
+                    </figcaption>
+                </figure>
+                <figure
+                    id="figure-4"
+                    class="aligned-center image-width-100"
+                    data-aligned="center"
+                    data-width="100"
+                    data-category="figure"
+                >
+                    <div
+                        class="figure-equation"
+                        data-equation="a^2 + b^2 = c^2"
+                    >
+                        <math display="block"
+                            ><mrow
+                                ><msup><mi>a</mi><mn>2</mn></msup
+                                ><mo>+</mo><msup><mi>b</mi><mn>2</mn></msup
+                                ><mo>=</mo
+                                ><msup><mi>c</mi><mn>2</mn></msup></mrow
+                            ></math
+                        >
+                    </div>
+                    <figcaption>
+                        <label>Figure 3</label>
+                        <p>An equation figure</p>
+                    </figcaption>
+                </figure>
+                <table
+                    id="table-2"
+                    class="table-80 table-left table-auto"
+                    data-width="80"
+                    data-aligned="left"
+                    data-layout="auto"
+                    data-category="table"
+                >
+                    <caption>
+                        <label>Table 2</label>
+                        <p>A second table</p>
+                    </caption>
+                    <tbody>
+                        <tr>
+                            <th><p id="p-34">Wide header</p></th>
+                            <th><p id="p-35">Narrow header</p></th>
+                        </tr>
+                        <tr>
+                            <td rowspan="2"><p id="p-36">Tall cell</p></td>
+                            <td><p id="p-37">B1</p></td>
+                        </tr>
+                        <tr>
+                            <td><p id="p-38">B2</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p id="p-39">
+                    A rich footnote<a class="footnote" href="#fn-2">2</a> ends
+                    here.
+                </p>
+                <p id="p-42">
+                    A textcite citation
+                    <span
+                        class="citation"
+                        data-format="textcite"
+                        data-references="3"
+                    ></span>
+                    and a missing-target
+                    <a class="reference" href="#gone">MISSING TARGET</a> cross
+                    reference.
+                </p>
+            </div>
+            <div
+                class="doc-part doc-table doc-table-section doc-other"
+                id="table-section"
+            >
+                <table
+                    id="table-3"
+                    class="table-100 table-center table-fixed"
+                    data-width="100"
+                    data-aligned="center"
+                    data-layout="fixed"
+                    data-category="table"
+                >
+                    <caption>
+                        <label>Table 3</label>
+                    </caption>
+                    <tbody>
+                        <tr>
+                            <td><p id="p-43">Single cell table</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="doc-part table-of-contents">
+                <h1>Table of Contents</h1>
+                <h1><a href="#title">Test Document for Export/Import</a></h1>
+                <h1><a href="#intro-heading">Introduction</a></h1>
+                <h2><a href="#text-formatting">Text Formatting</a></h2>
+                <h3><a href="#lists">Lists</a></h3>
+                <h1><a href="#figures">Figures</a></h1>
+                <h1><a href="#tables">Tables</a></h1>
+                <h1><a href="#footnotes-section">Footnotes</a></h1>
+                <h1><a href="#changes-section">Tracked Changes</a></h1>
+                <h1><a href="#comments">Comments</a></h1>
+                <h1><a href="#coverage-heading">Coverage Additions</a></h1>
+                <h2><a href="#coverage-h2">Deep Nesting</a></h2>
+                <h3><a href="#coverage-h3">Level Three</a></h3>
+                <h4><a href="#coverage-h4">Level Four</a></h4>
+                <h5><a href="#coverage-h5">Level Five</a></h5>
+                <h6><a href="#coverage-h6">Level Six</a></h6>
+            </div>
+            <hr
+                class="doc-part doc-separator doc-separator doc-other"
+                id="separator"
+            />
         </div>
         <div id="back">
             <section id="affiliations" class="affiliations">
@@ -280,6 +446,13 @@
                     <p id="p-22">
                         This is the footnote content with <em>italic text</em>.
                     </p>
+                </aside>
+                <aside class="footnote" role="doc-footnote" id="fn-2">
+                    <label>2</label>
+                    <p id="p-40">Footnote with a list:</p>
+                    <ul id="list-5">
+                        <li><p id="p-41">Footnote bullet</p></li>
+                    </ul>
                 </aside>
             </section>
         </div>

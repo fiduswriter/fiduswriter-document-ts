@@ -222,7 +222,9 @@ describe("TEI extraction", () => {
     it("extracts footnotes", () => {
         const footnotes = extractFootnotes(sampleDoc)
         expect(footnotes.length).toBeGreaterThan(0)
-        expect(JSON.stringify(footnotes[0])).toContain("italic")
+        const allFootnotes = JSON.stringify(footnotes)
+        expect(allFootnotes).toContain("italic")
+        expect(allFootnotes).toContain("Footnote bullet")
     })
 })
 
@@ -261,6 +263,139 @@ describe("TEI template helpers", () => {
 
     it("keywords() returns an empty string for empty lists", () => {
         expect(keywords([])).toBe("")
+    })
+})
+
+describe("TEI exporter: schema coverage", () => {
+    let TEIExporter
+    let docSchema
+    beforeAll(async () => {
+        ;({TEIExporter} = await import("../../src/exporter/tei/index.js"))
+        ;({docSchema} = await import("../../src/schema/document/index.js"))
+    })
+
+    const makeDoc = () => ({
+        id: "tei-coverage",
+        title: sampleDoc.content[0].content[0].text,
+        content: {...sampleDoc, attrs: sampleSettings},
+        settings: sampleSettings
+    })
+
+    const exportTei = async doc => {
+        const exporter = new TEIExporter(
+            doc,
+            {db: {}},
+            IMAGE_DB,
+            {},
+            new Date()
+        )
+        await exporter.init()
+        return exporter.textFiles.find(file =>
+            file.filename.endsWith(".tei.xml")
+        ).contents
+    }
+
+    // The XML formatter breaks long tags across lines; collapse whitespace
+    // before asserting on multi-attribute tags.
+    const flat = xml => xml.replace(/\s+/g, " ")
+
+    it("the fixture exercises every schema node type and attribute", async () => {
+        const {coverageGaps} = await import("../helpers/schema-coverage.js")
+        const gaps = coverageGaps(sampleDoc, docSchema)
+        expect(gaps.missingNodes).toEqual([])
+        expect(gaps.missingNodeAttrs).toEqual([])
+        expect(gaps.missingMarks).toEqual([])
+        expect(gaps.missingMarkAttrs).toEqual([])
+    })
+
+    it("exports heading levels 4-6 in nested numbered divs", async () => {
+        const tei = await exportTei(makeDoc())
+        expect(flat(tei)).toContain('rend="DH-Heading4"')
+        expect(flat(tei)).toContain('rend="DH-Heading5"')
+        expect(flat(tei)).toContain('rend="DH-Heading6"')
+        expect(flat(tei)).toContain("<head>7.1.1.1 Level Four</head>")
+        expect(flat(tei)).toContain("<head>7.1.1.1.1.1 Level Six</head>")
+    })
+
+    it("exports hard breaks and horizontal rules as line breaks", async () => {
+        const tei = await exportTei(makeDoc())
+        // hard_break inside a paragraph renders <lb/>, the horizontal rule
+        // renders as a rule line break.
+        expect(tei.match(/<lb \/>/g).length).toBeGreaterThanOrEqual(1)
+        expect(flat(tei)).toContain('<lb rend="rule" />')
+    })
+
+    it("exports code blocks with their content", async () => {
+        const tei = await exportTei(makeDoc())
+        expect(tei).toContain("<code>")
+        expect(tei).toContain("def hello():")
+    })
+
+    it("exports ordered and unordered lists, tracked items included", async () => {
+        const tei = await exportTei(makeDoc())
+        expect(flat(tei)).toContain('<list type="ordered">')
+        expect(flat(tei)).toContain('<list type="unordered">')
+        expect(tei).toContain("Ordered item starting at three")
+        expect(tei).toContain("Tracked bullet item")
+    })
+
+    it("exports image and equation figures with captions", async () => {
+        const tei = await exportTei(makeDoc())
+        expect(flat(tei)).toContain(
+            '<graphic url="images/sample-image-1.png" />'
+        )
+        expect(flat(tei)).toContain("Figure 3: A right-aligned figure")
+        expect(flat(tei)).toContain("Figure 4: An equation figure")
+        // The equation figure carries MathML.
+        expect(tei).toContain("<formula>")
+        expect(tei).toContain("Math/MathML")
+        // The image file ships only once, although two figures use it.
+        const exporter = new TEIExporter(
+            makeDoc(),
+            {db: {}},
+            IMAGE_DB,
+            {},
+            new Date()
+        )
+        await exporter.init()
+        const imageFiles = exporter.httpFiles.filter(file =>
+            file.filename.includes("sample-image-1")
+        )
+        expect(imageFiles.length).toBe(1)
+    })
+
+    it("exports tables with header rows, rowspan cells and table part tables", async () => {
+        const tei = await exportTei(makeDoc())
+        expect(flat(tei)).toContain('<row role="label">')
+        expect(flat(tei)).toContain('<cell rows="2">')
+        expect(tei).toContain("A second table")
+        // A table inside a table part is exported like any other table.
+        expect(tei).toContain("Single cell table")
+    })
+
+    it("exports footnotes containing lists", async () => {
+        const tei = await exportTei(makeDoc())
+        expect(flat(tei)).toContain('target="ftn2"')
+        expect(tei).toContain("Footnote with a list:")
+        expect(tei).toContain("Footnote bullet")
+    })
+
+    it("exports author ORCID identifiers", async () => {
+        const tei = await exportTei(makeDoc())
+        expect(flat(tei)).toContain(
+            '<idno type="ORCID">0000-0001-2345-6789</idno>'
+        )
+    })
+
+    it("keeps paragraph text around unresolved citations and missing cross reference targets", async () => {
+        // Without a citation style the citations cannot be resolved; the
+        // surrounding text must survive and the export must not fail.
+        const tei = await exportTei(makeDoc())
+        expect(flat(tei)).toContain(
+            "A textcite citation and a missing-target cross reference."
+        )
+        // Resolved cross references render their title.
+        expect(tei.match(/Introduction/g).length).toBeGreaterThanOrEqual(2)
     })
 })
 

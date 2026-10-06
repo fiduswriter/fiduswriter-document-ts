@@ -24,6 +24,8 @@ export interface ConvertContext {
     otherFiles: Array<{filename: string; content?: Blob; url?: string}>
     /** Image blobs available in the imported zip bundle. */
     zipImages: Record<string, Blob>
+    /** Image database ids for image sources already imported (dedup). */
+    imageIdsBySrc: Map<string, number>
     language: string
 }
 
@@ -352,7 +354,16 @@ export function convertImage(
     if (!src) {
         return undefined
     }
+    if (context.imageIdsBySrc.has(src)) {
+        // The same image source may occur several times in a document; it
+        // maps to a single entry in the image database.
+        return {
+            type: "image",
+            attrs: Object.assign({image: context.imageIdsBySrc.get(src)}, extraAttrs)
+        }
+    }
     const imageId = Math.floor(Math.random() * 1000000)
+    context.imageIdsBySrc.set(src, imageId)
     let imageRef: string
     let fileType: string
 

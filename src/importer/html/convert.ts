@@ -166,6 +166,7 @@ export class HtmlConvert {
             images: this.images,
             otherFiles: this.otherFiles,
             zipImages: this.zipImages,
+            imageIdsBySrc: new Map(),
             language
         }
 

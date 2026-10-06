@@ -358,6 +358,171 @@ describe("html importer: citation restoration", () => {
     })
 })
 
+describe("html importer: schema coverage", () => {
+    it("the fixture exercises every schema node type and attribute", async () => {
+        const {docSchema} = await import("../../src/schema/document/index.js")
+        const {coverageGaps} = await import("../helpers/schema-coverage.js")
+        const sampleDoc = JSON.parse(
+            readFileSync(
+                join(__dirname, "..", "exporter", "fixtures", "sample-doc.json"),
+                "utf-8"
+            )
+        )
+        const gaps = coverageGaps(sampleDoc, docSchema)
+        expect(gaps.missingNodes).toEqual([])
+        expect(gaps.missingNodeAttrs).toEqual([])
+        expect(gaps.missingMarks).toEqual([])
+        expect(gaps.missingMarkAttrs).toEqual([])
+    })
+
+    const bodyOf = result =>
+        result.content.content.find(part => part.type === "richtext_part")
+
+    it("imports heading levels 4-6 with their ids", () => {
+        const body = bodyOf(converted)
+        ;["heading4", "heading5", "heading6"].forEach((type, index) => {
+            const heading = body.content.find(
+                node => node.type === type && node.attrs?.id === `coverage-h${index + 4}`
+            )
+            expect(heading).toBeDefined()
+        })
+    })
+
+    it("imports horizontal rules and hard breaks", () => {
+        const body = bodyOf(converted)
+        expect(
+            body.content.some(node => node.type === "horizontal_rule")
+        ).toBe(true)
+        const hardBreak = body.content
+            .flatMap(block => block.content || [])
+            .find(node => node.type === "hard_break")
+        expect(hardBreak).toBeDefined()
+    })
+
+    it("imports code blocks with language, category, title and id", () => {
+        const body = bodyOf(converted)
+        const codeBlocks = body.content.filter(node => node.type === "code_block")
+        expect(codeBlocks.length).toBe(2)
+        const categorized = codeBlocks.find(
+            block => block.attrs.id === "code-2"
+        )
+        expect(categorized.attrs).toMatchObject({
+            language: "python",
+            category: "listing",
+            title: "A listing",
+            id: "code-2"
+        })
+        const plain = codeBlocks.find(block => !block.attrs.id)
+        expect(plain.attrs).toMatchObject({language: "javascript"})
+    })
+
+    it("imports ordered lists with their start number", () => {
+        const body = bodyOf(converted)
+        const orderedLists = body.content.filter(
+            node => node.type === "ordered_list"
+        )
+        expect(orderedLists.map(list => list.attrs.order).sort()).toEqual([1, 3])
+    })
+
+    it("imports figures with alignment and equation figures with captions", () => {
+        const body = bodyOf(converted)
+        const imageFigure = body.content.find(
+            node => node.type === "figure" && node.attrs?.id === "figure-3"
+        )
+        expect(imageFigure).toBeDefined()
+        expect(imageFigure.attrs).toMatchObject({
+            aligned: "right",
+            width: "60"
+        })
+        const equationFigure = body.content.find(
+            node => node.type === "figure" && node.attrs?.id === "figure-4"
+        )
+        expect(equationFigure).toBeDefined()
+        const equation = equationFigure.content.find(
+            node => node.type === "figure_equation"
+        )
+        expect(equation.attrs.equation).toBe("a^2 + b^2 = c^2")
+        const caption = equationFigure.content.find(
+            node => node.type === "figure_caption"
+        )
+        expect(caption.content.map(inline => inline.text).join("")).toBe(
+            "An equation figure"
+        )
+    })
+
+    it("imports tables with layout attributes and rowspan cells", () => {
+        const body = bodyOf(converted)
+        const table = body.content.find(
+            node => node.type === "table" && node.attrs?.id === "table-2"
+        )
+        expect(table.attrs).toMatchObject({
+            layout: "auto",
+            aligned: "left",
+            width: "80"
+        })
+        const tableBody = table.content.find(node => node.type === "table_body")
+        const spanningRow = tableBody.content[1]
+        expect(spanningRow.content[0].attrs.rowspan).toBe(2)
+    })
+
+    it("imports textcite citations when the bibliography has the entry", () => {
+        const bibDB = {
+            db: {
+                1: {entry_key: "doe2020test", bib_type: "article", fields: {}},
+                2: {entry_key: "smith2021another", bib_type: "book", fields: {}},
+                3: {entry_key: "wilm2026coverage", bib_type: "article", fields: {}}
+            }
+        }
+        const result = makeConverter(fixtureHtml, bibDB).init()
+        const body = bodyOf(result)
+        const citations = body.content
+            .flatMap(block => block.content || [])
+            .filter(node => node.type === "citation")
+        expect(citations.length).toBe(2)
+        const textcite = citations.find(
+            citation => citation.attrs.format === "textcite"
+        )
+        expect(textcite).toBeDefined()
+        expect(textcite.attrs.references).toEqual([{id: "3"}])
+    })
+
+    it("imports missing-target cross references with a placeholder title", () => {
+        const body = bodyOf(converted)
+        const missing = body.content
+            .flatMap(block => block.content || [])
+            .find(
+                node => node.type === "cross_reference" && node.attrs?.id === "gone"
+            )
+        expect(missing).toBeDefined()
+        expect(missing.attrs.title).toBe("MISSING TARGET")
+    })
+
+    it("keeps the text of annotation tags and legacy marks", () => {
+        const body = bodyOf(converted)
+        const text = body.content
+            .flatMap(block => block.content || [])
+            .map(inline => inline.text || "")
+            .join(" ")
+        expect(text).toContain("an annotated word, and a smallcaps legacy mark.")
+        const marks = body.content
+            .flatMap(block => block.content || [])
+            .flatMap(inline => (inline.marks || []).map(mark => mark.type))
+        expect(marks).not.toContain("annotation_tag")
+        expect(marks).not.toContain("smallcaps")
+    })
+
+    it("imports table parts and separators and skips the table of contents", () => {
+        const partTypes = converted.content.content.map(part => part.type)
+        expect(partTypes).toContain("table_part")
+        expect(partTypes).toContain("separator_part")
+        expect(partTypes).not.toContain("table_of_contents")
+        const tablePart = converted.content.content.find(
+            part => part.type === "table_part"
+        )
+        expect(tablePart.content[0].type).toBe("table")
+    })
+})
+
 describe("html importer: tracked changes", () => {
     it("restores insertion and deletion marks and block tracks", () => {
         // The sample document contains tracked changes; the exporter only

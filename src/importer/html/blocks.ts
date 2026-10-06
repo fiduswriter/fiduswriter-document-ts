@@ -187,7 +187,9 @@ function isGeneratedId(id: string): boolean {
 /** `<pre><code …>` → code_block with the data-* attribute conventions. */
 function convertCodeBlock(node: HtmlElement): FidusNode {
     const code = queryOne(node, "code") || node
-    const attrs = code.attributes
+    // The exporter writes the data-* attributes on <pre>; accept them on
+    // either element.
+    const attrs = Object.assign({}, code.attributes, node.attributes)
     const codeAttrs: Record<string, unknown> = {track: []}
     const language = attrs["data-language"]
     const category = attrs["data-category"]
@@ -219,6 +221,13 @@ function convertCodeBlock(node: HtmlElement): FidusNode {
 
 /** `<figure>` → figure node with image/figure_equation and figure_caption. */
 function convertFigure(node: HtmlElement, context: ConvertContext): FidusNode[] {
+    // Code blocks the exporter wrapped in a figure for numbering.
+    if (hasClass(node, "code-block-figure")) {
+        const pre = queryOne(node, "pre")
+        if (pre) {
+            return [convertCodeBlock(pre)]
+        }
+    }
     const figureAttrs: Record<string, unknown> = {
         id: attr(node, "id") || "",
         track: []
@@ -269,7 +278,8 @@ function convertFigure(node: HtmlElement, context: ConvertContext): FidusNode[] 
             figcaption.childNodes.filter(
                 child =>
                     !isElementNode(child) ||
-                    !hasClass(child as HtmlElement, "label")
+                    (!hasClass(child as HtmlElement, "label") &&
+                        (child as HtmlElement).tagName.toLowerCase() !== "label")
             ),
             [],
             context,

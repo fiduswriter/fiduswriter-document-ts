@@ -84,6 +84,7 @@ export function extractFootnotes(docContents: FidusNode): FidusNode[][] {
 /** Collect the image ids of all figures, in document order. */
 export function extractImageIDs(docContents: FidusNode): Array<string | number> {
     const images: Array<string | number> = []
+    const seen = new Set<string | number>()
     const stack: FidusNode[] = [docContents]
 
     while (stack.length) {
@@ -96,7 +97,14 @@ export function extractImageIDs(docContents: FidusNode): Array<string | number> 
                     (id): id is string | number =>
                         typeof id === "string" || typeof id === "number"
                 )
-            images.push(...ids)
+            ids.forEach(id => {
+                // The same image can be referenced from several figures; it
+                // ships once in the export zip.
+                if (!seen.has(id)) {
+                    seen.add(id)
+                    images.push(id)
+                }
+            })
         } else if (node.content) {
             for (const child of node.content) {
                 stack.push(child)

@@ -372,7 +372,8 @@ export class MarkdownExporterConvert {
                 attributes.push(`data-category="${escapeAttribute(category)}"`)
             }
             const equation = String(figureEquation.attrs?.equation || "")
-            return `:::: {${attributes.join(" ")}}\n\n$$\n${equation}\n$$\n\n::::`
+            const captionBlock = caption ? `\n\n${caption}` : ""
+            return `:::: {${attributes.join(" ")}}\n\n$$\n${equation}\n$$${captionBlock}\n\n::::`
         }
 
         if (!image) {
@@ -395,6 +396,11 @@ export class MarkdownExporterConvert {
             const width = String(attrs.width)
             attributes.push(
                 `width=${width}${/^\d+$/.test(width) ? "%" : ""}`
+            )
+        }
+        if (attrs.aligned) {
+            attributes.push(
+                `data-aligned="${escapeAttribute(String(attrs.aligned))}"`
             )
         }
         if (category !== "none") {
