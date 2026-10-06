@@ -111,6 +111,10 @@
       "types": "./dist/exporter/markdown/index.d.ts",
       "default": "./dist/exporter/markdown/index.js"
     },
+    "./exporter/typst": {
+      "types": "./dist/exporter/typst/index.d.ts",
+      "default": "./dist/exporter/typst/index.js"
+    },
     "./exporter/*": {
       "types": "./dist/exporter/*.d.ts",
       "default": "./dist/exporter/*.js"
