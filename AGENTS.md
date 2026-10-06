@@ -157,6 +157,10 @@ Tests live in `test/` and run with Jest.
   fixture from
   `https://tei-c.org/release/xml/tei/custom/schema/relaxng/tei_allPlus.rng`
   when TEI P5 is updated.
+- Typst exporter tests compile the generated markup with the Typst CLI,
+  which must be installed for those tests to run
+  (https://github.com/typst/typst); the helper also looks in
+  `~/.local/bin` when the binary is not on `PATH`.
 
 ## MathLive bundling
 
