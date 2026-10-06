@@ -97,7 +97,7 @@ export class HtmlConvert {
 
         const titleNode =
             parts.find(part => part.type === "title") ||
-            ({type: "title", content: [{type: "text", text: ""}]} as FidusNode)
+            ({type: "title", content: []} as FidusNode)
         const contentParts = parts.filter(part => part !== titleNode)
 
         const document: FidusDoc = {
@@ -351,11 +351,14 @@ export class HtmlConvert {
                     context,
                     true
                 )
+                const fallback = textOf(node).trim()
                 return {
                     type: "title",
                     content: inlines.length
                         ? inlines
-                        : [{type: "text", text: textOf(node).trim()}]
+                        : fallback
+                          ? [{type: "text", text: fallback}]
+                          : []
                 }
             }
             case "contributors_part":

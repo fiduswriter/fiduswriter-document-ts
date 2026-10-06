@@ -523,6 +523,63 @@ describe("html importer: schema coverage", () => {
     })
 })
 
+describe("html importer: arbitrary html", () => {
+    it("imports a standalone document with an empty head title", () => {
+        // Pandoc-style standalone HTML without document metadata: the title
+        // is empty and must not produce an invalid empty text node.
+        const html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title></title></head>
+<body>
+<header id="title-block-header"><h1 class="title"></h1></header>
+<p>Some standalone content.</p>
+</body>
+</html>`
+        const result = makeConverter(html).init()
+        const title = result.content.content[0]
+        expect(title.type).toBe("title")
+        expect(title.content).toEqual([])
+        const body = result.content.content.find(
+            part => part.type === "richtext_part"
+        )
+        const text = body.content
+            .map(block =>
+                (block.content || []).map(inline => inline.text || "").join("")
+            )
+            .join(" ")
+        expect(text).toContain("Some standalone content.")
+    })
+
+    it("imports foreign markup without crashing", () => {
+        const html = `<article>
+<h2>Foreign heading</h2>
+<p>Text with <mark>highlighted</mark> and <span class="unknown">tagged</span> words.</p>
+<nav><ul><li><a href="#a">nav link</a></li></ul></nav>
+<figure><img src="https://example.org/pic.png" alt="A remote picture"></figure>
+</article>`
+        const result = makeConverter(html).init()
+        expect(result.content.type).toBe("doc")
+        const body = result.content.content.find(
+            part => part.type === "richtext_part"
+        )
+        const text = body.content
+            .map(block =>
+                (block.content || []).map(inline => inline.text || "").join("")
+            )
+            .join(" ")
+        expect(text).toContain("Foreign heading")
+        expect(text).toContain("highlighted")
+        expect(text).toContain("nav link")
+        // The remote image is registered under a local file name with the
+        // source URL for the native importer to fetch.
+        const image = Object.values(result.images)[0]
+        expect(image.image).toBe("images/pic.png")
+        expect(result.otherFiles).toEqual([
+            {filename: "images/pic.png", url: "https://example.org/pic.png"}
+        ])
+    })
+})
+
 describe("html importer: tracked changes", () => {
     it("restores insertion and deletion marks and block tracks", () => {
         // The sample document contains tracked changes; the exporter only
