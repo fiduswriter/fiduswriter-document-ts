@@ -25,7 +25,8 @@ export const addAlert = (type, message) => {
 export const get = _url => {
     return Promise.resolve({
         blob: () => Promise.resolve(new Blob()),
-        json: () => Promise.resolve({})
+        json: () => Promise.resolve({}),
+        text: () => Promise.resolve("")
     })
 }
 

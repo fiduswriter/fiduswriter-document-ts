@@ -237,7 +237,7 @@ export class HTMLExporterConvert {
             body,
             back,
             settings: this.docSettings,
-            lang: this.docSettings.language!.split("-")[0],
+            lang: (this.docSettings.language || "en-US").split("-")[0],
             xhtml: this.xhtml,
             epub: this.epub
         })

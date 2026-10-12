@@ -1110,6 +1110,44 @@ describe("HTML exporter", () => {
         const mod = await import("../../src/exporter/html/templates.js")
         expect(mod).toBeDefined()
     })
+
+    it("exports a document whose settings have no language", async () => {
+        // Documents created from a template carry no `language` in their
+        // settings until the user picks one; the export must not crash on it.
+        const {HTMLExporter} = await import("../../src/exporter/html/index.js")
+        const settings = JSON.parse(JSON.stringify(sampleSettings))
+        delete settings.language
+        const doc = {
+            id: 1,
+            title: "Document without language",
+            content: sampleDoc.content,
+            settings,
+            comments: {},
+            bibliography: {}
+        }
+        const exporter = new HTMLExporter(
+            doc,
+            {db: {}},
+            {
+                db: {
+                    "sample-image-1": {
+                        id: 1,
+                        title: "Sample image",
+                        image: "images/sample-image-1.png"
+                    }
+                }
+            },
+            {},
+            new Date(),
+            []
+        )
+        exporter.createZip = async () => {}
+        await exporter.init()
+        const htmlFile = exporter.textFiles.find(
+            file => file.filename === "document.html"
+        )
+        expect(htmlFile.contents).toContain('lang="en"')
+    })
 })
 
 // ========================================================================
