@@ -70,9 +70,17 @@ export class ShrinkFidus {
 
         this.imageList.forEach(itemId => {
             const key = String(itemId)
+            // A document step can reference an image before its imageDB
+            // entry (the `iu` update) has arrived. Skip the dangling
+            // reference instead of crashing the export — the document text
+            // still exports and the importer tolerates missing images.
+            const imageEntry = this.imageDB.db[key]
+            if (!imageEntry) {
+                return
+            }
             shrunkImageDB[key] = Object.assign(
                 {},
-                this.imageDB.db[key]
+                imageEntry
             ) as Record<string, unknown>
             // Remove parts that are connected to a particular user/server
             delete shrunkImageDB[key].cats

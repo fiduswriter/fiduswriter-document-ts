@@ -161,6 +161,13 @@ Tests live in `test/` and run with Jest.
   which must be installed for those tests to run
   (https://github.com/typst/typst); the helper also looks in
   `~/.local/bin` when the binary is not on `PATH`.
+- Fuzz harnesses live in `test/fuzz/` (see `FUZZING.md`): `pnpm run
+test:fuzz` runs property-based import/export fuzzing against the compiled
+  `dist/` code. `FC_RUNS`/`FC_SEED` control iterations and replay. After
+  changing an importer, the native container handling or the exporters, run
+  the relevant harness with a few hundred iterations. Minimized repros of
+  fixed bugs live in `test/fuzz/regressions/` and run as part of `pnpm
+test`.
 
 ## MathLive bundling
 

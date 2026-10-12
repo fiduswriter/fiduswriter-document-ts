@@ -97,7 +97,19 @@ export class FidusFileImporter {
                     result.length > 60 &&
                     result.substring(0, 2) === "PK"
                 ) {
-                    this.initZipFileRead().then(() => resolve(this))
+                    this.initZipFileRead()
+                        .then(() => resolve(this))
+                        .catch(() => {
+                            // A structurally broken zip (loadAsync rejects)
+                            // must still settle the import — otherwise the
+                            // caller waits forever.
+                            if (!this.statusText) {
+                                this.statusText = gettext(
+                                    "The uploaded file does not appear to be a Fidus Writer file."
+                                )
+                            }
+                            resolve(this)
+                        })
                 } else {
                     this.statusText = gettext(
                         "The uploaded file does not appear to be a Fidus Writer file."
@@ -112,8 +124,18 @@ export class FidusFileImporter {
     initZipFileRead(): Promise<this> {
         return import("jszip")
             .then(({default: JSZip}) => new JSZip())
-            .then(zipfs => zipfs.loadAsync(this.file))
+            .then(zipfs =>
+                zipfs.loadAsync(this.file).catch(() => {
+                    this.statusText = gettext(
+                        "The uploaded file does not appear to be a Fidus Writer file."
+                    )
+                    return null
+                })
+            )
             .then(zipfs => {
+                if (!zipfs) {
+                    return this
+                }
                 const filenames: string[] = []
                 const p: Array<Promise<void>> = []
                 let validFile = true
@@ -155,6 +177,15 @@ export class FidusFileImporter {
                                                 content: content as Blob
                                             })
                                         }
+                                        resolve()
+                                    })
+                                    .catch(() => {
+                                        // A corrupt entry (bad CRC, broken
+                                        // deflate stream) must not leave
+                                        // Promise.all pending forever.
+                                        this.statusText = gettext(
+                                            "The uploaded file does not appear to be a Fidus Writer file."
+                                        )
                                         resolve()
                                     })
                             })
