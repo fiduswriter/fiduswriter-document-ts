@@ -55,7 +55,8 @@ interface License {
 interface CopyrightInfo {
     holder?: string
     year?: number | string
-    licenses?: License[]
+    // Legacy image databases store licenses as plain strings.
+    licenses?: Array<License | string>
 }
 
 export class LatexExporterConvert {
@@ -757,8 +758,11 @@ export class LatexExporterConvert {
                     content += `% © ${copyright.year ? copyright.year : new Date().getFullYear()} ${copyright.holder}\n`
                 }
                 if (copyright?.licenses?.length) {
-                    copyright.licenses.forEach((license: License) => {
-                        content += `% ${license.title}: ${license.url}${license.start ? ` (${license.start})\n` : ""}\n`
+                    copyright.licenses.forEach((license: License | string) => {
+                        content +=
+                            typeof license === "string"
+                                ? `% ${license}\n`
+                                : `% ${license.title}: ${license.url}${license.start ? ` (${license.start})` : ""}\n`
                     })
                 }
                 if (node.attrs?.id && this.internalLinks.includes(node.attrs.id)) {
@@ -969,8 +973,11 @@ export class LatexExporterConvert {
                 note += `% © ${copyright.year ? copyright.year : new Date().getFullYear()} ${copyright.holder}\n`
             }
             if (copyright.licenses?.length) {
-                copyright.licenses.forEach((license: License) => {
-                    note += `% ${license.url}${license.start ? ` (${license.start})` : ""}\n`
+                copyright.licenses.forEach((license: License | string) => {
+                    note +=
+                        typeof license === "string"
+                            ? `% ${license}\n`
+                            : `% ${license.url}${license.start ? ` (${license.start})` : ""}\n`
                 })
             }
         }

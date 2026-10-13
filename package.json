@@ -1,6 +1,6 @@
 {
   "name": "@fiduswriter/document",
-  "version": "0.3.34",
+  "version": "0.3.36",
   "description": "Fidus Writer document schema, importers and exporters",
   "keywords": [
     "fiduswriter",
@@ -206,7 +206,7 @@
     "node-html-parser": "^9.0.4",
     "orderedmap": "^2.1.1",
     "pages-to-pdf": "^0.4.1",
-    "paginate-for-print": "^1.1.2",
+    "paginate-for-print": "^1.1.3",
     "prettier": "^3.9.10",
     "prosemirror-commands": "^1.7.2",
     "prosemirror-gapcursor": "^1.4.1",

@@ -52,6 +52,29 @@ interface License {
     [key: string]: unknown
 }
 
+/**
+ * Render `<license>` elements for a copyright block.
+ *
+ * Legacy image databases store licenses as plain strings (e.g.
+ * `"CC BY-SA 4.0"`); `<ali:license_ref>` requires a URI, so only
+ * object-shaped licenses with a string URL produce output — mirroring the
+ * HTML exporter, which skips the rest.
+ */
+function renderLicenses(licenses: Array<License | string> | undefined): string {
+    return (licenses ?? [])
+        .filter(
+            (license): license is License =>
+                typeof license === "object" &&
+                license !== null &&
+                typeof license.url === "string"
+        )
+        .map(
+            license =>
+                `<license><ali:license_ref${license.start ? ` start_date="${license.start}"` : ""}>${escapeText(license.url as string)}</ali:license_ref></license>`
+        )
+        .join("")
+}
+
 interface Copyright {
     holder?: string
     year?: number
@@ -379,12 +402,7 @@ export class JATSExporterConverter {
             if (this.frontMatter.copyright.freeToRead) {
                 front += "<ali:free_to_read/>"
             }
-            front += this.frontMatter.copyright.licenses
-                .map(
-                    (license: License) =>
-                        `<license><ali:license_ref${license.start ? ` start_date="${license.start}"` : ""}>${escapeText(license.url as string)}</ali:license_ref></license>`
-                )
-                .join("")
+            front += renderLicenses(this.frontMatter.copyright.licenses)
             front += "</permissions>"
         } else {
             front += "<permissions/>"
@@ -456,12 +474,7 @@ export class JATSExporterConverter {
             if (this.frontMatter.copyright.freeToRead) {
                 front += "<ali:free_to_read/>"
             }
-            front += this.frontMatter.copyright.licenses
-                .map(
-                    (license: License) =>
-                        `<license><ali:license_ref${license.start ? ` start_date="${license.start}"` : ""}>${escapeText(license.url as string)}</ali:license_ref></license>`
-                )
-                .join("")
+            front += renderLicenses(this.frontMatter.copyright.licenses)
             front += "</permissions>"
         } else {
             front += "<permissions/>"
@@ -884,12 +897,7 @@ export class JATSExporterConverter {
                             if (copyright.freeToRead) {
                                 start += "<ali:free_to_read/>"
                             }
-                            start += copyright.licenses
-                                .map(
-                                    (license: License) =>
-                                        `<license><ali:license_ref${license.start ? ` start_date="${license.start}"` : ""}>${escapeText(license.url as string)}</ali:license_ref></license>`
-                                )
-                                .join("")
+                            start += renderLicenses(copyright.licenses)
                             start += "</permissions>"
                         }
                         if (imageFilename) {
