@@ -4,7 +4,7 @@ import {gettext, shortFileTitle, staticUrl} from "fwtoolkit"
 import type {BibDB, CSL, ExportDoc, FidusNode, ImageDB} from "../../types.js"
 import {formatHtml} from "../tools/format.js"
 import {removeHidden} from "../tools/doc_content.js"
-import {createSlug, getImageExtension} from "../tools/file.js"
+import {createSlug, getImageDBEntryFilename, getImageExtension} from "../tools/file.js"
 import {ZipFileCreator, type ZipTextFile} from "fwtoolkit/file/zip"
 import type {ProgressCallback} from "../tools/progress.js"
 import {HTMLExporterConvert} from "./convert.js"
@@ -201,8 +201,10 @@ export class HTMLExporter {
                     blob: imageValue
                 })
             } else {
+                // Data URLs have no usable last path segment (the base64
+                // payload may contain "/"); the helper derives a stable name.
                 this.httpFiles.push({
-                    filename: `images/${(imageValue as string).split("/").pop()!}`,
+                    filename: `images/${getImageDBEntryFilename(image, id)}`,
                     url: imageValue as string
                 })
             }

@@ -2,6 +2,7 @@ import {get} from "fwtoolkit"
 
 import type {FidusNode, ImageDB} from "../../types.js"
 import {descendantNodes} from "../tools/doc_content.js"
+import {getImageDBEntryFilename} from "../tools/file.js"
 import {svg2png} from "../tools/svg.js"
 import type {XMLElement} from "../tools/xml.js"
 import type {XmlZip} from "../tools/xml_zip.js"
@@ -105,7 +106,13 @@ export class ODTExporterImages {
                 const imageFilename =
                     imageValue instanceof Blob
                         ? `image-${String(image)}.${getImageExtension(imgDBEntry.file_type as string | undefined, imageValue.type)}`
-                        : (imageValue as string).split("/").pop()!
+                        : // Data URLs have no usable last path segment (the
+                          // base64 payload may contain "/"); the helper
+                          // derives a stable name.
+                          getImageDBEntryFilename(
+                              imgDBEntry,
+                              String(image)
+                          )
                 p.push(
                     imagePromise.then(async blob => {
                         const wImgId = this.addImage(imageFilename, blob)

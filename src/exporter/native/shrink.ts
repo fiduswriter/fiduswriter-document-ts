@@ -3,7 +3,7 @@ import {gettext} from "fwtoolkit"
 import {docSchema} from "../../schema/document/index.js"
 import {toMiniJSON} from "../../schema/mini_json.js"
 import type {BibDB, FidusNode, ImageDB} from "../../types.js"
-import {getImageExtension} from "../tools/file.js"
+import {getImageExtension, getDataUrlMime, isDataUrlValue} from "../tools/file.js"
 
 export type ProgressCallback = (
     message: string,
@@ -129,6 +129,18 @@ export class ShrinkFidus {
                     "image/avif": "avif"
                 }
                 const ext = mimeExtMap[mime] || "png"
+                filename = `images/${key}.${ext}`
+                url = imageValue
+            } else if (isDataUrlValue(imageValue)) {
+                // Data URLs carry no meaningful last path segment: the base64
+                // payload can contain "/" and `split("/").pop()` then uses a
+                // random base64 tail as the file name. Derive a stable one
+                // from the entry id and MIME type instead. The URL stays the
+                // data URL; the zip writer fetches (and thereby decodes) it.
+                const ext = getImageExtension(
+                    shrunkImageDB[key].file_type as string | undefined,
+                    getDataUrlMime(imageValue) || ""
+                )
                 filename = `images/${key}.${ext}`
                 url = imageValue
             } else {

@@ -4,7 +4,7 @@ import {gettext, shortFileTitle} from "fwtoolkit"
 import {formatXml} from "../tools/format.js"
 import type {BibDB, CSL, ExportDoc, ImageDB} from "../../types.js"
 import type {ProgressCallback} from "../tools/progress.js"
-import {createSlug, getImageExtension} from "../tools/file.js"
+import {createSlug, getImageDBEntryFilename, getImageExtension} from "../tools/file.js"
 import {ZipFileCreator} from "fwtoolkit/file/zip"
 import {JATSExporterConverter} from "./convert.js"
 import {
@@ -102,7 +102,9 @@ export class JATSExporter {
                 url = `blob:${id}`
                 blob = imageValue
             } else {
-                filename = (imageValue as string).split("/").pop()!
+                // Data URLs have no usable last path segment (the base64
+                // payload may contain "/"); the helper derives a stable name.
+                filename = getImageDBEntryFilename(imageEntry, id)
                 url = imageValue as string
             }
             return {

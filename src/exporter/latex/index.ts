@@ -6,7 +6,7 @@ import {gettext, shortFileTitle} from "fwtoolkit"
 import type {BibDB, BibDBEntries, ExportDoc, FidusNode, ImageDB} from "../../types.js"
 import type {ProgressCallback} from "../tools/progress.js"
 import {fixTables, removeHidden} from "../tools/doc_content.js"
-import {createSlug, getImageExtension} from "../tools/file.js"
+import {createSlug, getImageDBEntryFilename, getImageExtension} from "../tools/file.js"
 import {ZipFileCreator} from "fwtoolkit/file/zip"
 import {LatexExporterConvert} from "./convert.js"
 import {readMe} from "./readme.js"
@@ -84,8 +84,10 @@ export class LatexExporter {
                     blob: imageValue
                 })
             } else {
+                // Data URLs have no usable last path segment (the base64
+                // payload may contain "/"); the helper derives a stable name.
                 this.httpFiles.push({
-                    filename: (imageValue as string).split("/").pop()!,
+                    filename: getImageDBEntryFilename(imageEntry, id),
                     url: imageValue as string
                 })
             }

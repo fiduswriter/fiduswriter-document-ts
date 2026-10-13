@@ -6,7 +6,7 @@ import {gettext, shortFileTitle} from "fwtoolkit"
 import type {BibDB, CSL, ExportDoc, FidusNode, ImageDB} from "../../types.js"
 import type {ProgressCallback} from "../tools/progress.js"
 import {fixTables, removeHidden} from "../tools/doc_content.js"
-import {createSlug, getImageExtension} from "../tools/file.js"
+import {createSlug, getImageDBEntryFilename, getImageExtension} from "../tools/file.js"
 import {ZipFileCreator} from "fwtoolkit/file/zip"
 import {PandocExporterCitations} from "./citations.js"
 import {PandocExporterConvert} from "./convert.js"
@@ -104,7 +104,7 @@ export class PandocExporter {
                 } else {
                     const imageUrl = imageValue as string
                     this.httpFiles.push({
-                        filename: imageUrl.split("/").pop()!,
+                        filename: getImageDBEntryFilename(imageEntry, id),
                         url: imageUrl
                     })
                 }
