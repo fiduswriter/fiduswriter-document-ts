@@ -177,7 +177,7 @@
     "prepare": "npm run build && npm run build-schema && npm run bundle-mathlive && npm run sync-static-libs",
     "prepublishOnly": "npm run build && npm run build-schema && npm run bundle-mathlive && npm run sync-static-libs",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.js && node test/fuzz/regressions/shrink-missing-image.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.js && node test/fuzz/regressions/shrink-missing-image.js && node test/fuzz/regressions/jszip-orphan-size-mismatch.js && node test/fuzz/regressions/odt-style-cycle.js",
     "deploy-pages": "./scripts/deploy-pages.sh",
     "lint": "eslint src test scripts",
     "lint:fix": "eslint src test scripts --fix",

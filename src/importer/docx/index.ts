@@ -2,6 +2,7 @@ import {escapeText} from "fwtoolkit"
 
 import {DocxConvert} from "./convert.js"
 import {NativeImporter} from "../native/importer.js"
+import {ensureZipSizeGuard} from "../zip_guard.js"
 
 import type {
     E2EEOptions,
@@ -68,6 +69,7 @@ export class DocxImporter {
     }
 
     importDocx(): Promise<typeof this.output> {
+        ensureZipSizeGuard()
         const bibliography: Record<string, unknown> = {}
         return import("jszip")
             .then(({default: JSZip}) => this.file.arrayBuffer().then(ab => JSZip.loadAsync(ab)))

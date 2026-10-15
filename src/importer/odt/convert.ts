@@ -1026,41 +1026,50 @@ export class OdtConvert {
     }
 
     isTitleStyle(style: StyleProperties): boolean {
-        // Check if style or its parent has characteristics of a title style
-        if (!style) {
-            return false
-        }
+        // Check if style or its parent has characteristics of a title style.
+        // Walk the parent chain iteratively and stop at the first repeated
+        // parent name: ODT files (and mutated imports) can contain style
+        // reference cycles, which made the recursive version overflow the
+        // call stack.
+        const visitedParents = new Set<string>()
 
-        // Check style name
-        if (style.title?.toLowerCase().includes("title")) {
-            return true
-        }
-
-        // Check text properties for title-like formatting
-        const textProps = style.textProperties
-        if (textProps) {
-            // Title usually has larger font size and/or bold weight
-            if ((textProps.fontSize ?? 0) > 14 || textProps.bold) {
+        while (style) {
+            // Check style name
+            if (style.title?.toLowerCase().includes("title")) {
                 return true
             }
-        }
 
-        // Check paragraph properties
-        const paraProps = style.paragraphProperties
-        if (paraProps) {
-            // Titles are often centered and have larger margins
-            if (
-                paraProps.textAlign === "center" ||
-                (                (paraProps.marginTop ?? 0) > 0.5 && (paraProps.marginBottom ?? 0) > 0.5)
-            ) {
-                return true
+            // Check text properties for title-like formatting
+            const textProps = style.textProperties
+            if (textProps) {
+                // Title usually has larger font size and/or bold weight
+                if ((textProps.fontSize ?? 0) > 14 || textProps.bold) {
+                    return true
+                }
             }
-        }
 
-        // Check parent style if exists
-        if (style.parentStyleName) {
-            const parentStyle = this.styles[style.parentStyleName]
-            return this.isTitleStyle(parentStyle)
+            // Check paragraph properties
+            const paraProps = style.paragraphProperties
+            if (paraProps) {
+                // Titles are often centered and have larger margins
+                if (
+                    paraProps.textAlign === "center" ||
+                    ((paraProps.marginTop ?? 0) > 0.5 && (paraProps.marginBottom ?? 0) > 0.5)
+                ) {
+                    return true
+                }
+            }
+
+            // Check parent style if exists, without following cycles
+            if (style.parentStyleName) {
+                if (visitedParents.has(style.parentStyleName)) {
+                    return false
+                }
+                visitedParents.add(style.parentStyleName)
+                style = this.styles[style.parentStyleName]
+            } else {
+                return false
+            }
         }
 
         return false
@@ -1173,87 +1182,111 @@ export class OdtConvert {
     }
 
     isCodeBlockStyle(styleName: string, style: StyleProperties): boolean {
-        if (!styleName) {
+        // Walk the parent chain iteratively and stop at the first repeated
+        // name: ODT style reference cycles (also produced by mutated
+        // imports) made the recursive version overflow the call stack.
+        const visited = new Set<string>()
+
+        while (styleName) {
+            if (visited.has(styleName)) {
+                return false
+            }
+            visited.add(styleName)
+
+            // Check if style name contains preformatted or code indicators
+            const lowerStyleName = styleName.toLowerCase()
+            if (
+                lowerStyleName.includes("preformatted") ||
+                lowerStyleName.includes("code") ||
+                styleName === "Preformatted_20_Text"
+            ) {
+                return true
+            }
+
+            if (style?.parentStyleName) {
+                // Check parent style for code block indicators
+                styleName = style.parentStyleName
+                style = this.styles[styleName]
+                continue
+            }
+
+            // Check text properties for monospace fonts
+            if (style?.textProperties?.fontFamily) {
+                const fontFamily = style.textProperties.fontFamily.toLowerCase()
+                const monospacePatterns: string[] = [
+                    "courier",
+                    "consolas",
+                    "monaco",
+                    "menlo",
+                    "lucida console",
+                    "liberation mono",
+                    "dejavu sans mono",
+                    "bitstream vera sans mono",
+                    "source code pro",
+                    "fira code"
+                ]
+                return monospacePatterns.some((pattern: string) =>
+                    fontFamily.includes(pattern)
+                )
+            }
+
             return false
-        }
-
-        // Check if style name contains preformatted or code indicators
-        const lowerStyleName = styleName.toLowerCase()
-        if (
-            lowerStyleName.includes("preformatted") ||
-            lowerStyleName.includes("code") ||
-            styleName === "Preformatted_20_Text"
-        ) {
-            return true
-        }
-
-        // Check if parent style is a code block style
-        if (style?.parentStyleName) {
-            const parentStyle = this.styles[style.parentStyleName]
-            return this.isCodeBlockStyle(style.parentStyleName, parentStyle)
-        }
-
-        // Check text properties for monospace fonts
-        if (style?.textProperties?.fontFamily) {
-            const fontFamily = style.textProperties.fontFamily.toLowerCase()
-            const monospacePatterns: string[] = [
-                "courier",
-                "consolas",
-                "monaco",
-                "menlo",
-                "lucida console",
-                "liberation mono",
-                "dejavu sans mono",
-                "bitstream vera sans mono",
-                "source code pro",
-                "fira code"
-            ]
-            return monospacePatterns.some((pattern: string) =>
-                fontFamily.includes(pattern)
-            )
         }
 
         return false
     }
 
     isHeadingStyle(styleName: string): boolean {
-        if (!styleName) {
-            return false
-        }
+        // Walk the parent chain iteratively and stop at the first repeated
+        // name: ODT style reference cycles made the recursive version
+        // overflow the call stack.
+        const visited = new Set<string>()
+        let style = styleName ? this.styles[styleName] : undefined
 
-        const style = this.styles[styleName]
-        if (!style) {
-            return false
-        }
+        while (styleName && style) {
+            if (visited.has(styleName)) {
+                return false
+            }
+            visited.add(styleName)
 
-        // Check multiple indicators that this might be a heading style
-        return Boolean(
-            // Direct heading indicators
-            style.isHeading ||
-            styleName.toLowerCase().includes("heading") ||
-            styleName.toLowerCase().includes("title") ||
-            // Check outline level property
-            Boolean(style.outlineLevel) ||
+            // Check multiple indicators that this might be a heading style
+            const heading = Boolean(
+                // Direct heading indicators
+                style.isHeading ||
+                styleName.toLowerCase().includes("heading") ||
+                styleName.toLowerCase().includes("title") ||
+                // Check outline level property
+                Boolean(style.outlineLevel) ||
+                // Check specific formatting that's typical for headings
+                (style.paragraphProperties &&
+                    // Larger margins than normal paragraphs
+                    ((style.paragraphProperties.marginTop ?? 0) > 0.3 ||
+                        (style.paragraphProperties.marginBottom ?? 0) > 0.3 ||
+                        // Different alignment
+                        style.paragraphProperties.textAlign === "center")) ||
+                // Check text properties typical for headings
+                (style.textProperties &&
+                    // Larger font size
+                    ((style.textProperties.fontSize ?? 0) > 12 ||
+                        // Bold text
+                        style.textProperties.bold ||
+                        // Different font family
+                        style.textProperties.fontFamily))
+            )
+            if (heading) {
+                return true
+            }
+
             // Check if it's derived from a heading style
-            (style.parentStyleName
-                ? this.isHeadingStyle(style.parentStyleName)
-                : false) ||
-            // Check specific formatting that's typical for headings
-            (style.paragraphProperties &&
-                // Larger margins than normal paragraphs
-                ((style.paragraphProperties.marginTop ?? 0) > 0.3 ||
-                    (style.paragraphProperties.marginBottom ?? 0) > 0.3 ||
-                    // Different alignment
-                    style.paragraphProperties.textAlign === "center")) ||
-            // Check text properties typical for headings
-            (style.textProperties &&
-                // Larger font size
-                ((style.textProperties.fontSize ?? 0) > 12 ||
-                    // Bold text
-                    style.textProperties.bold ||
-                    // Different font family
-                    style.textProperties.fontFamily))
-        )
+            if (style.parentStyleName) {
+                styleName = style.parentStyleName
+                style = this.styles[styleName]
+            } else {
+                return false
+            }
+        }
+
+        return false
     }
 
     convertContainer(container: XMLElement): FidusNode[] {

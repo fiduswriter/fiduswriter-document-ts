@@ -2,6 +2,7 @@ import {escapeText} from "fwtoolkit"
 
 import {OdtConvert} from "./convert.js"
 import {NativeImporter} from "../native/importer.js"
+import {ensureZipSizeGuard} from "../zip_guard.js"
 
 import type {
     BibDB,
@@ -73,6 +74,7 @@ export class OdtImporter {
     }
 
     importOdt(): Promise<typeof this.output> {
+        ensureZipSizeGuard()
         return import("jszip")
             .then(({default: JSZip}) => this.file.arrayBuffer().then(ab => JSZip.loadAsync(ab)))
             .then(zip => {
