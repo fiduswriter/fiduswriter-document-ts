@@ -45,7 +45,7 @@ Do **not** put in this repository:
 - Pure UI components (those belong in `fwtoolkit`).
 - Django-specific logic.
 - End-to-end encryption code.
-- Book management logic (use `@fiduswriter/books-document` for composite/book
+- Book management logic (use `@fiduswriter/books` for composite/book
   exporters).
 
 ## Technology stack
@@ -194,7 +194,7 @@ This library is consumed by:
 
 - `fiduswriter-server-backend/` (the main Fidus Writer Django app) via
   `fiduswriter/document/package.json5`.
-- `@fiduswriter/books-document` for book-level exporters/importers.
+- `@fiduswriter/books` for book-level exporters/importers.
 - `@fiduswriter/cli` for command-line conversion.
 
 When publishing a new version, update those consumers and run their tests.
@@ -206,7 +206,7 @@ When publishing a new version, update those consumers and run their tests.
 - Update `package.json` version if needed (`npm version patch|minor|major`).
 - `npm publish` triggers `prepublishOnly`, which builds and bundles.
 - Push commits and tags.
-- Update downstream consumers (`@fiduswriter/books-document`,
+- Update downstream consumers (`@fiduswriter/books`,
   `@fiduswriter/cli`, `fiduswriter-server-backend/fiduswriter/document/package.json5`).
 
 ## Useful references
