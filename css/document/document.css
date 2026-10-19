@@ -1,0 +1,627 @@
+/* document.css — base styles for Fidus Writer HTML/EPUB/print exports */
+
+/* ── Fallback fonts (Libertinus Serif + JetBrains Mono, SIL OFL) ────────── */
+
+/* The Libertinus Serif and JetBrains Mono TTFs are bundled with
+   @fiduswriter/document. The url() paths are relative to this stylesheet:
+   they resolve against css/document/fonts/ when this file is served as
+   static/css/document/document.css and against css/fonts/ when it is embedded
+   as css/document.css inside an HTML/EPUB export (the exporter adds the font
+   files to the zip alongside it). */
+
+@font-face {
+    font-family: "Libertinus Serif";
+    font-style: normal;
+    font-weight: 400;
+    src: url(fonts/LibertinusSerif-Regular.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "Libertinus Serif";
+    font-style: normal;
+    font-weight: 700;
+    src: url(fonts/LibertinusSerif-Bold.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "Libertinus Serif";
+    font-style: italic;
+    font-weight: 400;
+    src: url(fonts/LibertinusSerif-Italic.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "Libertinus Serif";
+    font-style: italic;
+    font-weight: 700;
+    src: url(fonts/LibertinusSerif-BoldItalic.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "JetBrains Mono";
+    font-style: normal;
+    font-weight: 400;
+    src: url(fonts/JetBrainsMono-Regular.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "JetBrains Mono";
+    font-style: normal;
+    font-weight: 700;
+    src: url(fonts/JetBrainsMono-Bold.ttf) format("truetype");
+}
+
+/* ── Reset & base ──────────────────────────────────────────────────────────── */
+
+body.doc {
+    font-family: "Libertinus Serif", "Liberation Serif", serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #1a1a1a;
+    background: #fff;
+    max-width: 52rem;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+/* ── Document-part containers ──────────────────────────────────────────────── */
+
+.doc-part {
+    margin-bottom: 1.5rem;
+}
+
+.doc-title {
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* ── Headings ──────────────────────────────────────────────────────────────── */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Libertinus Serif", "Liberation Serif", serif;
+    font-weight: bold;
+    line-height: 1.25;
+    margin: 1.5em 0 0.5em;
+    color: #111;
+}
+
+h1 {
+    font-size: 1.75rem;
+}
+h2 {
+    font-size: 1.5rem;
+}
+h3 {
+    font-size: 1.25rem;
+}
+h4 {
+    font-size: 1.1rem;
+}
+h5 {
+    font-size: 1rem;
+}
+h6 {
+    font-size: 0.9rem;
+}
+
+/* ── Paragraphs ────────────────────────────────────────────────────────────── */
+
+p {
+    margin: 0 0 0.9em;
+}
+
+/* ── Inline marks ──────────────────────────────────────────────────────────── */
+
+.underline {
+    text-decoration: underline;
+}
+
+sup,
+sub {
+    font-size: 0.75em;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+sup {
+    top: -0.5em;
+}
+sub {
+    bottom: -0.25em;
+}
+
+code {
+    font-family: "JetBrains Mono", "DejaVu Sans Mono", monospace;
+    font-size: 0.88em;
+    background: #f4f4f4;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+}
+
+/* ── Blockquote ────────────────────────────────────────────────────────────── */
+
+blockquote {
+    margin: 1em 0 1em 2em;
+    padding-left: 1em;
+    border-left: 3px solid #ccc;
+    color: #444;
+    font-style: italic;
+}
+
+/* ── Lists ─────────────────────────────────────────────────────────────────── */
+
+ol,
+ul {
+    margin: 0.5em 0 1em 2em;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 0.25em;
+}
+
+/* ── Links ─────────────────────────────────────────────────────────────────── */
+
+a {
+    color: #1a5fb4;
+    text-decoration: underline;
+}
+
+.user-contents a {
+    text-decoration: underline;
+}
+
+a.reference {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dotted #888;
+}
+
+.anchor {
+    /* Invisible inline anchor for cross-references. */
+}
+
+span.anchor {
+    text-decoration: underline;
+    color: var(--cs-4-text);
+}
+
+/* ── Equations ─────────────────────────────────────────────────────────────── */
+
+span.equation {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+div.figure-equation {
+    text-align: center;
+    margin: 1em 0;
+    overflow-x: auto;
+}
+
+/* The equation image/SVG must be inline-level so that the text-align above
+   can center it (img defaults to display: block further down). */
+div.figure-equation img,
+div.figure-equation svg {
+    display: inline-block;
+}
+
+/* ── Code blocks ───────────────────────────────────────────────────────────── */
+
+pre {
+    font-family: "JetBrains Mono", "DejaVu Sans Mono", monospace;
+    font-size: 0.88em;
+    background: #f4f4f4;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 0.9em 1.1em;
+    overflow-x: auto;
+    margin: 1em 0;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+}
+
+figure.code-block-figure {
+    margin: 1.5em 0;
+}
+
+figure.code-block-figure figcaption {
+    font-size: 0.85em;
+    color: #555;
+    margin-bottom: 0.4em;
+}
+
+/* ── Figures and images ────────────────────────────────────────────────────── */
+
+figure {
+    margin: 1.5em 0;
+    display: block;
+}
+
+figcaption {
+    font-size: 0.875em;
+    color: #555;
+    margin-top: 0.4em;
+}
+
+figcaption label {
+    font-weight: bold;
+    margin-right: 0.4em;
+}
+
+/* Category label ("Figure 1") and caption text share a single line: the
+   caption paragraph is inline, and a colon separator is generated only when
+   a description actually follows the label (i.e. the label is not the last
+   child of figcaption/caption). */
+figcaption p,
+caption p {
+    display: inline;
+    margin: 0;
+}
+
+figcaption label:not(:last-child)::after,
+caption label:not(:last-child)::after {
+    content: ": ";
+}
+
+figure footer.copyright {
+    font-size: 0.75em;
+    color: #777;
+    margin-top: 0.3em;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Alignment */
+.aligned-left {
+    float: left;
+    margin: 0 1.5em 1em 0;
+}
+.aligned-right {
+    float: right;
+    margin: 0 0 1em 1.5em;
+}
+.aligned-center {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Width classes (percentage of container) */
+.image-width-25 {
+    width: 25%;
+}
+.image-width-50 {
+    width: 50%;
+}
+.image-width-75 {
+    width: 75%;
+}
+.image-width-100 {
+    width: 100%;
+}
+
+/* Clear floats after doc-parts that contain floated images */
+.doc-part::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* ── Tables ─────────────────────────────────────────────────────────────────── */
+
+table {
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    width: 100%;
+    font-size: 0.95em;
+    clear: both;
+}
+
+caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 0.875em;
+    color: #555;
+    margin-bottom: 0.5em;
+}
+
+caption label {
+    font-weight: bold;
+    margin-right: 0.4em;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 0.45em 0.7em;
+    vertical-align: top;
+    text-align: left;
+}
+
+th {
+    background: #f0f0f0;
+    font-weight: bold;
+}
+
+/* Table width/alignment helpers */
+.table-25 {
+    width: 25%;
+}
+.table-50 {
+    width: 50%;
+}
+.table-75 {
+    width: 75%;
+}
+.table-100 {
+    width: 100%;
+}
+.table-full {
+    width: 100%;
+}
+.table-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+.table-left {
+    margin-right: auto;
+}
+.table-right {
+    margin-left: auto;
+}
+
+.doc table[data-layout="fixed"] {
+    table-layout: fixed !important;
+}
+
+.doc table[data-layout="auto"] {
+    table-layout: auto !important;
+}
+
+/* ── Table of contents ─────────────────────────────────────────────────────── */
+
+.table-of-contents h1 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5em;
+}
+
+.doc .table-of-contents h1,
+.doc .table-of-contents h2,
+.doc .table-of-contents h3,
+.doc .table-of-contents h4,
+.doc .table-of-contents h5,
+.doc .table-of-contents h6 {
+    font-size: 1em;
+    font-weight: normal;
+    margin-bottom: unset;
+}
+
+.doc .table-of-contents h2 {
+    padding-left: 1em;
+}
+
+.doc .table-of-contents h3 {
+    padding-left: 2em;
+}
+
+.doc .table-of-contents h4 {
+    padding-left: 3em;
+}
+
+.doc .table-of-contents h5 {
+    padding-left: 4em;
+}
+
+.doc .table-of-contents h6 {
+    padding-left: 5em;
+}
+
+.doc .table-of-contents h1.toc {
+    font-style: italic;
+}
+
+.table-of-contents a {
+    text-decoration: none;
+    color: #1a5fb4;
+}
+
+/* ── Contributors ──────────────────────────────────────────────────────────── */
+
+.doc-contributors {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.doc-contributors .person,
+.doc-contributors .group {
+    display: inline-block;
+    margin-right: 0.75em;
+}
+
+.doc-contributors .name {
+    font-weight: bold;
+}
+
+.doc-contributors .affiliation {
+    vertical-align: super;
+    font-size: 0.75em;
+    color: #1a5fb4;
+    text-decoration: none;
+}
+
+.doc-contributors .contributor-id {
+    font-size: 0.8em;
+    color: #555;
+    margin-left: 0.3em;
+}
+
+/* ── Tags ───────────────────────────────────────────────────────────────────── */
+
+.doc-tags {
+    margin-bottom: 1rem;
+}
+
+.tag {
+    display: inline-block;
+    background: #e8e8e8;
+    border-radius: 3px;
+    padding: 0.1em 0.5em;
+    margin: 0.2em 0.25em;
+    font-size: 0.85em;
+}
+
+/* ── Back matter ────────────────────────────────────────────────────────────── */
+
+#back {
+    margin-top: 3rem;
+    border-top: 1px solid #ccc;
+    padding-top: 1.5rem;
+}
+
+/* Affiliations */
+section.affiliations {
+    margin-bottom: 1.5rem;
+}
+
+aside.affiliation {
+    display: flex;
+    gap: 0.4em;
+    font-size: 0.88em;
+    margin-bottom: 0.3em;
+}
+
+aside.affiliation label {
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* Footnotes */
+section.footnotes {
+    margin-top: 1.5rem;
+}
+
+a.footnote {
+    vertical-align: super;
+    font-size: 0.75em;
+    line-height: 0;
+    text-decoration: none;
+    color: #1a5fb4;
+}
+
+aside.footnote {
+    display: flex;
+    gap: 0.5em;
+    font-size: 0.875em;
+    margin-bottom: 0.6em;
+}
+
+aside.footnote label {
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+aside.footnote p {
+    margin: 0;
+}
+
+/* References / bibliography */
+.references {
+    margin-top: 1.5rem;
+}
+
+.references p,
+.csl-entry {
+    padding-left: 2em;
+    text-indent: -2em;
+    margin-bottom: 0.5em;
+    font-size: 0.95em;
+}
+
+/* ── Bibliography / CSL layout ──────────────────────────────────────────────── */
+
+.csl-bib-body {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+.csl-left-margin {
+    padding-right: 1ch;
+    clear: left;
+    float: left;
+    white-space: pre;
+}
+
+.csl-entry i,
+.citation i {
+    font-style: italic;
+}
+
+.csl-entry b,
+.citation b {
+    font-weight: bold;
+}
+
+.csl-entry sup,
+.citation sup {
+    vertical-align: super;
+    font-size: smaller;
+}
+
+.csl-entry sub,
+.citation sub {
+    vertical-align: sub;
+    font-size: smaller;
+}
+
+.csl-indent {
+    padding-left: 0.5in;
+}
+
+.csl-entry {
+    clear: left;
+}
+
+.csl-right-inline {
+    padding-left: 20px;
+}
+
+/* Ensure inline code marks stay inline even with higher specificity selectors */
+
+/* Cover all block-level elements that can contain inline content */
+
+.user-contents p code,
+.user-contents h1 code,
+.user-contents h2 code,
+.user-contents h3 code,
+.user-contents h4 code,
+.user-contents h5 code,
+.user-contents h6 code,
+.user-contents figcaption code,
+.user-contents caption code {
+    display: inline;
+}
+
+/* ── Separator ──────────────────────────────────────────────────────────────── */
+
+hr.doc-separator {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 2rem 0;
+}

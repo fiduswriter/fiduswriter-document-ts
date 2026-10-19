@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@fiduswriter/document — JATS bibliography generator</title>
+        <link rel="stylesheet" href="../css/fwtoolkit.css" />
+        <link rel="stylesheet" href="../demo.css" />
+        <link rel="icon" type="image/png" href="../favicon.png" />
+    </head>
+    <body>
+        <main class="demo-container">
+            <h1>JATS bibliography generator</h1>
+            <p>
+                Fill in a CSL-JSON reference and preview the JATS
+                <code>&lt;ref&gt;</code> output produced by
+                <code>jatsBib</code>.
+            </p>
+
+            <div class="demo-field">
+                <label for="ref-type">Reference type</label>
+                <select id="ref-type">
+                    <option value="article-journal">Journal article</option>
+                    <option value="book">Book</option>
+                    <option value="chapter">Book chapter</option>
+                    <option value="report">Report</option>
+                </select>
+            </div>
+
+            <div class="demo-field">
+                <label for="ref-title">Title</label>
+                <input type="text" id="ref-title" value="My article title" />
+            </div>
+
+            <div class="demo-field">
+                <label for="ref-container">Journal / Book title</label>
+                <input
+                    type="text"
+                    id="ref-container"
+                    value="Journal of Examples"
+                />
+            </div>
+
+            <div class="demo-field">
+                <label for="ref-authors">Authors (Family, Given; one per line)</label>
+                <textarea id="ref-authors">Doe, John
+Smith, Jane</textarea>
+            </div>
+
+            <div class="demo-field">
+                <label for="ref-year">Year</label>
+                <input type="text" id="ref-year" value="2024" />
+            </div>
+
+            <div class="demo-field">
+                <label for="ref-volume">Volume</label>
+                <input type="text" id="ref-volume" value="7" />
+            </div>
+
+            <div class="demo-field">
+                <label for="ref-issue">Issue</label>
+                <input type="text" id="ref-issue" value="3" />
+            </div>
+
+            <div class="demo-field">
+                <label for="ref-pages">Pages</label>
+                <input type="text" id="ref-pages" value="1-10" />
+            </div>
+
+            <div class="demo-actions">
+                <button id="generate" class="fw-button fw-dark">
+                    Generate JATS
+                </button>
+            </div>
+
+            <pre id="output" class="demo-output">Output will appear here…</pre>
+
+            <p><a href="../index.html">← Back to demos</a></p>
+        </main>
+
+        <script type="module" src="./index.js"></script>
+    </body>
+</html>

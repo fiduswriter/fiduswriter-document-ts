@@ -1,0 +1,127 @@
+{
+  "type": "doc",
+  "attrs": {
+    "documentstyle": "",
+    "tracked": false,
+    "citationstyle": "apa",
+    "language": "en-US",
+    "papersize": "A4",
+    "template": "",
+    "import_id": "",
+    "copyright": {
+      "holder": false,
+      "year": false,
+      "freeToRead": true,
+      "licenses": []
+    }
+  },
+  "content": [
+    {
+      "type": "title",
+      "attrs": {"id": "title"},
+      "content": [{"type": "text", "text": "Hello World"}]
+    },
+    {
+      "type": "heading_part",
+      "attrs": {
+        "id": "subtitle",
+        "metadata": "subtitle",
+        "title": "Subtitle"
+      },
+      "content": [
+        {
+          "type": "heading1",
+          "attrs": {"id": false, "track": []},
+          "content": [{"type": "text", "text": "A Sample Document"}]
+        }
+      ]
+    },
+    {
+      "type": "contributors_part",
+      "attrs": {
+        "id": "authors",
+        "metadata": "authors",
+        "title": "Authors"
+      },
+      "content": [
+        {
+          "type": "contributor",
+          "attrs": {
+            "firstname": "John",
+            "lastname": "Doe",
+            "email": false,
+            "institution": false
+          }
+        }
+      ]
+    },
+    {
+      "type": "richtext_part",
+      "attrs": {
+        "id": "abstract",
+        "metadata": "abstract",
+        "title": "Abstract"
+      },
+      "content": [
+        {
+          "type": "paragraph",
+          "attrs": {"track": []},
+          "content": [
+            {
+              "type": "text",
+              "text": "This sample document demonstrates the Fidus Writer document format with citation support and rich-text content."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "tags_part",
+      "attrs": {
+        "id": "keywords",
+        "metadata": "keywords",
+        "title": "Keywords"
+      },
+      "content": [
+        {"type": "tag", "attrs": {"tag": "demo"}},
+        {"type": "tag", "attrs": {"tag": "sample"}},
+        {"type": "tag", "attrs": {"tag": "fiduswriter"}}
+      ]
+    },
+    {
+      "type": "richtext_part",
+      "attrs": {
+        "id": "body",
+        "title": "Body"
+      },
+      "content": [
+        {
+          "type": "heading1",
+          "attrs": {"id": false, "track": []},
+          "content": [{"type": "text", "text": "Introduction"}]
+        },
+        {
+          "type": "paragraph",
+          "attrs": {"track": []},
+          "content": [
+            {"type": "text", "text": "This is a sample paragraph with "},
+            {
+              "type": "text",
+              "marks": [{"type": "strong"}],
+              "text": "bold"
+            },
+            {"type": "text", "text": " text and a citation "},
+            {
+              "type": "citation",
+              "attrs": {
+                "format": "autocite",
+                "references": [{"id": 1}]
+              }
+            },
+            {"type": "text", "text": "."}
+          ]
+        }
+      ]
+    }
+  ]
+}
