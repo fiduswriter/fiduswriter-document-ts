@@ -1,4 +1,5 @@
 import type {MarkSpec, NodeSpec} from "prosemirror-model"
+import {isSafeLinkHref} from "fwtoolkit"
 
 export const cross_reference = {
     inline: true,
@@ -47,8 +48,14 @@ export const link = {
         {
             tag: "a[href]",
             getAttrs(dom: HTMLElement) {
+                const href = dom.getAttribute("href")
+                // Drop anchors with a disallowed scheme
+                // (e.g. javascript:) when parsing pasted HTML.
+                if (!isSafeLinkHref(href)) {
+                    return null
+                }
                 return {
-                    href: dom.getAttribute("href") || "",
+                    href: href || "",
                     title: dom.getAttribute("title") || ""
                 }
             }
