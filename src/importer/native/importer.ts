@@ -115,8 +115,10 @@ export class NativeImporter {
             path: this.requestedPath
         }
 
+        // The e2ee flag must always be sent explicitly, so that the server
+        // never has to guess the encryption intent of the new document.
+        jsonData.e2ee = !!(this.e2eeOptions && this.e2eeOptions.enabled)
         if (this.e2eeOptions?.enabled) {
-            jsonData.e2ee = true
             if (this.e2eeOptions.salt) {
                 jsonData.e2ee_salt = this.e2eeOptions.salt
             }
