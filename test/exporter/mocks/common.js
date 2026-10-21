@@ -71,6 +71,25 @@ export const noSpaceTmp = (strings, ...values) => {
 
 export const longFilePath = (path, filename) => `${path}${filename}`
 
+export const isSafeLinkHref = href => {
+    if (typeof href !== "string") {
+        return false
+    }
+    const trimmed = href.trim()
+    if (!trimmed) {
+        return false
+    }
+    if (trimmed.startsWith("#")) {
+        return true
+    }
+    try {
+        const url = new URL(trimmed, "http://localhost")
+        return ["http:", "https:"].includes(url.protocol)
+    } catch {
+        return false
+    }
+}
+
 export class ZipFileCreator {
     constructor(
         textFiles = [],
@@ -123,5 +142,6 @@ export default {
     interpolate,
     staticUrl,
     noSpaceTmp,
-    longFilePath
+    longFilePath,
+    isSafeLinkHref
 }

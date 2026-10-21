@@ -6,7 +6,25 @@ jest.unstable_mockModule("fwtoolkit", () => ({
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
+            .replace(/"/g, "&quot;"),
+    isSafeLinkHref: href => {
+        if (typeof href !== "string") {
+            return false
+        }
+        const trimmed = href.trim()
+        if (!trimmed) {
+            return false
+        }
+        if (trimmed.startsWith("#")) {
+            return true
+        }
+        try {
+            const url = new URL(trimmed, "http://localhost")
+            return ["http:", "https:"].includes(url.protocol)
+        } catch {
+            return false
+        }
+    },
 }))
 
 const {jatsBib} = await import("../../src/exporter/jats/bibliography.js")

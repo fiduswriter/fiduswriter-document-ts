@@ -32,6 +32,24 @@ jest.unstable_mockModule("fwtoolkit", () => ({
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;"),
     shortFileTitle: (title: string, path: string) => title || path || "untitled",
+    isSafeLinkHref: (href: unknown) => {
+        if (typeof href !== "string") {
+            return false
+        }
+        const trimmed = href.trim()
+        if (!trimmed) {
+            return false
+        }
+        if (trimmed.startsWith("#")) {
+            return true
+        }
+        try {
+            const url = new URL(trimmed, "http://localhost")
+            return ["http:", "https:"].includes(url.protocol)
+        } catch {
+            return false
+        }
+    },
     addAlert: (_type: string, _message: string) => {},
     get: async (_url: string) => {
         const buffer = readFileSync(FIXTURE_PATH)
