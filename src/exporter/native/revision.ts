@@ -53,7 +53,7 @@ export class SaveRevision {
     }
 
     init(): Promise<unknown> {
-        this.progressCallback?.(gettext("Saving revision..."), 0)
+        this.progressCallback?.(gettext("Saving snapshot..."), 0)
         const shrinker = new ShrinkFidus(
             this.doc as unknown as ShrinkDoc,
             this.imageDB,
@@ -77,14 +77,14 @@ export class SaveRevision {
                 return zipper.init()
             })
             .then(blob => {
-                this.progressCallback?.(gettext("Uploading revision..."), 95)
+                this.progressCallback?.(gettext("Uploading snapshot..."), 95)
                 return this.uploadRevision(
                     blob,
                     this.doc as unknown as Record<string, unknown>
                 )
             })
             .then(result => {
-                this.progressCallback?.(gettext("Revision saved."), 100)
+                this.progressCallback?.(gettext("Snapshot saved."), 100)
                 return result
             })
             .catch(error => {
