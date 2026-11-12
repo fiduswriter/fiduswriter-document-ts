@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@fiduswriter/document demos</title>
+        <link rel="stylesheet" href="./css/fwtoolkit.css" />
+        <link rel="stylesheet" href="./demo.css" />
+        <link rel="icon" type="image/png" href="favicon.png" />
+    </head>
+    <body>
+        <main class="demo-container">
+            <p align="center">
+                <img
+                    src="./logo.svg"
+                    alt="@fiduswriter/document logo"
+                    width="100"
+                    height="100"
+                />
+            </p>
+            <h1>@fiduswriter/document demos</h1>
+            <p>
+                Interactive examples of the document model, importers and
+                exporters from <code>@fiduswriter/document</code>.
+            </p>
+
+            <h2>Converters</h2>
+            <p>Turn a Fidus Writer document into other formats.</p>
+            <nav class="demo-nav">
+                <a class="demo-card" href="./converter/index.html">
+                    <h2>File converter</h2>
+                    <p>
+                        Export a sample document to JATS, HTML, LaTeX, Pandoc
+                        JSON, DOCX, ODT and more. Edit the bibliography and
+                        supply custom templates.
+                    </p>
+                </a>
+            </nav>
+
+            <h2>Schema</h2>
+            <p>Explore the document schema that powers the editor.</p>
+            <nav class="demo-nav">
+                <a class="demo-card" href="./schema/index.html">
+                    <h2>Schema viewer</h2>
+                    <p>Browse nodes, marks and their allowed content.</p>
+                </a>
+            </nav>
+
+            <h2>Bibliography</h2>
+            <p>Generate JATS reference output from CSL-JSON data.</p>
+            <nav class="demo-nav">
+                <a class="demo-card" href="./jats-bib/index.html">
+                    <h2>JATS bibliography generator</h2>
+                    <p>Fill in a reference and preview the JATS XML.</p>
+                </a>
+            </nav>
+
+            <h2>Import</h2>
+            <p>Inspect the contents of a Fidus Writer file.</p>
+            <nav class="demo-nav">
+                <a class="demo-card" href="./import/index.html">
+                    <h2>Import preview</h2>
+                    <p>Drop a native <code>.fidus</code> file and view its JSON.</p>
+                </a>
+            </nav>
+
+            <p>
+                <small
+                    >View the source of each page to see how the API is
+                    used.</small
+                >
+            </p>
+        </main>
+    </body>
+</html>

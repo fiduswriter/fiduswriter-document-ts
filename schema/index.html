@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@fiduswriter/document — Schema viewer</title>
+        <link rel="stylesheet" href="../css/fwtoolkit.css" />
+        <link rel="stylesheet" href="../demo.css" />
+        <link rel="icon" type="image/png" href="../favicon.png" />
+        <style>
+            .schema-section {
+                margin-top: 1.5rem;
+            }
+            .schema-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 0.75rem;
+            }
+            .schema-item {
+                padding: 0.75rem;
+                background: var(--cs-light-background, #ffffff);
+                border: 1px solid var(--cs-light-border, #dee2e6);
+                border-radius: 4px;
+            }
+            .schema-item code {
+                font-weight: bold;
+            }
+            .schema-item p {
+                margin: 0.25rem 0 0;
+                color: var(--cs-light-text-secondary, #6c757d);
+                font-size: 0.9rem;
+            }
+        </style>
+    </head>
+    <body>
+        <main class="demo-container">
+            <h1>Schema viewer</h1>
+            <p>
+                Overview of the ProseMirror document schema used by Fidus
+                Writer.
+            </p>
+
+            <div class="schema-section">
+                <h2>Top node</h2>
+                <p id="top-node"></p>
+            </div>
+
+            <div class="schema-section">
+                <h2>Nodes</h2>
+                <div id="nodes" class="schema-list"></div>
+            </div>
+
+            <div class="schema-section">
+                <h2>Marks</h2>
+                <div id="marks" class="schema-list"></div>
+            </div>
+
+            <p><a href="../index.html">← Back to demos</a></p>
+        </main>
+
+        <script type="module" src="./index.js"></script>
+    </body>
+</html>
