@@ -2,8 +2,10 @@ import {MathMLToLaTeX} from "mathml-to-latex"
 import type {XMLElement} from "../../exporter/tools/xml.js"
 import {
     randomFigureId,
-    randomHeadingId
+    randomHeadingId,
+    randomTableId
 } from "../../schema/common/index.js"
+import {inlineToPlainText} from "../helpers.js"
 import {
     isDocxBibliographyField,
     isDocxCitationField,
@@ -568,10 +570,30 @@ export class DocxConvert {
 
         const skippedBlocks: XMLElement[] = []
 
-        body.children
-            .filter((node): node is XMLElement => typeof node !== "string")
-            .forEach((node: XMLElement) => {
+        const collect = (node: XMLElement) => {
             if (skippedBlocks.includes(node)) {
+                return
+            }
+            if (node.tagName === "w:tbl") {
+                const table = this.convertTable(node)
+                if (table) {
+                    currentSection.content.push(table)
+                }
+                return
+            }
+            if (node.tagName === "w:sdt") {
+                // Block-level content control (bibliography/citation controls
+                // are handled elsewhere): process the wrapped blocks.
+                if (isDocxSdtBibliography(node) || isDocxSdtCitation(node)) {
+                    return
+                }
+                const sdtContent = node.query("w:sdtContent")
+                sdtContent?.children
+                    .filter(
+                        (child): child is XMLElement =>
+                            typeof child !== "string"
+                    )
+                    .forEach(collect)
                 return
             }
             if (node.tagName !== "w:p") {
@@ -594,7 +616,11 @@ export class DocxConvert {
             if (block) {
                 currentSection.content.push(block)
             }
-        })
+        }
+
+        body.children
+            .filter((node): node is XMLElement => typeof node !== "string")
+            .forEach(collect)
 
         if (currentSection.content.length) {
             sections.push(currentSection)
@@ -676,7 +702,11 @@ export class DocxConvert {
 
         if (titlePars.length) {
             return {
-                content: this.convertInline(titlePars[0]),
+                // The schema title node may only contain text, so any
+                // fields/breaks/etc. in the title paragraph are flattened.
+                content: inlineToPlainText(
+                    this.convertInline(titlePars[0])
+                ),
                 containerNodes: [titlePars[0]]
             }
         }
@@ -700,7 +730,9 @@ export class DocxConvert {
             .filter((p: XMLElement | null): p is XMLElement => p !== null)
         if (headingPars.length) {
             return {
-                content: this.convertInline(headingPars[0]),
+                content: inlineToPlainText(
+                    this.convertInline(headingPars[0])
+                ),
                 containerNodes: [headingPars[0]]
             }
         }
@@ -996,7 +1028,161 @@ export class DocxConvert {
         }
     }
 
-    convertInline(node: XMLElement) {
+    convertTable(node: XMLElement): FidusNode | null {
+        const tblPr = node.query("w:tblPr")
+        const tblW = tblPr?.query("w:tblW")
+        let width = "100"
+        if (attr(tblW, "w:type") === "pct") {
+            const pct = parseInt(attr(tblW, "w:w"))
+            if (pct > 0) {
+                // PCT widths are fiftieths of a percent (5000 = 100%)
+                width = String(Math.min(100, Math.round(pct / 50)))
+            }
+        }
+        const aligned = attr(tblPr?.query("w:jc"), "w:val") || "center"
+
+        const rows: FidusNode[] = []
+        // Cells currently being extended downward by a vertical merge
+        // (w:vMerge), keyed by grid column index.
+        const vMergeOrigins = new Map<number, FidusNode>()
+        node.children
+            .filter(
+                (child): child is XMLElement =>
+                    typeof child !== "string" && child.tagName === "w:tr"
+            )
+            .forEach((row: XMLElement) => {
+                const tableRow = this.convertTableRow(row, vMergeOrigins)
+                if (tableRow) {
+                    rows.push(tableRow)
+                }
+            })
+
+        if (!rows.length) {
+            return null
+        }
+
+        return {
+            type: "table",
+            attrs: {
+                id: randomTableId(),
+                track: [],
+                width,
+                aligned,
+                layout: "fixed",
+                category: "none",
+                caption: false
+            },
+            content: [
+                {type: "table_caption"},
+                {
+                    type: "table_body",
+                    content: rows
+                }
+            ]
+        }
+    }
+
+    convertTableRow(
+        row: XMLElement,
+        vMergeOrigins: Map<number, FidusNode>
+    ): FidusNode | null {
+        const isHeader = Boolean(row.query("w:trPr")?.query("w:tblHeader"))
+        const cells: FidusNode[] = []
+        let column = 0
+        row.children
+            .filter(
+                (child): child is XMLElement =>
+                    typeof child !== "string" && child.tagName === "w:tc"
+            )
+            .forEach((tc: XMLElement) => {
+                const tcPr = tc.query("w:tcPr")
+                const gridSpan =
+                    parseInt(attr(tcPr?.query("w:gridSpan"), "w:val")) || 1
+
+                const hMerge = tcPr?.query("w:hMerge")
+                if (hMerge && attr(hMerge, "w:val") !== "restart") {
+                    // Cell covered by a horizontal merge started in the
+                    // previous cell.
+                    const prev = cells[cells.length - 1]
+                    if (prev?.attrs) {
+                        prev.attrs.colspan = (prev.attrs.colspan as number) + 1
+                    }
+                    column += 1
+                    return
+                }
+
+                const vMerge = tcPr?.query("w:vMerge")
+                const vMergeVal = vMerge
+                    ? attr(vMerge, "w:val") || "continue"
+                    : ""
+                if (vMergeVal === "continue") {
+                    // Cell covered by a vertical merge started further up.
+                    const origin = vMergeOrigins.get(column)
+                    if (origin?.attrs) {
+                        origin.attrs.rowspan = (origin.attrs.rowspan as number) + 1
+                    }
+                    column += gridSpan
+                    return
+                }
+
+                const cell: FidusNode = {
+                    type: isHeader ? "table_header" : "table_cell",
+                    attrs: {
+                        colspan: gridSpan,
+                        rowspan: 1
+                    },
+                    content: this.convertTableCellContent(tc)
+                }
+                if (vMergeVal === "restart") {
+                    for (let i = 0; i < gridSpan; i++) {
+                        vMergeOrigins.set(column + i, cell)
+                    }
+                } else {
+                    for (let i = 0; i < gridSpan; i++) {
+                        vMergeOrigins.delete(column + i)
+                    }
+                }
+                cells.push(cell)
+                column += gridSpan
+            })
+        if (!cells.length) {
+            return null
+        }
+        return {type: "table_row", content: cells}
+    }
+
+    convertTableCellContent(tc: XMLElement): FidusNode[] {
+        const content: FidusNode[] = []
+        const collect = (child: XMLElement) => {
+            if (child.tagName === "w:p") {
+                const block = this.convertBlock(child, [])
+                if (block) {
+                    content.push(block)
+                }
+            } else if (child.tagName === "w:tbl") {
+                const table = this.convertTable(child)
+                if (table) {
+                    content.push(table)
+                }
+            } else if (child.tagName === "w:sdt") {
+                const sdtContent = child.query("w:sdtContent")
+                sdtContent?.children
+                    .filter(
+                        (sub): sub is XMLElement => typeof sub !== "string"
+                    )
+                    .forEach(collect)
+            }
+        }
+        tc.children
+            .filter((child): child is XMLElement => typeof child !== "string")
+            .forEach(collect)
+        if (!content.length) {
+            content.push({type: "paragraph"})
+        }
+        return content
+    }
+
+    convertInline(node: XMLElement, enclosingTrack: FidusMark | null = null) {
         const content: FidusNode[] = []
 
         // We'll process all inline nodes in document order
@@ -1018,6 +1204,11 @@ export class DocxConvert {
                     // We're currently inside the display part of a fieldChar
                     contentReceiver = currentField.display
                 }
+            }
+            if (child.tagName === "#text") {
+                // Whitespace/text outside of runs carries no meaning in
+                // WordprocessingML (only w:t inside w:r does).
+                return
             }
             if (child.tagName === "w:r") {
                 // A run
@@ -1107,11 +1298,75 @@ export class DocxConvert {
                 const insertion = child.closest("w:ins")
                 const deletion = child.closest("w:del")
 
+                const marks = this.getCurrentMarks(
+                    formatting,
+                    insertion,
+                    deletion
+                )
+                if (
+                    enclosingTrack &&
+                    !insertion &&
+                    !deletion &&
+                    !marks.some(mark =>
+                        ["insertion", "deletion"].includes(mark.type)
+                    )
+                ) {
+                    marks.push(enclosingTrack)
+                }
                 contentReceiver.push({
                     type: "text",
                     text,
-                    marks: this.getCurrentMarks(formatting, insertion, deletion)
+                    marks
                 })
+            } else if (
+                child.tagName === "w:ins" ||
+                child.tagName === "w:del"
+            ) {
+                // Run-level tracked-change wrapper. The recursion picks up
+                // the insertion/deletion via closest().
+                this.convertInline(child).forEach((node: FidusNode) =>
+                    contentReceiver.push(node)
+                )
+            } else if (
+                child.tagName === "w:moveTo" ||
+                child.tagName === "w:moveFrom"
+            ) {
+                // Tracked moves have no equivalent in our schema; import them
+                // as insertion/deletion so the content is not lost.
+                const trackMark = this.trackMarkFromElement(
+                    child,
+                    child.tagName === "w:moveTo" ? "insertion" : "deletion"
+                )
+                this.convertInline(child, trackMark).forEach(
+                    (node: FidusNode) => contentReceiver.push(node)
+                )
+            } else if (child.tagName === "w:fldSimple") {
+                // Simple field: instruction in the w:instr attribute, cached
+                // display in the child runs.
+                const display = this.convertInline(child)
+                const rendered = this.renderField({
+                    status: "display",
+                    display,
+                    instructions: attr(child, "w:instr"),
+                    data: null
+                })
+                const result = rendered.length ? rendered : display
+                result.forEach((node: FidusNode) => contentReceiver.push(node))
+            } else if (
+                child.tagName === "w:proofErr" ||
+                child.tagName === "w:permStart" ||
+                child.tagName === "w:permEnd" ||
+                child.tagName === "w:bookmarkStart" ||
+                child.tagName === "w:bookmarkEnd" ||
+                child.tagName === "w:moveFromRangeStart" ||
+                child.tagName === "w:moveFromRangeEnd" ||
+                child.tagName === "w:moveToRangeStart" ||
+                child.tagName === "w:moveToRangeEnd" ||
+                child.tagName === "w:customXml" ||
+                child.tagName === "w:sectPr"
+            ) {
+                // Markup/processing metadata without document content.
+                return
             } else if (child.tagName === "w:commentRangeStart") {
                 const commentId = attr(child, "w:id")
                 if (commentId && this.parser.comments[commentId]) {
@@ -1193,6 +1448,14 @@ export class DocxConvert {
                 if (equationNode) {
                     contentReceiver.push(equationNode)
                 }
+            } else if (child.tagName === "m:oMathPara") {
+                // Display math paragraph: contains one or more m:oMath
+                // elements plus property nodes we can skip.
+                this.convertInline(child).forEach((node: FidusNode) =>
+                    contentReceiver.push(node)
+                )
+            } else if (child.tagName === "m:oMathParaPr") {
+                return
             } else if (child.tagName === "w:sdt") {
                 if (isDocxSdtCitation(child)) {
                     // Used by Mendeley Cite & Citavi
@@ -1445,6 +1708,26 @@ export class DocxConvert {
                 title: displayText || targetId
             }
         }
+    }
+
+    trackMarkFromElement(
+        element: XMLElement,
+        type: "insertion" | "deletion"
+    ): FidusMark {
+        const date = new Date(attr(element, "w:date"))
+        const date10 = Math.floor(date.getTime() / 600000) * 10
+        const mark: FidusMark = {
+            type,
+            attrs: {
+                user: 0,
+                username: attr(element, "w:author"),
+                date: date10
+            }
+        }
+        if (type === "insertion") {
+            ;(mark.attrs as Record<string, unknown>).approved = false
+        }
+        return mark
     }
 
     createMarksFromFormatting(formatting: RunProperties, insertion: XMLElement | null = null, deletion: XMLElement | null = null) {
