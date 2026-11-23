@@ -249,5 +249,8 @@
       "eslint --fix",
       "sh -c 'npm run typecheck'"
     ]
+  },
+  "optionalDependencies": {
+    "@resvg/resvg-js": "^2.6.2"
   }
 }

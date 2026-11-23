@@ -2,7 +2,10 @@ import {get} from "fwtoolkit"
 
 import type {FidusNode, ImageDB} from "../../types.js"
 import {descendantNodes} from "../tools/doc_content.js"
-import {getImageDBEntryFilename} from "../tools/file.js"
+import {
+    getImageDBEntryFilename,
+    getImageExtension
+} from "../tools/file.js"
 import {svg2png} from "../tools/svg.js"
 import type {XMLElement} from "../tools/xml.js"
 import type {XmlZip} from "../tools/xml_zip.js"
@@ -14,13 +17,6 @@ interface ImageInfo {
     title?: string
     type: string
     svg: string | null
-}
-
-function getImageExtension(fileType: string | undefined, blobType: string): string {
-    if (fileType) {
-        return fileType.includes("/") ? fileType.split("/").pop() || "bin" : fileType
-    }
-    return blobType.split("/")[1] || "bin"
 }
 
 export class ODTExporterImages {

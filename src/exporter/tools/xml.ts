@@ -94,7 +94,10 @@ export class XMLElement {
         const tagName = this.tagName
         if (isLeaf(tagName)) {
             if (tagName === "#text") {
-                return String(this.node[tagName] || "")
+                const value = this.node[tagName]
+                return value === undefined || value === null
+                    ? ""
+                    : String(value)
             }
             return ""
         } else {

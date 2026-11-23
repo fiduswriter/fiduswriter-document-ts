@@ -97,6 +97,20 @@ export class OdtImporter {
                     }
                 })
 
+                const objects: Record<string, string> = {}
+                const objectFiles = Object.keys(zip.files).filter(path =>
+                    /^Object [^/]+\/content\.xml$/.test(path)
+                )
+                const objectPromises = objectFiles.map(path =>
+                    zip
+                        .file(path)!
+                        .async("string")
+                        .then(content => ({
+                            dir: path.split("/")[0],
+                            content
+                        }))
+                )
+
                 const imagePromises = Object.entries(imageFiles).map(
                     ([filename, zipEntry]) =>
                         zipEntry.async("blob").then((blob: Blob) => ({
@@ -110,20 +124,34 @@ export class OdtImporter {
                     stylePromise,
                     metaPromise,
                     manifestPromise,
-                    Promise.all(imagePromises)
+                    Promise.all(imagePromises),
+                    Promise.all(objectPromises)
                 ]).then(
-                    ([contentXml, stylesXml, metaXml, manifestXml, images]) => {
+                    ([
+                        contentXml,
+                        stylesXml,
+                        metaXml,
+                        manifestXml,
+                        images,
+                        objectList
+                    ]) => {
                         const imageObj: Record<string, Blob> = {}
                         images.forEach(({filename, blob}: {filename: string; blob: Blob}) => {
                             imageObj[filename] = blob
                         })
+                        objectList.forEach(
+                            (object: {dir: string; content: string}) => {
+                                objects[object.dir] = object.content
+                            }
+                        )
 
                         return this.handleOdtContent(
                             contentXml,
                             stylesXml,
                             metaXml,
                             manifestXml,
-                            imageObj
+                            imageObj,
+                            objects
                         )
                     }
                 )
@@ -135,7 +163,8 @@ export class OdtImporter {
         stylesXml: string | undefined,
         metaXml: string | undefined,
         manifestXml: string | undefined,
-        images: Record<string, Blob> = {}
+        images: Record<string, Blob> = {},
+        objects: Record<string, string> = {}
     ): Promise<typeof this.output> {
         const bibliography: Record<string, unknown> = {}
 
@@ -147,7 +176,8 @@ export class OdtImporter {
             this.importId as string,
             this.template as {content: FidusDoc},
             bibliography,
-            this.bibDB
+            this.bibDB,
+            objects
         )
 
         let convertedDoc

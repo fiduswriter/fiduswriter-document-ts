@@ -15,12 +15,15 @@ export function getImageExtension(
     fileType: string | undefined,
     blobType: string
 ): string {
-    if (fileType) {
-        return fileType.includes("/")
-            ? fileType.split("/").pop() || "bin"
-            : fileType
+    const fromMime = (mime: string): string => {
+        const subtype = mime.split("/")[1] || "bin"
+        // image/svg+xml → svg (a "+xml" suffix is not a file extension)
+        return subtype.includes("+") ? subtype.split("+")[0] : subtype
     }
-    return blobType.split("/")[1] || "bin"
+    if (fileType) {
+        return fileType.includes("/") ? fromMime(fileType) : fileType
+    }
+    return fromMime(blobType)
 }
 
 /** Whether an image DB value is a data URL (the desktop/static hosts store

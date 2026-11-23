@@ -12,6 +12,11 @@ import {
 import {parseTracks} from "../../schema/common/track.js"
 import {inlineToPlainText} from "../helpers.js"
 import {
+    chartModelToSvg,
+    odfChartModel,
+    svgToBlob
+} from "../chart_svg.js"
+import {
     isOdtBibliographyReferenceMark,
     isOdtBibliographySection,
     isOdtCitationMark,
@@ -158,6 +163,8 @@ export class OdtConvert {
     currentCommentIds: string[]
     currentTracks: TrackMark[]
     referenceableObjects: Record<string, ReferenceableObject>
+    /** Embedded object subdocuments (Object N/content.xml), by object dir. */
+    objects: Record<string, string>
 
     constructor(
         contentXml: string,
@@ -167,7 +174,8 @@ export class OdtConvert {
         importId: string,
         template: {content: FidusDoc},
         bibliography: Record<string, unknown>,
-        bibDb: BibDB
+        bibDb: BibDB,
+        objects: Record<string, string> = {}
     ) {
         this.importId = importId
         this.template = template
@@ -175,6 +183,7 @@ export class OdtConvert {
         this.bibDB = bibDb
         this.images = {}
         this.styles = {}
+        this.objects = objects
 
         this.contentDoc = contentXml ? xmlDOM(contentXml) : null
         this.stylesDoc = stylesXml ? xmlDOM(stylesXml) : null
@@ -454,6 +463,31 @@ export class OdtConvert {
         return properties
     }
 
+    /** A draw:frame holding an image, an embedded object, or a text box. */
+    convertFrame(
+        node: XMLElement,
+        attrs: Record<string, unknown>
+    ): FidusNode | FidusNode[] | null {
+        const image = this.convertImage(node, attrs)
+        if (image) {
+            return image
+        }
+        const objectEl = node.query("draw:object")
+        if (objectEl) {
+            const object = this.convertObject(objectEl, attrs)
+            if (object) {
+                return object
+            }
+        }
+        // Text boxes (and similar framed content) without an image:
+        // import the inner content as regular blocks.
+        const textbox = node.query("draw:text-box")
+        if (textbox) {
+            return this.convertContainer(textbox)
+        }
+        return null
+    }
+
     convertObject(node: XMLElement, attrs: Record<string, unknown>): FidusNode | null {
         const mathEl = node.query("math")
         if (mathEl) {
@@ -466,6 +500,62 @@ export class OdtConvert {
             return {
                 type: "equation",
                 attrs
+            }
+        }
+        // Charts embedded as objects (draw:object xlink:href="./Object N"):
+        // render a snapshot from the chart subdocument so the content is
+        // not lost. Parity with the DOCX importer's chart snapshots.
+        const frame = node.closest("draw:frame")
+        const objectHref =
+            attr(node, "xlink:href") ||
+            (frame ? attr(frame, "xlink:href") : "")
+        const objectDir = objectHref.replace(/^\.\//, "").split("/")[0]
+        const objectXml = objectDir ? this.objects[objectDir] : ""
+        if (objectXml) {
+            const chartEl = xmlDOM(objectXml).query("chart:chart")
+            if (chartEl) {
+                const model = odfChartModel(chartEl)
+                if (model) {
+                    const svg = chartModelToSvg(model)
+                    const imageId = Math.floor(Math.random() * 1000000)
+                    this.images[imageId] = {
+                        id: imageId,
+                        title: model.title || "Chart",
+                        copyright: {
+                            holder: false,
+                            year: false,
+                            freeToRead: true,
+                            licenses: []
+                        },
+                        image: `snapshot-${imageId}.svg`,
+                        file_type: "image/svg+xml",
+                        file: svgToBlob(svg),
+                        width: 450,
+                        height: 300,
+                        checksum: 0
+                    }
+                    return {
+                        type: "figure",
+                        attrs: Object.assign(
+                            {
+                                id: randomFigureId(),
+                                aligned: "center",
+                                width: 100,
+                                caption: false
+                            },
+                            attrs
+                        ),
+                        content: [
+                            {
+                                type: "image",
+                                attrs: {
+                                    image: imageId
+                                }
+                            },
+                            {type: "figure_caption"}
+                        ]
+                    }
+                }
             }
         }
         return null
@@ -1313,14 +1403,26 @@ export class OdtConvert {
 
         switch (node.tagName) {
             case "text:p": {
-                const firstChild = node.children[0]
+                const elementChildren = node.children.filter(
+                    (child): child is XMLElement =>
+                        typeof child !== "string" &&
+                        child.tagName !== "#text" &&
+                        Boolean(child.tagName)
+                )
+                const hasText = node.children.some(
+                    child =>
+                        (typeof child === "string" && child.trim()) ||
+                        (typeof child !== "string" &&
+                            child.tagName === "#text" &&
+                            Boolean(child.textContent.trim()))
+                )
                 if (
-                    node.children.length === 1 &&
-                    typeof firstChild !== "string" &&
-                    firstChild.tagName === "draw:frame"
+                    !hasText &&
+                    elementChildren.length === 1 &&
+                    elementChildren[0].tagName === "draw:frame"
                 ) {
-                    // Paragraph consists of only one figure/image.
-                    return this.convertImage(firstChild, attrs)
+                    // Paragraph consists of only one figure/object/text box.
+                    return this.convertFrame(elementChildren[0], attrs)
                 }
                 return this.convertParagraph(node, attrs)
             }
@@ -1329,7 +1431,7 @@ export class OdtConvert {
             case "text:list":
                 return this.convertList(node, attrs)
             case "draw:frame":
-                return this.convertImage(node, attrs)
+                return this.convertFrame(node, attrs)
             case "draw:object":
                 return this.convertObject(node, attrs)
             case "table:table":

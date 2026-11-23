@@ -18,6 +18,13 @@ import {normalizeText} from "./helpers.js"
 import {omml2mathml} from "./omml2mathml.js"
 import {DocxParser} from "./parse.js"
 import type {RunProperties} from "./parse.js"
+import {
+    chartModelToSvg,
+    ooxmlChartModel,
+    placeholderSvg,
+    svgToBlob,
+    tableModelToSvg
+} from "../chart_svg.js"
 import {gettext} from "fwtoolkit"
 import type JSZip from "jszip"
 import type {
@@ -89,6 +96,50 @@ function attr(node: unknown, name: string): string {
         return String((node as XMLElement).getAttribute(name) || "")
     }
     return ""
+}
+
+/** Decode the handful of entities found in HTML/MHT chunk files. */
+function decodeEntities(text: string): string {
+    return text
+        .replace(/&nbsp;/gi, " ")
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#(\d+);/g, (_match, code: string) =>
+            String.fromCodePoint(parseInt(code))
+        )
+}
+
+/** Best-effort text extraction from an HTML/MHT altChunk part. */
+function htmlToText(html: string): string[] {
+    // For MHT chunks, use the HTML portion only.
+    const mhtMatch = html.match(
+        /Content-Type:\s*text\/html[\s\S]*?\r?\n\r?\n([\s\S]*)$/i
+    )
+    const source = mhtMatch ? mhtMatch[1] : html
+    const paragraphs: string[] = []
+    const blockRe = /<(?:p|div|h[1-6]|tr|li)[^>]*>([\s\S]*?)(?:<\/(?:p|div|h[1-6]|tr|li)>|$)/gi
+    let match: RegExpExecArray | null
+    while ((match = blockRe.exec(source)) !== null) {
+        const text = decodeEntities(
+            match[1].replace(/<[^>]+>/g, " ")
+        )
+            .replace(/\s+/g, " ")
+            .trim()
+        if (text) {
+            paragraphs.push(text)
+        }
+    }
+    if (!paragraphs.length) {
+        const text = decodeEntities(source.replace(/<[^>]+>/g, " "))
+            .replace(/\s+/g, " ")
+            .trim()
+        if (text) {
+            paragraphs.push(text)
+        }
+    }
+    return paragraphs
 }
 
 export class DocxConvert {
@@ -596,6 +647,35 @@ export class DocxConvert {
                     .forEach(collect)
                 return
             }
+            if (node.tagName === "w:altChunk") {
+                // Transcluded document: import the chunk's content so it is
+                // not lost.
+                const rel = this.parser.relationships[attr(node, "r:id")]
+                if (rel) {
+                    const path = this.packagePath(rel.target)
+                    const chunkDoc = this.parser.altChunkDocs[path]
+                    if (chunkDoc) {
+                        chunkDoc
+                            .query("w:body")
+                            ?.children.filter(
+                                (child): child is XMLElement =>
+                                    typeof child !== "string"
+                            )
+                            .forEach(collect)
+                    } else {
+                        const chunkText = this.parser.altChunkText[path]
+                        if (chunkText) {
+                            htmlToText(chunkText).forEach(text => {
+                                currentSection.content.push({
+                                    type: "paragraph",
+                                    content: [{type: "text", text}]
+                                })
+                            })
+                        }
+                    }
+                }
+                return
+            }
             if (node.tagName !== "w:p") {
                 return
             }
@@ -614,7 +694,11 @@ export class DocxConvert {
 
             const block = this.convertBlock(node, skippedBlocks)
             if (block) {
-                currentSection.content.push(block)
+                if (Array.isArray(block)) {
+                    currentSection.content.push(...block)
+                } else {
+                    currentSection.content.push(block)
+                }
             }
         }
 
@@ -768,7 +852,7 @@ export class DocxConvert {
         return false
     }
 
-    convertBlock(node: XMLElement, skippedBlocks: XMLElement[] = []): FidusNode | null {
+    convertBlock(node: XMLElement, skippedBlocks: XMLElement[] = []): FidusNode | FidusNode[] | null {
         if (node.tagName !== "w:p") {
             return null
         }
@@ -779,6 +863,8 @@ export class DocxConvert {
             converted = this.convertHeading(node, style)
         } else if (style.numbering) {
             converted = this.convertListItem(node, style)
+        } else if (node.query("o:OLEObject")) {
+            converted = this.convertOleObject(node)
         } else if (
             style.isCaption &&
             (node.query("w:drawing") || node.query("w:pict"))
@@ -809,7 +895,17 @@ export class DocxConvert {
             // We skip bibliography paragraphs
             return null
         }
-        return this.wrapTrackChanges(node, converted)
+        const wrapped = this.wrapTrackChanges(node, converted)
+        if (!wrapped) {
+            // Drawings we cannot represent (e.g. shapes containing only a
+            // text box) leave the block empty — recover the text-box
+            // content as regular blocks instead.
+            const textboxBlocks = this.convertTextboxes(node)
+            if (textboxBlocks.length) {
+                return textboxBlocks
+            }
+        }
+        return wrapped
     }
 
     wrapTrackChanges(node: XMLElement, content: FidusNode | null): FidusNode | null {
@@ -947,6 +1043,154 @@ export class DocxConvert {
         }
     }
 
+    /** Register an SVG snapshot in the image DB and wrap it in a figure. */
+    snapshotFigure(
+        svg: string,
+        width: number,
+        height: number,
+        title: string
+    ): FidusNode {
+        const imageId = Math.floor(Math.random() * 1000000)
+        this.images[imageId] = {
+            id: imageId,
+            title,
+            image: `snapshot-${imageId}.svg`,
+            file: svgToBlob(svg),
+            copyright: {
+                holder: false,
+                year: false,
+                freeToRead: true,
+                licenses: []
+            },
+            checksum: 0,
+            width: Math.round(width * 0.75),
+            height: Math.round(height * 0.75)
+        }
+        return {
+            type: "figure",
+            attrs: {
+                id: randomFigureId(),
+                aligned: "center",
+                width: 100,
+                caption: false
+            },
+            content: [
+                {
+                    type: "image",
+                    attrs: {
+                        image: imageId
+                    }
+                },
+                {type: "figure_caption"}
+            ]
+        }
+    }
+
+    /** Relationship target (relative to word/) resolved to a package path. */
+    packagePath(target: string): string {
+        if (target.startsWith("/")) {
+            return target.slice(1)
+        }
+        const parts = (target.startsWith("word/") ? target : `word/${target}`)
+            .split("/")
+        const resolved: string[] = []
+        parts.forEach(part => {
+            if (part === "..") {
+                resolved.pop()
+            } else if (part !== "." && part) {
+                resolved.push(part)
+            }
+        })
+        return resolved.join("/")
+    }
+
+    chartSnapshotFigure(chartRef: XMLElement): FidusNode | null {
+        const rel = this.parser.relationships[attr(chartRef, "r:id")]
+        const chartSpace = rel && this.parser.charts[this.packagePath(rel.target)]
+        if (!chartSpace) {
+            return null
+        }
+        const model = ooxmlChartModel(chartSpace)
+        if (!model) {
+            return null
+        }
+        const svg = chartModelToSvg(model)
+        return this.snapshotFigure(
+            svg,
+            600,
+            400,
+            model.title || "Chart"
+        )
+    }
+
+    smartArtSnapshotFigure(relIds: XMLElement): FidusNode | null {
+        const rel = this.parser.relationships[attr(relIds, "r:dm")]
+        const data = rel && this.parser.diagrams[this.packagePath(rel.target)]
+        if (!data) {
+            return null
+        }
+        const texts = data
+            .queryAll("a:t")
+            .map((t: XMLElement) => t.textContent.trim())
+            .filter(text => text)
+        return this.snapshotFigure(
+            placeholderSvg("SmartArt diagram", texts.slice(0, 4), {
+                width: 480,
+                height: 120
+            }),
+            480,
+            120,
+            "SmartArt diagram"
+        )
+    }
+
+    convertOleObject(node: XMLElement): FidusNode | null {
+        const ole = node.query("o:OLEObject")
+        const rel = ole ? this.parser.relationships[attr(ole, "r:id")] : null
+        if (!rel) {
+            return null
+        }
+        const path = this.packagePath(rel.target)
+        const filename = path.split("/").pop() || path
+        const table = this.parser.embeddingTables[path]
+        if (table) {
+            const svg = tableModelToSvg(table)
+            return this.snapshotFigure(svg, 600, 400, table.title || filename)
+        }
+        return this.snapshotFigure(
+            placeholderSvg("Embedded object", [filename], {
+                width: 480,
+                height: 100
+            }),
+            480,
+            100,
+            filename
+        )
+    }
+
+    /** Convert the paragraphs inside text boxes into regular blocks. */
+    convertTextboxes(node: XMLElement): FidusNode[] {
+        const blocks: FidusNode[] = []
+        node.queryAll("w:txbxContent").forEach((textbox: XMLElement) => {
+            textbox.children
+                .filter(
+                    (child): child is XMLElement =>
+                        typeof child !== "string" && child.tagName === "w:p"
+                )
+                .forEach((paragraph: XMLElement) => {
+                    const block = this.convertBlock(paragraph, [])
+                    if (block) {
+                        if (Array.isArray(block)) {
+                            blocks.push(...block)
+                        } else {
+                            blocks.push(block)
+                        }
+                    }
+                })
+        })
+        return blocks
+    }
+
     convertFigure(node: XMLElement, captionNode: XMLElement | null = null) {
         let captionBlock, captionOrder
         if (captionNode) {
@@ -961,6 +1205,17 @@ export class DocxConvert {
 
         const blip = drawing.query("a:blip")
         if (!blip) {
+            // Content without a document-model representation (charts,
+            // SmartArt): render a snapshot from the package part and keep
+            // it as an SVG image so nothing reads as lost.
+            const chart = drawing.query("c:chart")
+            if (chart) {
+                return this.chartSnapshotFigure(chart)
+            }
+            const relIds = drawing.query("dgm:relIds")
+            if (relIds) {
+                return this.smartArtSnapshotFigure(relIds)
+            }
             return null
         }
 
@@ -1157,7 +1412,11 @@ export class DocxConvert {
             if (child.tagName === "w:p") {
                 const block = this.convertBlock(child, [])
                 if (block) {
-                    content.push(block)
+                    if (Array.isArray(block)) {
+                        content.push(...block)
+                    } else {
+                        content.push(block)
+                    }
                 }
             } else if (child.tagName === "w:tbl") {
                 const table = this.convertTable(child)

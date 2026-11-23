@@ -1,6 +1,8 @@
 import {xmlDOM} from "../../exporter/tools/xml.js"
 import type {XMLElement} from "../../exporter/tools/xml.js"
 import {randomCommentId} from "../../schema/common/index.js"
+import {xlsxFirstSheetTable} from "../chart_svg.js"
+import type {TableModel} from "../chart_svg.js"
 import {gettext} from "fwtoolkit"
 import type JSZip from "jszip"
 import type {CommentData, FidusMark, FidusNode} from "../../types.js"
@@ -77,6 +79,22 @@ function attr(node: unknown, name: string): string {
     return ""
 }
 
+/** Resolve a relationship target (relative to word/) to a package path. */
+function resolvePackagePath(target: string): string {
+    const parts = (target.startsWith("word/") ? target : `word/${target}`)
+        .replace(/^\//, "")
+        .split("/")
+    const resolved: string[] = []
+    parts.forEach(part => {
+        if (part === "..") {
+            resolved.pop()
+        } else if (part !== "." && part) {
+            resolved.push(part)
+        }
+    })
+    return resolved.join("/")
+}
+
 const DEFAULT_STYLES_XML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
 </w:styles>`
@@ -90,6 +108,15 @@ export class DocxParser {
     endnotes: Record<string, Footnote>
     relationships: Record<string, Relationship>
     images: Record<string, File>
+    charts: Record<string, XMLElement>
+    diagrams: Record<string, XMLElement>
+    embeddings: Record<string, ArrayBuffer>
+    /** First-sheet table of each embedded xlsx, keyed by package path. */
+    embeddingTables: Record<string, TableModel>
+    /** Pre-parsed document of each embedded/altChunk docx, by package path. */
+    altChunkDocs: Record<string, XMLElement>
+    /** Raw text of HTML/MHT altChunk parts, keyed by package path. */
+    altChunkText: Record<string, string>
     coreDoc: XMLElement | null
     document: XMLElement | null
     customDoc: XMLElement | null
@@ -103,6 +130,12 @@ export class DocxParser {
         this.endnotes = {}
         this.relationships = {}
         this.images = {}
+        this.charts = {}
+        this.diagrams = {}
+        this.embeddings = {}
+        this.embeddingTables = {}
+        this.altChunkDocs = {}
+        this.altChunkText = {}
 
         this.coreDoc = null
         this.document = null
@@ -118,9 +151,112 @@ export class DocxParser {
             .then(() => this.parseEndnotes())
             .then(() => this.parseRelationships())
             .then(() => this.parseImages())
+            .then(() => this.parseObjectParts())
             .then(() => this.parseCoreDoc())
             .then(() => this.parseCustomDoc())
             .then(() => this.parseDocument())
+    }
+
+    /**
+     * Preload the package parts backing content that has no representation
+     * in the document model (charts, SmartArt data, OLE embeddings) so the
+     * synchronous conversion pass can snapshot them.
+     */
+    async parseObjectParts() {
+        const loadXml = async (
+            path: string,
+            into: Record<string, XMLElement>
+        ) => {
+            try {
+                const content = await this.zip.file(path)?.async("string")
+                if (content) {
+                    into[path] = xmlDOM(content)
+                }
+            } catch (err) {
+                console.warn(`Could not parse ${path}`, err)
+            }
+        }
+        await Promise.all(
+            Object.keys(this.zip.files)
+                .filter((path: string) =>
+                    /^word\/(charts\/chart|diagrams\/data)[^/]*\.xml$/.test(
+                        path
+                    )
+                )
+                .map((path: string) =>
+                    loadXml(
+                        path,
+                        path.includes("/charts/")
+                            ? this.charts
+                            : this.diagrams
+                    )
+                )
+        )
+        const embeddingFiles = Object.keys(this.zip.files).filter(
+            (path: string) =>
+                /^word\/embeddings\/[^/]+$/.test(path) &&
+                !this.zip.files[path].dir
+        )
+        await Promise.all(
+            embeddingFiles.map(async (path: string) => {
+                try {
+                    this.embeddings[path] = await this.zip
+                        .file(path)!
+                        .async("arraybuffer")
+                } catch (err) {
+                    console.warn(`Could not read ${path}`, err)
+                }
+            })
+        )
+        // Snapshot tables of embedded workbooks for the OLE import path.
+        for (const path of embeddingFiles) {
+            if (!path.toLowerCase().endsWith(".xlsx")) {
+                continue
+            }
+            try {
+                const table = await xlsxFirstSheetTable(this.embeddings[path])
+                if (table) {
+                    this.embeddingTables[path] = table
+                }
+            } catch (err) {
+                console.warn(`Could not parse embedded workbook ${path}`, err)
+            }
+        }
+        // Pre-parse altChunk parts (transcluded documents) so the
+        // synchronous conversion pass can import them inline.
+        for (const rel of Object.values(this.relationships)) {
+            // Word writes the type as ".../aFChunk" (and some generators
+            // as ".../altChunk").
+            if (!/(altchunk|afchunk)$/i.test(rel.type)) {
+                continue
+            }
+            const path = resolvePackagePath(rel.target)
+            const lower = path.toLowerCase()
+            try {
+                if (lower.endsWith(".docx")) {
+                    const data = await this.zip
+                        .file(path)
+                        ?.async("arraybuffer")
+                    if (data) {
+                        const {default: JSZip} = await import("jszip")
+                        const subZip = await JSZip.loadAsync(data)
+                        const docXml = await subZip
+                            .file("word/document.xml")
+                            ?.async("string")
+                        if (docXml) {
+                            this.altChunkDocs[path] = xmlDOM(docXml)
+                        }
+                    }
+                } else if (/\.(html?|mht|mhtml)$/.test(lower)) {
+                    const text = await this.zip.file(path)?.async("string")
+                    if (text) {
+                        this.altChunkText[path] = text
+                    }
+                }
+            } catch (err) {
+                console.warn(`Could not parse altChunk part ${path}`, err)
+            }
+        }
     }
 
     async parseStyles() {
