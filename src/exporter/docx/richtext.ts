@@ -114,6 +114,14 @@ export class DOCXExporterRichtext {
     docPrCount: number
     citationCounter: number // Track which citation we're processing
     paragraphIdCounter: number // Used for w14:paraId attributes on comments
+    // Stack of table grid contexts (one per nested table) used to render
+    // merged cells: w:gridSpan for horizontal merges and w:vMerge for
+    // vertical merges, omitting purely horizontally covered cells.
+    tableGridStack: Array<{
+        column: number
+        vmerge: number[]
+        snapshot: number[]
+    }>
 
     constructor(
         doc: ExportDoc,
@@ -146,6 +154,7 @@ export class DOCXExporterRichtext {
         this.docPrCount = -1
         this.citationCounter = 0 // Track which citation we're processing
         this.paragraphIdCounter = 0 // Used for w14:paraId attributes on comments
+        this.tableGridStack = []
     }
 
     run(node: FidusNode, options: RunOptions = {}, nextNode: FidusNode | null = null): string {
@@ -1109,6 +1118,7 @@ export class DOCXExporterRichtext {
                     </w:p>`
                 }
                 this.tables.addTableGridStyle()
+                this.tableGridStack.push({column: 0, vmerge: [], snapshot: []})
                 start += `
                     <w:tbl>
                         <w:tblPr>
@@ -1160,39 +1170,71 @@ export class DOCXExporterRichtext {
             case "table_caption":
                 // We already deal with this in 'table'.
                 return ""
-            case "table_row":
+            case "table_row": {
+                const grid = this.tableGridStack[this.tableGridStack.length - 1]
+                if (grid) {
+                    // A new grid row: vertical merges from above have one
+                    // fewer row to go. Cells consult the snapshot, so merges
+                    // started in this same row do not cover this row's own
+                    // cells.
+                    grid.column = 0
+                    grid.vmerge = grid.vmerge.map(left => Math.max(0, left - 1))
+                    grid.snapshot = [...grid.vmerge]
+                }
                 start += "<w:tr>"
+                if (node.content?.[0]?.type === "table_header") {
+                    // Repeat this row as a header row at the top of each page.
+                    start += "<w:trPr><w:tblHeader/></w:trPr>"
+                }
                 end = "</w:tr>" + end
                 break
+            }
             case "table_cell":
-            case "table_header":
+            case "table_header": {
+                const grid = this.tableGridStack[this.tableGridStack.length - 1]
+                const rowspan = node.attrs!.rowspan as number | undefined
+                const colspan = node.attrs!.colspan as number | undefined
+                if (!rowspan && !node.content) {
+                    // Cell covered by a merge (added by fixTables). Purely
+                    // horizontal coverage is implicit in w:gridSpan, so the
+                    // cell is omitted; vertical coverage needs an empty
+                    // continuation cell.
+                    if (grid) {
+                        if ((grid.snapshot[grid.column] || 0) > 0) {
+                            start += `<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto" /><w:vMerge/></w:tcPr><w:p/></w:tc>`
+                        }
+                        grid.column += 1
+                    }
+                    break
+                }
+                const rowSpan = rowspan || 1
+                const colSpan = colspan || 1
+                if (grid) {
+                    for (let i = 0; i < colSpan; i++) {
+                        grid.vmerge[grid.column + i] = rowSpan
+                    }
+                    grid.column += colSpan
+                }
                 start += `
                     <w:tc>
                         <w:tcPr>
+                            <w:tcW w:w="${Number.parseInt(String((options.dimensions?.width || 0) / 635))}" w:type="dxa" />
                             ${
-                                node.attrs!.rowspan && node.attrs!.colspan
-                                    ? `<w:tcW w:w="${Number.parseInt(String((options.dimensions?.width || 0) / 635))}" w:type="dxa" />`
-                                    : '<w:tcW w:w="0" w:type="auto" />'
+                                rowSpan > 1
+                                    ? '<w:vMerge w:val="restart" />'
+                                    : ""
                             }
                             ${
-                                node.attrs!.rowspan
-                                    ? (node.attrs!.rowspan as number) > 1
-                                        ? '<w:vMerge w:val="restart" />'
-                                        : ""
-                                    : "<w:vMerge/>"
-                            }
-                            ${
-                                node.attrs!.colspan
-                                    ? (node.attrs!.colspan as number) > 1
-                                        ? '<w:hMerge w:val="restart" />'
-                                        : ""
-                                    : "<w:hMerge/>"
+                                colSpan > 1
+                                    ? `<w:gridSpan w:val="${colSpan}" />`
+                                    : ""
                             }
                         </w:tcPr>
                         ${node.content! ? "" : "<w:p/>"}`
                 end = "</w:tc>" + end
 
                 break
+            }
             case "equation": {
                 const latex = node.attrs!.equation
                 content += this.math.getOmml(latex as string)
@@ -1265,6 +1307,9 @@ export class DOCXExporterRichtext {
                     node.content![i + 1]
                 )
             }
+        }
+        if (node.type === "table") {
+            this.tableGridStack.pop()
         }
         return start + content + end
     }

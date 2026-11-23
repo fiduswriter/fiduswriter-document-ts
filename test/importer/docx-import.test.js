@@ -353,6 +353,11 @@ describe("DOCX import/export round trip with tables", () => {
                 .file("word/document.xml")
                 ?.async("string")
             expect(documentXml).toContain("<w:tbl>")
+            // Horizontal merges use the modern w:gridSpan form.
+            expect(documentXml).toContain('<w:gridSpan w:val="2"/>')
+            // Header rows are marked to repeat on each page.
+            expect(documentXml).toContain("<w:tblHeader/>")
+            expect(documentXml).toContain('<w:vMerge w:val="restart"/>')
 
             // Re-import the exported file: the tables must come back.
             const reimported = new DocxConvert(
