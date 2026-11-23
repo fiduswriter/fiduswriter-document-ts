@@ -10,6 +10,7 @@ import {
     randomTableId
 } from "../../schema/common/index.js"
 import {parseTracks} from "../../schema/common/track.js"
+import {inlineToPlainText} from "../helpers.js"
 import {
     isOdtBibliographyReferenceMark,
     isOdtBibliographySection,
@@ -593,11 +594,14 @@ export class OdtConvert {
 
         // Add title (required first element)
         const title = this.extractTitle()
+        // The schema title node may only contain text, so any fields,
+        // line breaks, etc. in the title paragraph are flattened.
+        const titleContent = inlineToPlainText(title.content)
 
-        if (title.content.length) {
+        if (titleContent.length) {
             document.content.push({
                 type: "title",
-                content: title.content
+                content: titleContent
             })
         } else {
             // If no title found, use default title
@@ -616,7 +620,7 @@ export class OdtConvert {
         })
 
         ;(document.attrs as Record<string, unknown>).title =
-            title.content.map((node: FidusNode) => node.text || "").join("") ||
+            titleContent.map((node: FidusNode) => node.text || "").join("") ||
             gettext("Untitled")
 
         // Get all content sections from the ODT
@@ -1540,6 +1544,28 @@ export class OdtConvert {
                         return this.convertFigureReference(child)
                     case "text:soft-page-break":
                         return null
+                    case "text:page-number":
+                    case "text:page-count":
+                    case "text:date":
+                    case "text:time":
+                    case "text:creation-date":
+                    case "text:modification-date":
+                    case "text:file-name":
+                    case "text:author-name":
+                    case "text:initial-creator":
+                    case "text:title":
+                    case "text:subject":
+                    case "text:keywords":
+                    case "text:editing-duration":
+                    case "text:sheet-name": {
+                        // Document metadata/page fields: keep the displayed
+                        // text so no content is lost (same fallback as
+                        // unsupported DOCX fields).
+                        const text = child.textContent
+                        return text
+                            ? this.convertText(text, currentStyleMarks)
+                            : null
+                    }
                     default:
                         console.warn(
                             `Unsupported inline node: ${child.tagName}`
