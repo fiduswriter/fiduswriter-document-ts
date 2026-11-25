@@ -54,3 +54,10 @@ by the `prepare` / `prepublishOnly` scripts.
 The test suite includes round-trip tests that import real DOCX files, run them
 through the exporters, and validate that the generated output files contain the
 required ZIP entries and well-formed XML.
+
+## Trademark
+
+"Fidus Writer" is a registered EU trademark of Lund Info AB. This
+repository's license covers the code, not the name and logo — see
+[TRADEMARK.md](TRADEMARK.md) and the
+[Fidus Writer trademark policy](https://www.fiduswriter.org/trademark/).
