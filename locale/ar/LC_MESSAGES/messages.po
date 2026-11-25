@@ -26,6 +26,9 @@ msgstr "عربي"
 msgid "Assembling JATS archive..."
 msgstr "جارٍ تجميع أرشيف JATS..."
 
+msgid "Assembling TEI archive..."
+msgstr "جارٍ تجميع أرشيف TEI..."
+
 msgid "Asturian"
 msgstr "الأسترية"
 
@@ -64,6 +67,9 @@ msgstr "تم إنشاء النسخة."
 
 msgid "Copy of"
 msgstr "نسخة من"
+
+msgid "Could not create document. You may have reached your document limit."
+msgstr "تعذر إنشاء المستند. ربما تكون قد وصلت إلى حد المستند الخاص بك."
 
 msgid "Creating copy..."
 msgstr "جارٍ إنشاء نسخة..."
@@ -125,11 +131,20 @@ msgstr "اكتمل التصدير إلى JATS."
 msgid "Export to LaTeX complete."
 msgstr "اكتمل التصدير إلى LaTeX."
 
+msgid "Export to Markdown complete."
+msgstr "اكتمل التصدير إلى Markdown."
+
 msgid "Export to ODT complete."
 msgstr "اكتمل التصدير إلى ODT."
 
 msgid "Export to Pandoc complete."
 msgstr "اكتمل التصدير إلى Pandoc."
+
+msgid "Export to TEI complete."
+msgstr "اكتمل التصدير إلى TEI."
+
+msgid "Export to Typst complete."
+msgstr "اكتمل التصدير إلى Typst."
 
 msgid "Exporting to DOCX..."
 msgstr "جارٍ التصدير إلى DOCX..."
@@ -143,14 +158,26 @@ msgstr "جارٍ التصدير إلى JATS..."
 msgid "Exporting to LaTeX..."
 msgstr "جارٍ التصدير إلى LaTeX..."
 
+msgid "Exporting to Markdown..."
+msgstr "تصدير إلى تخفيض السعر..."
+
 msgid "Exporting to ODT..."
 msgstr "جارٍ التصدير إلى ODT..."
 
 msgid "Exporting to Pandoc..."
 msgstr "التصدير إلى باندوك..."
 
+msgid "Exporting to TEI..."
+msgstr "التصدير إلى TEI..."
+
+msgid "Exporting to Typst..."
+msgstr "جارٍ التصدير إلى Typst..."
+
 msgid "File export has been initiated."
 msgstr "تم بدء تصدير الملف."
+
+msgid "Formatting citations..."
+msgstr "تنسيق الاقتباسات..."
 
 msgid "French"
 msgstr "فرنسي"
@@ -206,6 +233,15 @@ msgstr "النرويجية (بوكمال)"
 msgid "Norwegian (nynorsk)"
 msgstr "النرويجية (نينورسك)"
 
+msgid "PDF export complete."
+msgstr "اكتمل تصدير ملف PDF."
+
+msgid "PDF export failed."
+msgstr "فشل تصدير PDF."
+
+msgid "PDF export has been initiated."
+msgstr "تم بدء تصدير PDF."
+
 msgid "Persian"
 msgstr "الفارسية"
 
@@ -224,8 +260,14 @@ msgstr "جارٍ تحضير الوثيقة..."
 msgid "Preparing LaTeX files..."
 msgstr "جارٍ تحضير ملفات LaTeX..."
 
-msgid "Preparing print view..."
-msgstr "جارٍ تحضير عرض الطباعة..."
+msgid "Preparing Markdown files..."
+msgstr "جارٍ تحضير ملفات Markdown..."
+
+msgid "Preparing Typst files..."
+msgstr "جارٍ تحضير ملفات Typst..."
+
+msgid "Print view ready. Opening print dialog..."
+msgstr "عرض الطباعة جاهز. جارٍ فتح مربع حوار الطباعة..."
 
 msgid "Printing complete."
 msgstr "اكتملت الطباعة."
@@ -236,11 +278,11 @@ msgstr "بدأت الطباعة."
 msgid "Rendering document..."
 msgstr "تقديم الوثيقة..."
 
+msgid "Rendering PDF…"
+msgstr "عرض قوات الدفاع الشعبي…"
+
 msgid "Reviewers"
 msgstr "المراجعين"
-
-msgid "Snapshot saved."
-msgstr "تم حفظ اللقطة."
 
 msgid "Romanian"
 msgstr "روماني"
@@ -265,6 +307,9 @@ msgstr "السلوفاكية"
 
 msgid "Slovenian"
 msgstr "السلوفينية"
+
+msgid "Snapshot saved."
+msgstr "تم حفظ اللقطة."
 
 msgid "Spanish"
 msgstr "الأسبانية"

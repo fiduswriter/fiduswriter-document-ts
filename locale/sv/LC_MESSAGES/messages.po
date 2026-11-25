@@ -26,6 +26,9 @@ msgstr "arabiska"
 msgid "Assembling JATS archive..."
 msgstr "Samlar JATS-arkiv..."
 
+msgid "Assembling TEI archive..."
+msgstr "Samlar TEI-arkiv..."
+
 msgid "Asturian"
 msgstr "asturiska"
 
@@ -64,6 +67,9 @@ msgstr "Kopia skapad."
 
 msgid "Copy of"
 msgstr "Kopia av"
+
+msgid "Could not create document. You may have reached your document limit."
+msgstr "Det gick inte att skapa dokument. Du kan ha nått din dokumentgräns."
 
 msgid "Creating copy..."
 msgstr "Skapar kopia..."
@@ -125,11 +131,20 @@ msgstr "Exporten till JATS klar."
 msgid "Export to LaTeX complete."
 msgstr "Exporten till LaTeX slutförd."
 
+msgid "Export to Markdown complete."
+msgstr "Export till Markdown slutförd."
+
 msgid "Export to ODT complete."
 msgstr "Exporten till ODT slutförd."
 
 msgid "Export to Pandoc complete."
 msgstr "Exporten till Pandoc slutförd."
+
+msgid "Export to TEI complete."
+msgstr "Exporten till TEI slutförd."
+
+msgid "Export to Typst complete."
+msgstr "Exporten till Typst slutförd."
 
 msgid "Exporting to DOCX..."
 msgstr "Exporterar till DOCX..."
@@ -143,14 +158,26 @@ msgstr "Exporterar till JATS..."
 msgid "Exporting to LaTeX..."
 msgstr "Exporterar till LaTeX..."
 
+msgid "Exporting to Markdown..."
+msgstr "Exporterar till Markdown..."
+
 msgid "Exporting to ODT..."
 msgstr "Exporterar till ODT..."
 
 msgid "Exporting to Pandoc..."
 msgstr "Exporterar till Pandoc..."
 
+msgid "Exporting to TEI..."
+msgstr "Exporterar till TEI..."
+
+msgid "Exporting to Typst..."
+msgstr "Exporterar till Typst..."
+
 msgid "File export has been initiated."
 msgstr "Filexport har påbörjats."
+
+msgid "Formatting citations..."
+msgstr "Formaterar citat..."
 
 msgid "French"
 msgstr "franska"
@@ -206,6 +233,15 @@ msgstr "norska (bokmål)"
 msgid "Norwegian (nynorsk)"
 msgstr "norska (nynorsk)"
 
+msgid "PDF export complete."
+msgstr "PDF-export klar."
+
+msgid "PDF export failed."
+msgstr "PDF-export misslyckades."
+
+msgid "PDF export has been initiated."
+msgstr "PDF-export har påbörjats."
+
 msgid "Persian"
 msgstr "persiska"
 
@@ -224,8 +260,14 @@ msgstr "Förbereder dokument..."
 msgid "Preparing LaTeX files..."
 msgstr "Förbereder LaTeX-filer..."
 
-msgid "Preparing print view..."
-msgstr "Förbereder utskriftsvy..."
+msgid "Preparing Markdown files..."
+msgstr "Förbereder Markdown-filer..."
+
+msgid "Preparing Typst files..."
+msgstr "Förbereder Typst-filer..."
+
+msgid "Print view ready. Opening print dialog..."
+msgstr "Utskriftsvy klar. Öppnar utskriftsdialogrutan..."
 
 msgid "Printing complete."
 msgstr "Utskriften klar."
@@ -236,11 +278,11 @@ msgstr "Utskrift har påbörjats."
 msgid "Rendering document..."
 msgstr "Återger dokument..."
 
+msgid "Rendering PDF…"
+msgstr "Återger PDF..."
+
 msgid "Reviewers"
 msgstr "Recensenter"
-
-msgid "Snapshot saved."
-msgstr "Ögonblicksbild sparad."
 
 msgid "Romanian"
 msgstr "rumänska"
@@ -265,6 +307,9 @@ msgstr "slovakiska"
 
 msgid "Slovenian"
 msgstr "slovenska"
+
+msgid "Snapshot saved."
+msgstr "Ögonblicksbild sparad."
 
 msgid "Spanish"
 msgstr "spanska"

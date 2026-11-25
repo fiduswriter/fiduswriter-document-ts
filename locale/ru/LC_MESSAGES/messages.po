@@ -26,6 +26,9 @@ msgstr "арабский"
 msgid "Assembling JATS archive..."
 msgstr "Сборка JATS-архива..."
 
+msgid "Assembling TEI archive..."
+msgstr "Сборка архива TEI..."
+
 msgid "Asturian"
 msgstr "Астурийский"
 
@@ -64,6 +67,9 @@ msgstr "Копия создана."
 
 msgid "Copy of"
 msgstr "Копия"
+
+msgid "Could not create document. You may have reached your document limit."
+msgstr "Не удалось создать документ. Возможно, вы исчерпали лимит документов."
 
 msgid "Creating copy..."
 msgstr "Создание копии..."
@@ -125,11 +131,20 @@ msgstr "Экспорт в JATS завершен."
 msgid "Export to LaTeX complete."
 msgstr "Экспорт в LaTeX завершен."
 
+msgid "Export to Markdown complete."
+msgstr "Экспорт в Markdown завершен."
+
 msgid "Export to ODT complete."
 msgstr "Экспорт в ODT завершен."
 
 msgid "Export to Pandoc complete."
 msgstr "Экспорт в Pandoc завершен."
+
+msgid "Export to TEI complete."
+msgstr "Экспорт в TEI завершен."
+
+msgid "Export to Typst complete."
+msgstr "Экспорт в Typst завершен."
 
 msgid "Exporting to DOCX..."
 msgstr "Экспорт в DOCX..."
@@ -143,14 +158,26 @@ msgstr "Экспорт в JATS..."
 msgid "Exporting to LaTeX..."
 msgstr "Экспорт в LaTeX..."
 
+msgid "Exporting to Markdown..."
+msgstr "Экспорт в Markdown..."
+
 msgid "Exporting to ODT..."
 msgstr "Экспорт в ODT..."
 
 msgid "Exporting to Pandoc..."
 msgstr "Экспорт в Пандок..."
 
+msgid "Exporting to TEI..."
+msgstr "Экспорт в TEI..."
+
+msgid "Exporting to Typst..."
+msgstr "Экспорт в Типст..."
+
 msgid "File export has been initiated."
 msgstr "Экспорт файла начат."
+
+msgid "Formatting citations..."
+msgstr "Форматирование цитат..."
 
 msgid "French"
 msgstr "Французский"
@@ -206,6 +233,15 @@ msgstr "Норвежский (букмол)"
 msgid "Norwegian (nynorsk)"
 msgstr "Норвежский (нюнорск)"
 
+msgid "PDF export complete."
+msgstr "Экспорт PDF завершен."
+
+msgid "PDF export failed."
+msgstr "Экспорт PDF не удался."
+
+msgid "PDF export has been initiated."
+msgstr "Экспорт PDF начат."
+
 msgid "Persian"
 msgstr "персидский"
 
@@ -224,8 +260,14 @@ msgstr "Готовим документ..."
 msgid "Preparing LaTeX files..."
 msgstr "Подготовка файлов LaTeX..."
 
-msgid "Preparing print view..."
-msgstr "Подготовка просмотра для печати..."
+msgid "Preparing Markdown files..."
+msgstr "Подготовка файлов Markdown..."
+
+msgid "Preparing Typst files..."
+msgstr "Подготовка файлов Typst..."
+
+msgid "Print view ready. Opening print dialog..."
+msgstr "Просмотр для печати готов. Открытие диалогового окна печати..."
 
 msgid "Printing complete."
 msgstr "Печать завершена."
@@ -236,11 +278,11 @@ msgstr "Печать началась."
 msgid "Rendering document..."
 msgstr "Оформление документа..."
 
+msgid "Rendering PDF…"
+msgstr "Рендеринг PDF…"
+
 msgid "Reviewers"
 msgstr "Рецензенты"
-
-msgid "Snapshot saved."
-msgstr "Снимок сохранен."
 
 msgid "Romanian"
 msgstr "румынский"
@@ -265,6 +307,9 @@ msgstr "словацкий"
 
 msgid "Slovenian"
 msgstr "словенский"
+
+msgid "Snapshot saved."
+msgstr "Снимок сохранен."
 
 msgid "Spanish"
 msgstr "испанский"

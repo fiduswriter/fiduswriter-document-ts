@@ -26,6 +26,9 @@ msgstr "арабски"
 msgid "Assembling JATS archive..."
 msgstr "Сглобява се JATS архив..."
 
+msgid "Assembling TEI archive..."
+msgstr "Сглобява се TEI архив..."
+
 msgid "Asturian"
 msgstr "Астурия"
 
@@ -64,6 +67,11 @@ msgstr "Копието е създадено."
 
 msgid "Copy of"
 msgstr "Копие на"
+
+msgid "Could not create document. You may have reached your document limit."
+msgstr ""
+"Не можа да се създаде документ. Може да сте достигнали лимита си за "
+"документи."
 
 msgid "Creating copy..."
 msgstr "Създава се копие..."
@@ -125,11 +133,20 @@ msgstr "Експортирането към JATS е завършено."
 msgid "Export to LaTeX complete."
 msgstr "Експортирането в LaTeX е завършено."
 
+msgid "Export to Markdown complete."
+msgstr "Експортирането в Markdown завършено."
+
 msgid "Export to ODT complete."
 msgstr "Експортирането към ODT е завършено."
 
 msgid "Export to Pandoc complete."
 msgstr "Експортирането в Pandoc е завършено."
+
+msgid "Export to TEI complete."
+msgstr "Експортирането към TEI е завършено."
+
+msgid "Export to Typst complete."
+msgstr "Експортирането към Typst завършено."
 
 msgid "Exporting to DOCX..."
 msgstr "Експортиране в DOCX..."
@@ -143,14 +160,26 @@ msgstr "Експортиране към JATS..."
 msgid "Exporting to LaTeX..."
 msgstr "Експортира се в LaTeX..."
 
+msgid "Exporting to Markdown..."
+msgstr "Експортира се в Markdown..."
+
 msgid "Exporting to ODT..."
 msgstr "Експортиране към ODT..."
 
 msgid "Exporting to Pandoc..."
 msgstr "Експортиране към Pandoc..."
 
+msgid "Exporting to TEI..."
+msgstr "Експортиране към TEI..."
+
+msgid "Exporting to Typst..."
+msgstr "Експортиране към Typst..."
+
 msgid "File export has been initiated."
 msgstr "Експортирането беше стартирано."
+
+msgid "Formatting citations..."
+msgstr "Цитатите се форматират..."
 
 msgid "French"
 msgstr "Френски"
@@ -206,6 +235,15 @@ msgstr "Норвежки (bokmål)"
 msgid "Norwegian (nynorsk)"
 msgstr "Норвежки (nynorsk)"
 
+msgid "PDF export complete."
+msgstr "PDF експортирането е завършено."
+
+msgid "PDF export failed."
+msgstr "Неуспешно експортиране на PDF."
+
+msgid "PDF export has been initiated."
+msgstr "Експортирането в PDF е стартирано."
+
 msgid "Persian"
 msgstr "персийски"
 
@@ -224,8 +262,15 @@ msgstr "Документът се подготвя..."
 msgid "Preparing LaTeX files..."
 msgstr "Подготвят се LaTeX файлове..."
 
-msgid "Preparing print view..."
-msgstr "Подготвя се изглед за печат..."
+msgid "Preparing Markdown files..."
+msgstr "Подготвят се Markdown файлове..."
+
+msgid "Preparing Typst files..."
+msgstr "Подготвят се Typst файлове..."
+
+msgid "Print view ready. Opening print dialog..."
+msgstr ""
+"Изгледът за печат е готов. Отваряне на диалоговия прозорец за печат..."
 
 msgid "Printing complete."
 msgstr "Отпечатването е завършено."
@@ -236,11 +281,11 @@ msgstr "Печатането е започнало."
 msgid "Rendering document..."
 msgstr "Изобразява се документ..."
 
+msgid "Rendering PDF…"
+msgstr "Изобразява се PDF..."
+
 msgid "Reviewers"
 msgstr "Рецензенти"
-
-msgid "Snapshot saved."
-msgstr "Снимката е запазена."
 
 msgid "Romanian"
 msgstr "румънски"
@@ -265,6 +310,9 @@ msgstr "словашки"
 
 msgid "Slovenian"
 msgstr "словенски"
+
+msgid "Snapshot saved."
+msgstr "Снимката е запазена."
 
 msgid "Spanish"
 msgstr "Испански"

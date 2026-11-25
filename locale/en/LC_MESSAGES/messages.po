@@ -26,6 +26,9 @@ msgstr "Arabic"
 msgid "Assembling JATS archive..."
 msgstr "Assembling JATS archive..."
 
+msgid "Assembling TEI archive..."
+msgstr "Assembling TEI archive..."
+
 msgid "Asturian"
 msgstr "Asturian"
 
@@ -64,6 +67,9 @@ msgstr "Copy created."
 
 msgid "Copy of"
 msgstr "Copy of"
+
+msgid "Could not create document. You may have reached your document limit."
+msgstr "Could not create document. You may have reached your document limit."
 
 msgid "Creating copy..."
 msgstr "Creating copy..."
@@ -125,11 +131,20 @@ msgstr "Export to JATS complete."
 msgid "Export to LaTeX complete."
 msgstr "Export to LaTeX complete."
 
+msgid "Export to Markdown complete."
+msgstr "Export to Markdown complete."
+
 msgid "Export to ODT complete."
 msgstr "Export to ODT complete."
 
 msgid "Export to Pandoc complete."
 msgstr "Export to Pandoc complete."
+
+msgid "Export to TEI complete."
+msgstr "Export to TEI complete."
+
+msgid "Export to Typst complete."
+msgstr "Export to Typst complete."
 
 msgid "Exporting to DOCX..."
 msgstr "Exporting to DOCX..."
@@ -143,14 +158,26 @@ msgstr "Exporting to JATS..."
 msgid "Exporting to LaTeX..."
 msgstr "Exporting to LaTeX..."
 
+msgid "Exporting to Markdown..."
+msgstr "Exporting to Markdown..."
+
 msgid "Exporting to ODT..."
 msgstr "Exporting to ODT..."
 
 msgid "Exporting to Pandoc..."
 msgstr "Exporting to Pandoc..."
 
+msgid "Exporting to TEI..."
+msgstr "Exporting to TEI..."
+
+msgid "Exporting to Typst..."
+msgstr "Exporting to Typst..."
+
 msgid "File export has been initiated."
 msgstr "File export has been initiated."
+
+msgid "Formatting citations..."
+msgstr "Formatting citations..."
 
 msgid "French"
 msgstr "French"
@@ -233,8 +260,14 @@ msgstr "Preparing document..."
 msgid "Preparing LaTeX files..."
 msgstr "Preparing LaTeX files..."
 
-msgid "Preparing print view..."
-msgstr "Preparing print view..."
+msgid "Preparing Markdown files..."
+msgstr "Preparing Markdown files..."
+
+msgid "Preparing Typst files..."
+msgstr "Preparing Typst files..."
+
+msgid "Print view ready. Opening print dialog..."
+msgstr "Print view ready. Opening print dialog..."
 
 msgid "Printing complete."
 msgstr "Printing complete."
@@ -250,9 +283,6 @@ msgstr "Rendering PDF…"
 
 msgid "Reviewers"
 msgstr "Reviewers"
-
-msgid "Snapshot saved."
-msgstr "Snapshot saved."
 
 msgid "Romanian"
 msgstr "Romanian"
@@ -277,6 +307,9 @@ msgstr "Slovak"
 
 msgid "Slovenian"
 msgstr "Slovenian"
+
+msgid "Snapshot saved."
+msgstr "Snapshot saved."
 
 msgid "Spanish"
 msgstr "Spanish"

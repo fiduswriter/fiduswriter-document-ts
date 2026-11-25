@@ -26,6 +26,9 @@ msgstr "Arapça"
 msgid "Assembling JATS archive..."
 msgstr "JATS arşivi oluşturuluyor..."
 
+msgid "Assembling TEI archive..."
+msgstr "TEI arşivi oluşturuluyor..."
+
 msgid "Asturian"
 msgstr "Asturya dili"
 
@@ -64,6 +67,9 @@ msgstr "Kopya oluşturuldu."
 
 msgid "Copy of"
 msgstr "Kopyası"
+
+msgid "Could not create document. You may have reached your document limit."
+msgstr "Doküman oluşturulamadı. Belge limitinize ulaşmış olabilirsiniz."
 
 msgid "Creating copy..."
 msgstr "Kopya oluşturuluyor..."
@@ -125,11 +131,20 @@ msgstr "JATS'e aktarma işlemi tamamlandı."
 msgid "Export to LaTeX complete."
 msgstr "LaTeX'e aktarma işlemi tamamlandı."
 
+msgid "Export to Markdown complete."
+msgstr "Markdown'a aktarma işlemi tamamlandı."
+
 msgid "Export to ODT complete."
 msgstr "ODT'ye aktarma işlemi tamamlandı."
 
 msgid "Export to Pandoc complete."
 msgstr "Pandoc'a aktarma işlemi tamamlandı."
+
+msgid "Export to TEI complete."
+msgstr "TEI'ye ihracat tamamlandı."
+
+msgid "Export to Typst complete."
+msgstr "Tystt'e aktarma işlemi tamamlandı."
 
 msgid "Exporting to DOCX..."
 msgstr "DOCX'e aktarılıyor..."
@@ -143,14 +158,26 @@ msgstr "JATS'e aktarılıyor..."
 msgid "Exporting to LaTeX..."
 msgstr "LaTeX'e aktarılıyor..."
 
+msgid "Exporting to Markdown..."
+msgstr "Markdown'a aktarılıyor..."
+
 msgid "Exporting to ODT..."
 msgstr "ODT'ye aktarılıyor..."
 
 msgid "Exporting to Pandoc..."
 msgstr "Pandoc'a aktarılıyor..."
 
+msgid "Exporting to TEI..."
+msgstr "TEI'ye ihracat..."
+
+msgid "Exporting to Typst..."
+msgstr "Tyst'e aktarılıyor..."
+
 msgid "File export has been initiated."
 msgstr "Dosya dışa aktarımı başlatıldı."
+
+msgid "Formatting citations..."
+msgstr "Alıntılar biçimlendiriliyor..."
 
 msgid "French"
 msgstr "Fransızca"
@@ -206,6 +233,15 @@ msgstr "Norveççe (bokmål)"
 msgid "Norwegian (nynorsk)"
 msgstr "Norveççe (nynorsk)"
 
+msgid "PDF export complete."
+msgstr "PDF dışa aktarımı tamamlandı."
+
+msgid "PDF export failed."
+msgstr "PDF dışa aktarımı başarısız oldu."
+
+msgid "PDF export has been initiated."
+msgstr "PDF dışa aktarımı başlatıldı."
+
 msgid "Persian"
 msgstr "Farsça"
 
@@ -224,8 +260,14 @@ msgstr "Belge hazırlanıyor..."
 msgid "Preparing LaTeX files..."
 msgstr "LaTeX dosyaları hazırlanıyor..."
 
-msgid "Preparing print view..."
-msgstr "Yazdırma görünümü hazırlanıyor..."
+msgid "Preparing Markdown files..."
+msgstr "Markdown dosyaları hazırlanıyor..."
+
+msgid "Preparing Typst files..."
+msgstr "Tyst dosyaları hazırlanıyor..."
+
+msgid "Print view ready. Opening print dialog..."
+msgstr "Yazdırma görünümü hazır. Yazdırma iletişim kutusu açılıyor..."
 
 msgid "Printing complete."
 msgstr "Yazdırma tamamlandı."
@@ -236,11 +278,11 @@ msgstr "Yazdırma başlatıldı."
 msgid "Rendering document..."
 msgstr "Belge oluşturuluyor..."
 
+msgid "Rendering PDF…"
+msgstr "PDF oluşturuluyor…"
+
 msgid "Reviewers"
 msgstr "İnceleyenler"
-
-msgid "Snapshot saved."
-msgstr "Anlık görüntü kaydedildi."
 
 msgid "Romanian"
 msgstr "Romen"
@@ -265,6 +307,9 @@ msgstr "Slovak"
 
 msgid "Slovenian"
 msgstr "Slovence"
+
+msgid "Snapshot saved."
+msgstr "Anlık görüntü kaydedildi."
 
 msgid "Spanish"
 msgstr "İspanyol"

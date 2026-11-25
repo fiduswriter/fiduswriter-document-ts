@@ -12,3 +12,4 @@ pnpm-workspace.yaml
 package.json
 .mathlive_bundle_cache.json
 static-libs/
+locale/

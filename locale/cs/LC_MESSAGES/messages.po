@@ -26,6 +26,9 @@ msgstr "arabština"
 msgid "Assembling JATS archive..."
 msgstr "Skládání archivu JATS..."
 
+msgid "Assembling TEI archive..."
+msgstr "Skládání archivu TEI..."
+
 msgid "Asturian"
 msgstr "asturský"
 
@@ -64,6 +67,9 @@ msgstr "Kopie vytvořena."
 
 msgid "Copy of"
 msgstr "Kopie"
+
+msgid "Could not create document. You may have reached your document limit."
+msgstr "Nelze vytvořit dokument. Možná jste dosáhli limitu dokumentů."
 
 msgid "Creating copy..."
 msgstr "Vytváření kopie..."
@@ -125,11 +131,20 @@ msgstr "Export do JATS dokončen."
 msgid "Export to LaTeX complete."
 msgstr "Export do LaTeXu dokončen."
 
+msgid "Export to Markdown complete."
+msgstr "Export do Markdown dokončen."
+
 msgid "Export to ODT complete."
 msgstr "Export do ODT dokončen."
 
 msgid "Export to Pandoc complete."
 msgstr "Export do Pandoc dokončen."
+
+msgid "Export to TEI complete."
+msgstr "Export do TEI dokončen."
+
+msgid "Export to Typst complete."
+msgstr "Export do Typst dokončen."
 
 msgid "Exporting to DOCX..."
 msgstr "Export do DOCX..."
@@ -143,14 +158,26 @@ msgstr "Export do JATS..."
 msgid "Exporting to LaTeX..."
 msgstr "Export do LaTeXu..."
 
+msgid "Exporting to Markdown..."
+msgstr "Export do Markdown..."
+
 msgid "Exporting to ODT..."
 msgstr "Export do ODT..."
 
 msgid "Exporting to Pandoc..."
 msgstr "Export do Pandoc..."
 
+msgid "Exporting to TEI..."
+msgstr "Export do TEI..."
+
+msgid "Exporting to Typst..."
+msgstr "Export do Typst..."
+
 msgid "File export has been initiated."
 msgstr "Export souboru byl zahájen."
+
+msgid "Formatting citations..."
+msgstr "Formátování citací..."
 
 msgid "French"
 msgstr "francouzština"
@@ -206,6 +233,15 @@ msgstr "norština (bokmål)"
 msgid "Norwegian (nynorsk)"
 msgstr "norština (nynorsk)"
 
+msgid "PDF export complete."
+msgstr "Export PDF dokončen."
+
+msgid "PDF export failed."
+msgstr "Export PDF se nezdařil."
+
+msgid "PDF export has been initiated."
+msgstr "Export do PDF byl zahájen."
+
 msgid "Persian"
 msgstr "Peršan"
 
@@ -224,8 +260,14 @@ msgstr "Příprava dokumentu..."
 msgid "Preparing LaTeX files..."
 msgstr "Příprava souborů LaTeX..."
 
-msgid "Preparing print view..."
-msgstr "Příprava zobrazení tisku..."
+msgid "Preparing Markdown files..."
+msgstr "Příprava souborů Markdown..."
+
+msgid "Preparing Typst files..."
+msgstr "Příprava souborů Typst..."
+
+msgid "Print view ready. Opening print dialog..."
+msgstr "Pohled na tisk připraven. Otevírání dialogového okna tisku..."
 
 msgid "Printing complete."
 msgstr "Tisk dokončen."
@@ -236,11 +278,11 @@ msgstr "Tisk byl zahájen."
 msgid "Rendering document..."
 msgstr "Vykreslování dokumentu..."
 
+msgid "Rendering PDF…"
+msgstr "Vykreslování PDF…"
+
 msgid "Reviewers"
 msgstr "Recenzenti"
-
-msgid "Snapshot saved."
-msgstr "Snímek uložen."
 
 msgid "Romanian"
 msgstr "rumunština"
@@ -265,6 +307,9 @@ msgstr "Slovák"
 
 msgid "Slovenian"
 msgstr "slovinský"
+
+msgid "Snapshot saved."
+msgstr "Snímek uložen."
 
 msgid "Spanish"
 msgstr "španělština"

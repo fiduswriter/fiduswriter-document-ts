@@ -26,6 +26,9 @@ msgstr "阿拉伯"
 msgid "Assembling JATS archive..."
 msgstr "正在组装 JATS 档案..."
 
+msgid "Assembling TEI archive..."
+msgstr "正在收集 TEI 档案..."
+
 msgid "Asturian"
 msgstr "阿斯图里亚斯"
 
@@ -64,6 +67,9 @@ msgstr "已创建副本。"
 
 msgid "Copy of"
 msgstr "副本"
+
+msgid "Could not create document. You may have reached your document limit."
+msgstr "无法创建文档。您可能已达到文档限制。"
 
 msgid "Creating copy..."
 msgstr "正在创建副本..."
@@ -125,11 +131,20 @@ msgstr "导出至 JATS 已完成。"
 msgid "Export to LaTeX complete."
 msgstr "导出至 LaTeX 完成。"
 
+msgid "Export to Markdown complete."
+msgstr "导出至 Markdown 完成。"
+
 msgid "Export to ODT complete."
 msgstr "导出至 ODT 已完成。"
 
 msgid "Export to Pandoc complete."
 msgstr "导出至 Pandoc 完成。"
+
+msgid "Export to TEI complete."
+msgstr "导出至 TEI 已完成。"
+
+msgid "Export to Typst complete."
+msgstr "导出至 Typst 已完成。"
 
 msgid "Exporting to DOCX..."
 msgstr "正在导出到 DOCX..."
@@ -143,14 +158,26 @@ msgstr "正在导出到 JATS..."
 msgid "Exporting to LaTeX..."
 msgstr "导出到 LaTeX..."
 
+msgid "Exporting to Markdown..."
+msgstr "正在导出到 Markdown..."
+
 msgid "Exporting to ODT..."
 msgstr "正在导出到 ODT..."
 
 msgid "Exporting to Pandoc..."
 msgstr "正在导出到 Pandoc..."
 
+msgid "Exporting to TEI..."
+msgstr "导出至 TEI..."
+
+msgid "Exporting to Typst..."
+msgstr "正在导出到 Typst..."
+
 msgid "File export has been initiated."
 msgstr "文件导出已启动。"
+
+msgid "Formatting citations..."
+msgstr "格式化引文..."
 
 msgid "French"
 msgstr "法语"
@@ -206,6 +233,15 @@ msgstr "挪威语（博克马尔语）"
 msgid "Norwegian (nynorsk)"
 msgstr "挪威语（nynorsk）"
 
+msgid "PDF export complete."
+msgstr "PDF导出完成。"
+
+msgid "PDF export failed."
+msgstr "PDF 导出失败。"
+
+msgid "PDF export has been initiated."
+msgstr "PDF 导出已启动。"
+
 msgid "Persian"
 msgstr "波斯语"
 
@@ -224,8 +260,14 @@ msgstr "正在准备文件..."
 msgid "Preparing LaTeX files..."
 msgstr "正在准备 LaTeX 文件..."
 
-msgid "Preparing print view..."
-msgstr "正在准备打印视图..."
+msgid "Preparing Markdown files..."
+msgstr "正在准备 Markdown 文件..."
+
+msgid "Preparing Typst files..."
+msgstr "正在准备 Typst 文件..."
+
+msgid "Print view ready. Opening print dialog..."
+msgstr "打印视图准备就绪。打开打印对话框..."
 
 msgid "Printing complete."
 msgstr "打印完成。"
@@ -236,11 +278,11 @@ msgstr "打印已开始。"
 msgid "Rendering document..."
 msgstr "渲染文档..."
 
+msgid "Rendering PDF…"
+msgstr "渲染 PDF..."
+
 msgid "Reviewers"
 msgstr "审稿人"
-
-msgid "Snapshot saved."
-msgstr "快照已保存。"
 
 msgid "Romanian"
 msgstr "罗马尼亚语"
@@ -265,6 +307,9 @@ msgstr "斯洛伐克语"
 
 msgid "Slovenian"
 msgstr "斯洛文尼亚语"
+
+msgid "Snapshot saved."
+msgstr "快照已保存。"
 
 msgid "Spanish"
 msgstr "西班牙语"

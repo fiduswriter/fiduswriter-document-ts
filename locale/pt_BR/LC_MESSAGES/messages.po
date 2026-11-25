@@ -26,6 +26,9 @@ msgstr "Árabe"
 msgid "Assembling JATS archive..."
 msgstr "Montando arquivo JATS..."
 
+msgid "Assembling TEI archive..."
+msgstr "Montando arquivo TEI..."
+
 msgid "Asturian"
 msgstr "Asturiano"
 
@@ -64,6 +67,11 @@ msgstr "Cópia criada."
 
 msgid "Copy of"
 msgstr "Cópia de"
+
+msgid "Could not create document. You may have reached your document limit."
+msgstr ""
+"Não foi possível criar o documento. Você pode ter atingido o limite de "
+"documentos."
 
 msgid "Creating copy..."
 msgstr "Criando cópia..."
@@ -125,11 +133,20 @@ msgstr "Exportação para JATS concluída."
 msgid "Export to LaTeX complete."
 msgstr "Exportação para LaTeX concluída."
 
+msgid "Export to Markdown complete."
+msgstr "Exportação para Markdown concluída."
+
 msgid "Export to ODT complete."
 msgstr "Exportação para ODT concluída."
 
 msgid "Export to Pandoc complete."
 msgstr "Exportação para Pandoc concluída."
+
+msgid "Export to TEI complete."
+msgstr "Exportação para TEI concluída."
+
+msgid "Export to Typst complete."
+msgstr "Exportação para Typst concluída."
 
 msgid "Exporting to DOCX..."
 msgstr "Exportando para DOCX..."
@@ -143,14 +160,26 @@ msgstr "Exportando para JATS..."
 msgid "Exporting to LaTeX..."
 msgstr "Exportando para LaTeX..."
 
+msgid "Exporting to Markdown..."
+msgstr "Exportando para Markdown..."
+
 msgid "Exporting to ODT..."
 msgstr "Exportando para ODT..."
 
 msgid "Exporting to Pandoc..."
 msgstr "Exportando para Pandoc..."
 
+msgid "Exporting to TEI..."
+msgstr "Exportando para TEI..."
+
+msgid "Exporting to Typst..."
+msgstr "Exportando para Typst..."
+
 msgid "File export has been initiated."
 msgstr "Exportação iniciada."
+
+msgid "Formatting citations..."
+msgstr "Formatando citações..."
 
 msgid "French"
 msgstr "Francês"
@@ -206,6 +235,15 @@ msgstr "Norueguês (Bokmål)"
 msgid "Norwegian (nynorsk)"
 msgstr "Norueguês (nynorsk)"
 
+msgid "PDF export complete."
+msgstr "Exportação de PDF concluída."
+
+msgid "PDF export failed."
+msgstr "Falha na exportação de PDF."
+
+msgid "PDF export has been initiated."
+msgstr "A exportação de PDF foi iniciada."
+
 msgid "Persian"
 msgstr "Persa"
 
@@ -224,8 +262,15 @@ msgstr "Preparando documento..."
 msgid "Preparing LaTeX files..."
 msgstr "Preparando arquivos LaTeX..."
 
-msgid "Preparing print view..."
-msgstr "Preparando visualização de impressão..."
+msgid "Preparing Markdown files..."
+msgstr "Preparando arquivos Markdown..."
+
+msgid "Preparing Typst files..."
+msgstr "Preparando arquivos Typst..."
+
+msgid "Print view ready. Opening print dialog..."
+msgstr ""
+"Visualização de impressão pronta. Abrindo a caixa de diálogo de impressão..."
 
 msgid "Printing complete."
 msgstr "Impressão concluída."
@@ -236,11 +281,11 @@ msgstr "Impressão iniciada."
 msgid "Rendering document..."
 msgstr "Renderizando documento..."
 
+msgid "Rendering PDF…"
+msgstr "Renderizando PDF…"
+
 msgid "Reviewers"
 msgstr "Revisores"
-
-msgid "Snapshot saved."
-msgstr "Instantâneo salvo."
 
 msgid "Romanian"
 msgstr "Romeno"
@@ -265,6 +310,9 @@ msgstr "Eslovaco"
 
 msgid "Slovenian"
 msgstr "Esloveno"
+
+msgid "Snapshot saved."
+msgstr "Instantâneo salvo."
 
 msgid "Spanish"
 msgstr "Espanhol"

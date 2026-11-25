@@ -26,6 +26,9 @@ msgstr "Arabisch"
 msgid "Assembling JATS archive..."
 msgstr "JATS-archief samenstellen..."
 
+msgid "Assembling TEI archive..."
+msgstr "TEI-archief samenstellen..."
+
 msgid "Asturian"
 msgstr "Asturisch"
 
@@ -64,6 +67,9 @@ msgstr "Kopie gemaakt."
 
 msgid "Copy of"
 msgstr "Kopie van"
+
+msgid "Could not create document. You may have reached your document limit."
+msgstr "Kan document niet maken. Mogelijk heeft u uw documentlimiet bereikt."
 
 msgid "Creating copy..."
 msgstr "Kopie maken..."
@@ -125,11 +131,20 @@ msgstr "Exporteren naar JATS voltooid."
 msgid "Export to LaTeX complete."
 msgstr "Exporteren naar LaTeX voltooid."
 
+msgid "Export to Markdown complete."
+msgstr "Exporteren naar Markdown voltooid."
+
 msgid "Export to ODT complete."
 msgstr "Exporteren naar ODT voltooid."
 
 msgid "Export to Pandoc complete."
 msgstr "Exporteren naar Pandoc voltooid."
+
+msgid "Export to TEI complete."
+msgstr "Exporteren naar TEI voltooid."
+
+msgid "Export to Typst complete."
+msgstr "Exporteren naar Typst voltooid."
 
 msgid "Exporting to DOCX..."
 msgstr "Exporteren naar DOCX..."
@@ -143,14 +158,26 @@ msgstr "Exporteren naar JATS..."
 msgid "Exporting to LaTeX..."
 msgstr "Exporteren naar LaTeX..."
 
+msgid "Exporting to Markdown..."
+msgstr "Exporteren naar Markdown..."
+
 msgid "Exporting to ODT..."
 msgstr "Exporteren naar ODT..."
 
 msgid "Exporting to Pandoc..."
 msgstr "Exporteren naar Pandoc..."
 
+msgid "Exporting to TEI..."
+msgstr "Exporteren naar TEI..."
+
+msgid "Exporting to Typst..."
+msgstr "Exporteren naar Typst..."
+
 msgid "File export has been initiated."
 msgstr "Bestandsexport is gestart."
+
+msgid "Formatting citations..."
+msgstr "Citaties opmaken..."
 
 msgid "French"
 msgstr "Frans"
@@ -206,6 +233,15 @@ msgstr "Noors (bokmål)"
 msgid "Norwegian (nynorsk)"
 msgstr "Noors (nynorsk)"
 
+msgid "PDF export complete."
+msgstr "PDF-export voltooid."
+
+msgid "PDF export failed."
+msgstr "PDF-export mislukt."
+
+msgid "PDF export has been initiated."
+msgstr "De PDF-export is gestart."
+
 msgid "Persian"
 msgstr "Perzisch"
 
@@ -224,8 +260,14 @@ msgstr "Document voorbereiden..."
 msgid "Preparing LaTeX files..."
 msgstr "LaTeX-bestanden voorbereiden..."
 
-msgid "Preparing print view..."
-msgstr "Afdrukweergave voorbereiden..."
+msgid "Preparing Markdown files..."
+msgstr "Markdown-bestanden voorbereiden..."
+
+msgid "Preparing Typst files..."
+msgstr "Typst-bestanden voorbereiden..."
+
+msgid "Print view ready. Opening print dialog..."
+msgstr "Afdrukweergave gereed. Dialoogvenster Afdrukken openen..."
 
 msgid "Printing complete."
 msgstr "Afdrukken voltooid."
@@ -236,11 +278,11 @@ msgstr "Het afdrukken is gestart."
 msgid "Rendering document..."
 msgstr "Document weergeven..."
 
+msgid "Rendering PDF…"
+msgstr "PDF renderen…"
+
 msgid "Reviewers"
 msgstr "Recensenten"
-
-msgid "Snapshot saved."
-msgstr "Momentopname opgeslagen."
 
 msgid "Romanian"
 msgstr "Roemeense"
@@ -265,6 +307,9 @@ msgstr "Slowaaks"
 
 msgid "Slovenian"
 msgstr "Sloveens"
+
+msgid "Snapshot saved."
+msgstr "Momentopname opgeslagen."
 
 msgid "Spanish"
 msgstr "Spaans"

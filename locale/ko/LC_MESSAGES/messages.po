@@ -26,6 +26,9 @@ msgstr "아라비아 말"
 msgid "Assembling JATS archive..."
 msgstr "JATS 아카이브를 조립하는 중..."
 
+msgid "Assembling TEI archive..."
+msgstr "TEI 아카이브를 조립하는 중..."
+
 msgid "Asturian"
 msgstr "아스투리아스어"
 
@@ -64,6 +67,9 @@ msgstr "사본이 생성되었습니다."
 
 msgid "Copy of"
 msgstr "사본"
+
+msgid "Could not create document. You may have reached your document limit."
+msgstr "문서를 생성할 수 없습니다. 문서 한도에 도달했을 수 있습니다."
 
 msgid "Creating copy..."
 msgstr "사본을 만드는 중..."
@@ -125,11 +131,20 @@ msgstr "JATS로 내보내기가 완료되었습니다."
 msgid "Export to LaTeX complete."
 msgstr "LaTeX로 내보내기가 완료되었습니다."
 
+msgid "Export to Markdown complete."
+msgstr "마크다운으로 내보내기가 완료되었습니다."
+
 msgid "Export to ODT complete."
 msgstr "ODT로 내보내기가 완료되었습니다."
 
 msgid "Export to Pandoc complete."
 msgstr "Pandoc으로 내보내기가 완료되었습니다."
+
+msgid "Export to TEI complete."
+msgstr "TEI로 내보내기가 완료되었습니다."
+
+msgid "Export to Typst complete."
+msgstr "Typst로 내보내기가 완료되었습니다."
 
 msgid "Exporting to DOCX..."
 msgstr "DOCX로 내보내는 중..."
@@ -143,14 +158,26 @@ msgstr "JATS로 내보내는 중..."
 msgid "Exporting to LaTeX..."
 msgstr "LaTeX로 내보내는 중..."
 
+msgid "Exporting to Markdown..."
+msgstr "마크다운으로 내보내는 중..."
+
 msgid "Exporting to ODT..."
 msgstr "ODT로 내보내는 중..."
 
 msgid "Exporting to Pandoc..."
 msgstr "판독으로 내보내는 중..."
 
+msgid "Exporting to TEI..."
+msgstr "TEI로 내보내는 중..."
+
+msgid "Exporting to Typst..."
+msgstr "Typst로 내보내는 중..."
+
 msgid "File export has been initiated."
 msgstr "파일 내보내기가 시작되었습니다."
+
+msgid "Formatting citations..."
+msgstr "인용 형식 지정 중..."
 
 msgid "French"
 msgstr "프랑스어"
@@ -206,6 +233,15 @@ msgstr "노르웨이어(복몰)"
 msgid "Norwegian (nynorsk)"
 msgstr "노르웨이어(니노르스크)"
 
+msgid "PDF export complete."
+msgstr "PDF 내보내기가 완료되었습니다."
+
+msgid "PDF export failed."
+msgstr "PDF 내보내기에 실패했습니다."
+
+msgid "PDF export has been initiated."
+msgstr "PDF 내보내기가 시작되었습니다."
+
 msgid "Persian"
 msgstr "페르시아 인"
 
@@ -224,8 +260,14 @@ msgstr "문서 준비 중..."
 msgid "Preparing LaTeX files..."
 msgstr "LaTeX 파일 준비 중..."
 
-msgid "Preparing print view..."
-msgstr "인쇄 보기 준비 중..."
+msgid "Preparing Markdown files..."
+msgstr "마크다운 파일 준비 중..."
+
+msgid "Preparing Typst files..."
+msgstr "Typst 파일 준비 중..."
+
+msgid "Print view ready. Opening print dialog..."
+msgstr "인쇄 보기가 준비되었습니다. 인쇄 대화 상자를 여는 중..."
 
 msgid "Printing complete."
 msgstr "인쇄가 완료되었습니다."
@@ -236,11 +278,11 @@ msgstr "인쇄가 시작되었습니다."
 msgid "Rendering document..."
 msgstr "문서 렌더링 중..."
 
+msgid "Rendering PDF…"
+msgstr "PDF 렌더링 중…"
+
 msgid "Reviewers"
 msgstr "리뷰어"
-
-msgid "Snapshot saved."
-msgstr "스냅샷이 저장되었습니다."
 
 msgid "Romanian"
 msgstr "루마니아 사람"
@@ -265,6 +307,9 @@ msgstr "슬로바키아 사람"
 
 msgid "Slovenian"
 msgstr "슬로베니아"
+
+msgid "Snapshot saved."
+msgstr "스냅샷이 저장되었습니다."
 
 msgid "Spanish"
 msgstr "스페인어"

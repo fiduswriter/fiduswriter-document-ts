@@ -26,6 +26,9 @@ msgstr "アラビア語"
 msgid "Assembling JATS archive..."
 msgstr "JATS アーカイブを組み立てています..."
 
+msgid "Assembling TEI archive..."
+msgstr "TEI アーカイブを組み立てています..."
+
 msgid "Asturian"
 msgstr "アストゥリアス語"
 
@@ -64,6 +67,9 @@ msgstr "コピーが作成されました。"
 
 msgid "Copy of"
 msgstr "のコピー"
+
+msgid "Could not create document. You may have reached your document limit."
+msgstr "ドキュメントを作成できませんでした。文書の制限に達した可能性があります。"
 
 msgid "Creating copy..."
 msgstr "コピーを作成しています..."
@@ -125,11 +131,20 @@ msgstr "JATSへのエクスポートが完了しました。"
 msgid "Export to LaTeX complete."
 msgstr "LaTeXへのエクスポートが完了しました。"
 
+msgid "Export to Markdown complete."
+msgstr "Markdown へのエクスポートが完了しました。"
+
 msgid "Export to ODT complete."
 msgstr "ODTへのエクスポートが完了しました。"
 
 msgid "Export to Pandoc complete."
 msgstr "Pandoc へのエクスポートが完了しました。"
+
+msgid "Export to TEI complete."
+msgstr "TEIへのエクスポートが完了しました。"
+
+msgid "Export to Typst complete."
+msgstr "Typst へのエクスポートが完了しました。"
 
 msgid "Exporting to DOCX..."
 msgstr "DOCX にエクスポートしています..."
@@ -143,14 +158,26 @@ msgstr "JATS にエクスポートしています..."
 msgid "Exporting to LaTeX..."
 msgstr "LaTeX にエクスポートしています..."
 
+msgid "Exporting to Markdown..."
+msgstr "Markdown にエクスポートしています..."
+
 msgid "Exporting to ODT..."
 msgstr "ODT にエクスポートしています..."
 
 msgid "Exporting to Pandoc..."
 msgstr "Pandoc にエクスポートしています..."
 
+msgid "Exporting to TEI..."
+msgstr "TEI にエクスポートしています..."
+
+msgid "Exporting to Typst..."
+msgstr "Typst にエクスポート中..."
+
 msgid "File export has been initiated."
 msgstr "ファイルのエクスポートが開始されました。"
+
+msgid "Formatting citations..."
+msgstr "引用の書式を設定しています..."
 
 msgid "French"
 msgstr "フランス語"
@@ -206,6 +233,15 @@ msgstr "ノルウェー語 (ブークモール)"
 msgid "Norwegian (nynorsk)"
 msgstr "ノルウェー語 (ニーノシュク)"
 
+msgid "PDF export complete."
+msgstr "PDFのエクスポートが完了しました。"
+
+msgid "PDF export failed."
+msgstr "PDF のエクスポートに失敗しました。"
+
+msgid "PDF export has been initiated."
+msgstr "PDF のエクスポートが開始されました。"
+
 msgid "Persian"
 msgstr "ペルシア語"
 
@@ -224,8 +260,14 @@ msgstr "書類を準備しています..."
 msgid "Preparing LaTeX files..."
 msgstr "LaTeX ファイルを準備しています..."
 
-msgid "Preparing print view..."
-msgstr "印刷ビューを準備しています..."
+msgid "Preparing Markdown files..."
+msgstr "Markdown ファイルを準備しています..."
+
+msgid "Preparing Typst files..."
+msgstr "Typst ファイルを準備しています..."
+
+msgid "Print view ready. Opening print dialog..."
+msgstr "印刷ビューの準備ができました。印刷ダイアログを開いています..."
 
 msgid "Printing complete."
 msgstr "印刷が完了しました。"
@@ -236,11 +278,11 @@ msgstr "印刷が開始されました。"
 msgid "Rendering document..."
 msgstr "ドキュメントをレンダリング中..."
 
+msgid "Rendering PDF…"
+msgstr "PDF をレンダリング中…"
+
 msgid "Reviewers"
 msgstr "査読者"
-
-msgid "Snapshot saved."
-msgstr "スナップショットが保存されました。"
 
 msgid "Romanian"
 msgstr "ルーマニア語"
@@ -265,6 +307,9 @@ msgstr "スロバキア語"
 
 msgid "Slovenian"
 msgstr "スロベニア語"
+
+msgid "Snapshot saved."
+msgstr "スナップショットが保存されました。"
 
 msgid "Spanish"
 msgstr "スペイン語"
